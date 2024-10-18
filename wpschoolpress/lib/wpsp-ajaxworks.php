@@ -1,7 +1,7 @@
 <?php
 if (!defined('ABSPATH')) exit('No Such File');
 
-function wpsp_DeleteUser($uids = array() , $type)
+function wpsp_DeleteUser($type, $uids = array())
 {
 	if (!isset($_POST['wps_generate_nonce']) || !wp_verify_nonce(sanitize_text_field($_POST['wps_generate_nonce']) , 'wps_action'))
 	{

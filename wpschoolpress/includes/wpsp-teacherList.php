@@ -95,8 +95,10 @@ else{
     $teacherQuery	=	'WHERE';
 }
 
+$query = "SELECT * FROM $teacher_table $teacherQuery first_name != %s ORDER BY tid DESC";
 
-$teachers=$wpdb->get_results($wpdb->prepare("select * from $teacher_table $teacherQuery  first_name != 'teacher' order by tid DESC"));
+$teachers = $wpdb->get_results($wpdb->prepare($query, 'teacher'));
+// $teachers=$wpdb->get_results($wpdb->prepare("select * from $teacher_table $teacherQuery  first_name != 'teacher' order by tid DESC"));
 // echo "<pre>";print_r($sel_classid);
 
 $plugins_url=plugins_url();

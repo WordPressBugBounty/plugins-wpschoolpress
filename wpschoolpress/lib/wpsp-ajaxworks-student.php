@@ -1006,7 +1006,8 @@ function wpsp_StudentPublicProfile()
 									<td><strong>". apply_filters( 'wpsp_parent_popupvalue_parentprofession', esc_html__( ' Parent Profession:', 'wpschoolpress' ))." </strong>".esc_html($stinfo->p_profession)."</td>
 								</tr>
 								<tr>
-									<td colspan='2'><strong>Phone Number: </strong>".esc_html($stinfo->s_phone)."</td>
+									<td><strong>Phone Number: </strong>".esc_html($stinfo->s_phone)."</td>
+									<td><strong>Parent Blood Group: </strong>".esc_html($stinfo->p_bloodgrp)."</td>
 								</tr>
 								<tr>
 									<td><strong>Roll No: </strong>".esc_html($stinfo->s_rollno)."</td>

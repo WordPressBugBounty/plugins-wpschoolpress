@@ -76,6 +76,7 @@ if (($skip_hours === TRUE) || ('POST' == $_SERVER['REQUEST_METHOD'] && sanitize_
             foreach ($get_sessions as $sesio) {
                 $session[] = $sesio;
             }
+            $error = 0;
         } else {
             $error = 1;
             echo "<div class='wpsp-text-red'>Can't fetch template from the selected class</div>";
@@ -91,6 +92,7 @@ if (($skip_hours === TRUE) || ('POST' == $_SERVER['REQUEST_METHOD'] && sanitize_
         } else {
             // echo "<span class='red'>*Sessions already available in order to edit session delete and regenerate timetable.</span>";
         }
+        $error = 0;
     } else {
         $error = 1;
         echo "<div class='wpsp-text-red'>No Sessions Retrieved</div>";

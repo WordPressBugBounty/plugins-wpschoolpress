@@ -10,6 +10,7 @@ $(document).ready(function() {
     selectable: true,
     selectHelper: true,
     ignoreTimezone: true,
+    eventOverlap: true,
     timeFormat: 'h(:mm)',
     allDaySlot: false,
     select: function(start, end) {
