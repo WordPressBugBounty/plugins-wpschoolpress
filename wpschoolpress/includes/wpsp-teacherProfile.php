@@ -101,7 +101,7 @@ if (!empty($tinfo))
             <div class="wpsp-col-lg-3 wpsp-col-md-4 wpsp-col-sm-4 wpsp-col-xs-12">
               <div class="wpsp-form-group">
                 <label class="wpsp-label" for="dateofbirth"><?php esc_html_e( 'Date of Birth', 'wpschoolpress' ); ?></label> <?php if ($edit) { ?>
-                <input type="text" class="wpsp-form-control select_date datepicker" value="<?php if ($tinfo->dob == "0000-00-00"){ }else{ echo wpsp_viewDate(esc_attr($tinfo->dob));} ?>" id="Dob" name="Dob" placeholder="Date of Birth"> <?php } else { echo wpsp_viewDate(esc_html($tinfo->dob)); } ?>
+                <input type="text" class="wpsp-form-control select_date datepicker" value="<?php if ($tinfo->dob == "0000-00-00"){ }else{ echo esc_attr(wpsp_viewDate($tinfo->dob));} ?>" id="Dob" name="Dob" placeholder="Date of Birth"> <?php } else { echo esc_html(wpsp_viewDate($tinfo->dob),'wpschoolpress'); } ?>
               </div>
             </div>
             <div class="wpsp-col-lg-3 wpsp-col-md-4 wpsp-col-sm-4 wpsp-col-xs-12">
@@ -161,14 +161,14 @@ if (!empty($tinfo))
                 <?php if ($edit) { ?>
                 <select class="wpsp-form-control" id="Bloodgroup" name="Bloodgroup">
                   <option value=""><?php esc_html_e( 'Select Blood Group', 'wpschoolpress' ); ?></option>
-                  <option <?php if ($tinfo->bloodgrp == 'O+') echo esc_html("selected","wpschoolpress"); ?> value="O+"> <?php echo __("O +","wpschoolpress");?> </option>
-                  <option <?php if ($tinfo->bloodgrp == 'O-') echo esc_html("selected","wpschoolpress"); ?> value="O-"><?php echo __("O -","wpschoolpress");?> </option>
-                  <option <?php if ($tinfo->bloodgrp == 'A+') echo esc_html("selected","wpschoolpress"); ?> value="A+"><?php echo __("A +","wpschoolpress");?> </option>
-                  <option <?php if ($tinfo->bloodgrp == 'A-') echo esc_html("selected","wpschoolpress"); ?> value="A-"><?php echo __("A -","wpschoolpress");?> </option>
-                  <option <?php if ($tinfo->bloodgrp == 'B+') echo esc_html("selected","wpschoolpress"); ?> value="B+"><?php echo __("B +","wpschoolpress");?> </option>
-                  <option <?php if ($tinfo->bloodgrp == 'B-') echo esc_html("selected","wpschoolpress"); ?> value="B-"><?php echo __("B -","wpschoolpress");?> </option>
-                  <option <?php if ($tinfo->bloodgrp == 'AB+') echo esc_html("selected","wpschoolpress"); ?> value="AB+"><?php echo __("AB +","wpschoolpress");?> </option>
-                  <option <?php if ($tinfo->bloodgrp == 'AB-') echo esc_html("selected","wpschoolpress"); ?> value="AB-"><?php echo __("AB -","wpschoolpress");?> </option>
+                  <option <?php if ($tinfo->bloodgrp == 'O+') echo esc_html("selected","wpschoolpress"); ?> value="O+"> <?php echo esc_html("O +","wpschoolpress");?> </option>
+                  <option <?php if ($tinfo->bloodgrp == 'O-') echo esc_html("selected","wpschoolpress"); ?> value="O-"><?php echo esc_html("O -","wpschoolpress");?> </option>
+                  <option <?php if ($tinfo->bloodgrp == 'A+') echo esc_html("selected","wpschoolpress"); ?> value="A+"><?php echo esc_html("A +","wpschoolpress");?> </option>
+                  <option <?php if ($tinfo->bloodgrp == 'A-') echo esc_html("selected","wpschoolpress"); ?> value="A-"><?php echo esc_html("A -","wpschoolpress");?> </option>
+                  <option <?php if ($tinfo->bloodgrp == 'B+') echo esc_html("selected","wpschoolpress"); ?> value="B+"><?php echo esc_html("B +","wpschoolpress");?> </option>
+                  <option <?php if ($tinfo->bloodgrp == 'B-') echo esc_html("selected","wpschoolpress"); ?> value="B-"><?php echo esc_html("B -","wpschoolpress");?> </option>
+                  <option <?php if ($tinfo->bloodgrp == 'AB+') echo esc_html("selected","wpschoolpress"); ?> value="AB+"><?php echo esc_html("AB +","wpschoolpress");?> </option>
+                  <option <?php if ($tinfo->bloodgrp == 'AB-') echo esc_html("selected","wpschoolpress"); ?> value="AB-"><?php echo esc_html("AB -","wpschoolpress");?> </option>
                 </select> <?php } else echo esc_html($tinfo->bloodgrp); ?>
               </div>
             </div>
@@ -181,7 +181,7 @@ if (!empty($tinfo))
             </div>
             <div class="wpsp-col-xs-12"> <?php if ($edit) { ?> <button type="submit" id="u_teacher" class="wpsp-btn wpsp-btn-success"><?php esc_html_e( 'Next', 'wpschoolpress' ); ?></button>
               <!--  <a href='
-            <?php echo wpsp_admin_url(); ?>sch-teacher' class="wpsp-btn wpsp-dark-btn">Back</a> --> <?php } else{ ?>
+            <?php echo esc_url(wpsp_admin_url()); ?>sch-teacher' class="wpsp-btn wpsp-dark-btn">Back</a> --> <?php } else{ ?>
             <a href="?id=<?php echo esc_attr($tinfo->wp_usr_id); ?>&edit=true" type="button" class="wpsp-btn wpsp-btn-sm wpsp-btn-warning"><i class="icon dashicons dashicons-edit wpsp-edit-icon"></i></a>
             <a data-original-title="Remove this user" type="button" class="wpsp-btn wpsp-btn-sm wpsp-btn-danger"> <i class="icon dashicons dashicons-trash wpsp-delete-icon"></i></a> <?php } ?>
             </div>
@@ -200,14 +200,14 @@ if (!empty($tinfo))
               <div class="wpsp-form-group">
                 <label class="wpsp-label" for="Join"><?php esc_html_e( 'Joining Date (mm/dd/yyyy)', 'wpschoolpress' ); ?></label>
                 <?php if ($edit) { ?>
-                    <input type="text" class="wpsp-form-control select_date" value="<?php if (wpsp_viewDate($tinfo->doj) == "0000-00-00"){}else{ echo wpsp_viewDate(esc_attr($tinfo->doj));} ?>" id="Doj" name="Doj" placeholder="Date of Join"> <?php } else echo wpsp_viewDate(esc_html($tinfo->doj)); ?>
+                    <input type="text" class="wpsp-form-control select_date" value="<?php if (wpsp_viewDate($tinfo->doj) == "0000-00-00"){}else{ echo esc_attr(wpsp_viewDate($tinfo->doj));} ?>" id="Doj" name="Doj" placeholder="Date of Join"> <?php } else echo esc_html(wpsp_viewDate($tinfo->doj),'wpschoolpress'); ?>
               </div>
             </div>
             <div class="wpsp-col-md-4 wpsp-col-sm-4 wpsp-col-xs-12">
               <div class="wpsp-form-group">
                 <label class="wpsp-label" for="Releaving"><?php esc_html_e( 'Leaving Date (mm/dd/yyyy)', 'wpschoolpress' ); ?></label>
                 <?php if ($edit){ ?>
-                <input type="text" class="wpsp-form-control select_date" value="<?php if (wpsp_viewDate($tinfo->dol) == "0000-00-00"){ }else{ echo wpsp_viewDate(esc_attr($tinfo->dol)); } ?>" id="Dol" name="dol" placeholder="Date of Leave"> <?php } else echo wpsp_viewDate(esc_html($tinfo->dol)); ?>
+                <input type="text" class="wpsp-form-control select_date" value="<?php if (wpsp_viewDate($tinfo->dol) == "0000-00-00"){ }else{ echo esc_attr(wpsp_viewDate($tinfo->dol)); } ?>" id="Dol" name="dol" placeholder="Date of Leave"> <?php } else echo esc_html(wpsp_viewDate($tinfo->dol),'wpschoolpress'); ?>
               </div>
             </div>
             <div class="wpsp-col-md-4 wpsp-col-sm-4 wpsp-col-xs-12">

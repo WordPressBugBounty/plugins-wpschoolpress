@@ -15,7 +15,7 @@ $remove_data_status =   get_option( 'wpsp_remove_data');
                     <div id="postbox-container-1" class="postbox-container">
                         <div id="normal-sortables" class="meta-box-sortables">
                             <div class="postbox ">
-                                <h2 class="hndle"><span><?php _e( 'Settings', 'wpschoolpress'); ?> </span></h2>
+                                <h2 class="hndle"><span><?php esc_html_e( 'Settings', 'wpschoolpress'); ?> </span></h2>
                                 <div class="inside">
                                     <form name="post" action="" method="post">
                                       <table class="plg-form-table">

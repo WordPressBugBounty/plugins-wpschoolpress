@@ -27,8 +27,7 @@ $sch_import_history = apply_filters('wpsp_sidebar_importhistory_title_menu',esc_
 $sch_class_history = apply_filters('wpsp_sidebar_classhistory_title_menu',esc_html__('Class History','wpschoolpress'));
 $sch_payment = apply_filters('wpsp_sidebar_payment_title_menu',esc_html__('Payment','wpschoolpress'));
 $sch_enrolled_class = apply_filters('wpsp_sidebar_enrolledclass_title_menu',esc_html__('Enrolled Classes','wpschoolpress'));
-
-$sch_posts = apply_filters('wpsp_sidebar_posts_title_menu',esc_html__('Posts','WPSchoolPress'));
-$sch_posts_profile = apply_filters('wpsp_sidebar_posts_title_menu',esc_html__('Social Profile','WPSchoolPress'));
-$sch_reported_posts = apply_filters('wpsp_sidebar_reported_posts_menu',esc_html__('Reported Post','WPSchoolPress'));
-$sch_posts_notification = apply_filters('wpsp_sidebar_posts_notification_menu',esc_html__('Notification','WPSchoolPress'));
+$sch_posts = apply_filters('wpsp_sidebar_posts_title_menu',esc_html__('Posts','wpschoolpress'));
+$sch_posts_profile = apply_filters('wpsp_sidebar_posts_title_menu',esc_html__('Social Profile','wpschoolpress'));
+$sch_reported_posts = apply_filters('wpsp_sidebar_reported_posts_menu',esc_html__('Reported Post','wpschoolpress'));
+$sch_posts_notification = apply_filters('wpsp_sidebar_posts_notification_menu',esc_html__('Notification','wpschoolpress'));

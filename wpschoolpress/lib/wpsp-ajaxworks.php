@@ -446,7 +446,7 @@ function wpsp_BulkDelete()
 	wpsp_Authenticate();
 	$uids = explode(',', sanitize_text_field($_POST['UID']));
 	$type = sanitize_text_field($_POST['type']);
-	if (wpsp_DeleteUser($uids, $type))
+	if (wpsp_DeleteUser($type,$uids))
 	{
 		echo esc_html("success", "wpschoolpress");
 	}
@@ -514,8 +514,11 @@ function wpsp_DeleteTeacher()
 	$deltec = $wpdb->delete($teacher_tbl, array(
 		'tid' => $tid
 	));
-	if ($deltec) echo esc_html("success", "wpschoolpress");
-	else echo esc_html("Something went wrong!", "wpschoolpress");
+	if ($deltec) { 
+		echo esc_html("success", "wpschoolpress");
+	}else{ 
+		echo esc_html("Something went wrong111!", "wpschoolpress");
+	}
 	wp_die();
 }
 /* Delete imported User*/
@@ -578,7 +581,7 @@ function wpsp_UndoImport()
 	));
 	if (($user_del) && ($wpsp_del))
 	{
-        echo sprintf( __( 'Imported  %s rows are removed successfully!!', 'wpschoolpress' ), $count );
+        echo sprintf( esc_html( 'Imported  %s rows are removed successfully!!', 'wpschoolpress' ), esc_html($count,'wpschoolpress') );
 		// echo esc_html("Imported " . $count . " rows are removed successfully!!", "wpschoolpress");
 	}
 	else
@@ -634,7 +637,8 @@ function wpsp_ParentPublicProfile($pid = '', $button = 0)
 	{
 		$profile = esc_html( 'No data retrived!..' ,'wpschoolpress');
 	}
-	echo apply_filters('wpsp_parent_profile', $profile, intval($pid));
+	// echo apply_filters('wpsp_parent_profile', $profile, intval($pid));
+	echo wp_kses_post($profile);
 	wp_die();
 }
 /****************************** Class Functions ******************************/
@@ -1349,7 +1353,7 @@ function wpsp_StudentCount()
 	}
 	else
 	{
-        echo sprintf( __( 'There are %s students associated with this class.', 'wpschoolpress' ), $count );
+        echo sprintf( esc_html( 'There are %s students associated with this class.', 'wpschoolpress' ), esc_html($count,'wpschoolpress') );
 		// echo "There are " . esc_html($count) . " students associated with this class.";
 	}
 	wp_die();
@@ -1378,7 +1382,7 @@ function wpsp_getStudentsList()
 		}
 		else
 		{
-			$msg = __(sprintf('You have selected wrong date, your class startdate is %s and enddate %s', $check_date->c_sdate, $check_date->c_edate) , 'wpschoolpress');
+			$msg = sprintf(esc_html('You have selected wrong date, your class startdate is %s and enddate %s','wpschoolpress'), $check_date->c_sdate, $check_date->c_edate);
 			$response['status'] = 0;
 			$response['msg'] = $msg;
 			echo wp_json_encode($response);
@@ -1579,7 +1583,7 @@ function wpsp_AttendanceEntry()
 	{
 		$msg = esc_html("error","wpschoolpress");
 	}
-	echo $msg;
+	echo esc_html($msg,'wpschoolpress');
 	wp_die();
 }
 function wpsp_DeleteAttendance()
@@ -1674,7 +1678,7 @@ function wpsp_leaveDates($strDateFrom, $strDateTo, $weeklyOff = array(
 function wpsp_GetAttReport()
 {
 	wpsp_Authenticate();
-	echo wpsp_AttReport(intval($_POST['student_id']) , 0);
+	echo wp_kses_post(wpsp_AttReport(intval($_POST['student_id']) , 0));
 }
 function wpsp_AttReport($st_id, $close = 1)
 {
@@ -2274,7 +2278,7 @@ function wpsp_AddMark(){
 			}
 		}
 		if( !empty( $msg ) ) {
-			echo $msg;
+			echo esc_html($msg,'wpschoolpress');
 		} else if($m_ins) {
 			echo esc_html( 'success' ,'wpschoolpress' );
 		} else {
@@ -3122,6 +3126,8 @@ function wpsp_AddTransport()
 							</div>
 					</form>';
 		echo wpsp_kses_filter_allowed_html($form);
+		// echo wp_kses_post($form);
+		
 	}
 	wp_die();
 }
@@ -3139,7 +3145,7 @@ function wpsp_UpdateTransport()
 		}
 		wpsp_Authenticate();
 		$validation = wpsp_FormValidation($_POST, ['VhName', 'VhNumb']);
-		if ($validation === TRUE){
+		// if ($validation === TRUE){
 			$wpdb->update($trans_table, array(
 				'bus_no' => sanitize_text_field($_POST['VhNumb']) ,
 				'bus_name' => sanitize_text_field($_POST['VhName']) ,
@@ -3151,11 +3157,11 @@ function wpsp_UpdateTransport()
 				'id' => intval($_POST['transid'])
 			));
 			echo esc_html( 'success', 'wpschoolpress' );
-		}
-		else
-		{
-			echo wp_kses_post($validation);
-		}
+		// }
+		// else
+		// {
+		// 	echo $validation;
+		// }
 	}
 	else
 	{
@@ -3260,6 +3266,8 @@ function wpsp_UpdateTransport()
 					</div>
 					</form>';
 			echo wpsp_kses_filter_allowed_html($form);
+			// echo wp_kses_post($form);
+			
 		}
 		else
 		{
@@ -3832,7 +3840,9 @@ function wpsp_ViewMessage($mid = '', $return = false)
 	}
 	else
 	{
-		echo stripslashes($content);
+		// echo stripslashes($content);
+		echo wp_kses_post($content);
+		
 	}
 	wp_die();
 }
@@ -4029,8 +4039,8 @@ function wpsp_getTeachersList(){
 		$allPresent = 0;
 		if ($check_attend)
 		{
-			$title = __('Update Attendance Entry', 'wpschoolpress');
-			$warning = __('Attendance already were entered!', 'wpschoolpress');
+			$title = esc_html__('Update Attendance Entry', 'wpschoolpress');
+			$warning = esc_html__('Attendance already were entered!', 'wpschoolpress');
 			foreach($check_attend as $key => $value)
 			{
 				$attendanceID[] = $value->id;
@@ -4047,7 +4057,7 @@ function wpsp_getTeachersList(){
 						  <form name="AttendanceEntryForm" id="AttendanceEntryForm" method="post" class="form-horizontal">
 							<div class="box-body">
 							<div class="wpsp-form-group">
-								<p><span class="wpsp-text-red">' . $warning . '</span></p>
+								<p><span class="wpsp-text-red">' . esc_html($warning,'wpschoolpress') . '</span></p>
 							</div>
 							<div class="wpsp-row">
 								<div class="wpsp-col-md-12">
@@ -4070,7 +4080,7 @@ function wpsp_getTeachersList(){
 									$full_name = $st->first_name . " " . $st->middle_name . " " . $st->last_name;
 									$reason = isset($reasonList[$st->wp_usr_id]) ? $reasonList[$st->wp_usr_id] : '';
 									$rchecked = isset($reasonList[$st->wp_usr_id]) ? 1 : 0;
-									echo '<tr><td>' . $sno . '</td>
+									echo '<tr><td>' . esc_html($sno,'wpschoolpress') . '</td>
 												<td>' . esc_html($full_name) . '</td>
 												<td><input type="checkbox" ' . checked($rchecked, 1, false) . ' class="ccheckbox wpsp-checkbox" name="absent[]" value="' . esc_attr($st->wp_usr_id) . '"> Absent </td>
 												<td><input type="text"  name="reason[' . esc_attr($st->wp_usr_id) . ']" value="' .esc_attr($reason) . '" class="wpsp-form-control"></td>
@@ -4098,6 +4108,7 @@ function wpsp_getTeachersList(){
 				</div>';
 		$content = ob_get_clean();
 		echo wpsp_kses_filter_allowed_html($content);
+		// echo wp_kses_post($content);
 	}
 	wp_die();
 }
@@ -4183,7 +4194,7 @@ function wpsp_TeacherAttendanceView(){
 					$reasonList[$value['teacher_id']] = $value['reason'];
 				}
 			}
-			$teacherlist = $wpdb->get_results("SELECT *FROM $teacher_table", ARRAY_A);
+			$teacherlist = $wpdb->get_results("SELECT * FROM $teacher_table", ARRAY_A);
 			ob_start();
 ?> <table class="wpsp-table" id="teacherAttendanceTable" cellspacing="0" width="100%" style="width:100%">
     <thead>
@@ -4191,7 +4202,7 @@ function wpsp_TeacherAttendanceView(){
             <th><?php esc_html_e( 'Teacher Code', 'wpschoolpress' ); ?></th>
             <th><?php esc_html_e( 'Teacher Name', 'wpschoolpress' ); ?></th>
             <th><?php esc_html_e( 'Attendance', 'wpschoolpress' ); ?></th>
-            <th><?php esc_html_e( 'Commment', 'wpschoolpress' ); ?></th>
+            <th><?php esc_html_e( 'Comment', 'wpschoolpress' ); ?></th>
         </tr>
     </thead>
     <tbody> <?php
@@ -4558,7 +4569,7 @@ function wpsp_getStudentsAttendanceList()
 			}
 			else
 			{
-				$msg = __(sprintf('You have selected wrong date, your class startdate is %s and enddate %s', $check_date->c_sdate, $check_date->c_edate) , 'wpschoolpress');
+				$msg = sprintf(esc_html('You have selected wrong date, your class startdate is %s and enddate %s', 'wpschoolpress'),$check_date->c_sdate, $check_date->c_edate);
 				$response['status'] = 0;
 				$response['msg'] = $msg;
 				echo json_encode($response);
@@ -4610,10 +4621,10 @@ function wpsp_getStudentsAttendanceList()
 			if (count($studentData) > 0 && empty($msg))
 			{
 				ob_start();
-				echo '<table class="wpsp-table" id="attendanceOverview" cellspacing="0" width="100%" style="width:100%"><tr><th>' . __('Roll Number', 'wpschoolpress') . '</th>
-							<th>' . __('Student Name', 'wpschoolpress') . '</th>
-							<th>' . __('Attendance', 'wpschoolpress') . '</th>
-							<th>' . __('Commment', 'wpschoolpress') . '</th>
+				echo '<table class="wpsp-table" id="attendanceOverview" cellspacing="0" width="100%" style="width:100%"><tr><th>' . esc_html_e('Roll Number', 'wpschoolpress') . '</th>
+							<th>' . esc_html_e('Student Name', 'wpschoolpress') . '</th>
+							<th>' . esc_html_e('Attendance', 'wpschoolpress') . '</th>
+							<th>' . esc_html_e('Commment', 'wpschoolpress') . '</th>
 							</tr>';
 
 							foreach($studentData as $student){
@@ -4642,7 +4653,7 @@ function wpsp_getStudentsAttendanceList()
 			}
 			elseif (empty($msg))
 			{
-				$msg = __('<span class="wpsp-text-red">No Students Available in this class</span>', 'wpschoolpress');
+				$msg = esc_html('<span class="wpsp-text-red">No Students Available in this class</span>', 'wpschoolpress');
 			}
 		}
 		$title = '<h3 class="wpsp-card-title">' . __('Attendance Overview', 'wpschoolpress') . '</h3>';
@@ -4678,8 +4689,10 @@ function wpsp_listdashboardschedule(){
 	foreach($examinfo as $key => $value)
 	{
 		$event_list[] = array(
-			'start' => esc_html($value['e_s_date']),
-			'end' => esc_html($value['e_e_date']),
+			// 'start' => esc_html($value['e_s_date']),
+			// 'end' => esc_html($value['e_e_date']),
+			'start' => date('Y-m-d\TH:i:s', strtotime($value['e_s_date'])),
+			'end' => date('Y-m-d\TH:i:s', strtotime($value['e_e_date'])),
 			'title' => esc_html($value['e_name']." For Class ".$value['c_name']),
 			'color' => '#dd4b39',
 		);
@@ -4723,8 +4736,10 @@ function wpsp_listdashboardschedule(){
 
 	foreach($leaves as $key => $value){
 		$event_list[] = array(
-			'start' => $value['leave_date'],
-			'end' => $value['leave_date'],
+			// 'start' => $value['leave_date'],
+			// 'end' => $value['leave_date'],
+			'start' => date('Y-m-d\TH:i:s', strtotime($value['leave_date'])),
+			'end' => date('Y-m-d\TH:i:s', strtotime($value['leave_date'])),
 			'title' => esc_html($value['description']) . ' leave for class ' . esc_html($value['c_name']),
 			'color' => '#00a65a',
 		);

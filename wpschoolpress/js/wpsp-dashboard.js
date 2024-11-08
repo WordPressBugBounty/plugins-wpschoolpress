@@ -11,8 +11,23 @@ $(document).ready(function() {
     selectHelper: true,
     ignoreTimezone: true,
     eventOverlap: true,
-    timeFormat: 'h(:mm)',
+    // timeFormat: 'h(:mm)',
+    timeFormat: "h(:mm)a",
     allDaySlot: false,
+    events: {
+      url: ajax_url,
+      type: "POST",
+      data: {
+        action: "listdashboardschedule",
+      },
+      dataType: "json",
+      success: function (data) {
+        // console.log("Fetched Events: ", data);
+      },
+      error: function () {
+        alert("There is an error while fetching events!");
+      },
+    },
     select: function(start, end) {
       $('#calevent_entry')[0].reset();
       $('#calevent_save').prop('disabled', false);

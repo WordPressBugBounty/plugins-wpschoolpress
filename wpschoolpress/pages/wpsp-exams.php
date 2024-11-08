@@ -96,8 +96,8 @@ wpsp_header();
 								<td><?php echo  esc_html($wpsp_exam->e_name);?></td>
 								<td><?php echo  esc_html($classname); ?></td>
 								<td><?php echo  esc_html($sublist); ?></td>
-								<td><?php echo  wpsp_ViewDate(esc_html($wpsp_exam->e_s_date)); ?></td>
-								<td><?php echo  wpsp_ViewDate(esc_html($wpsp_exam->e_e_date));?></td>
+								<td><?php echo  esc_html(wpsp_ViewDate($wpsp_exam->e_s_date),'wpschoolpress'); ?></td>
+								<td><?php echo  esc_html(wpsp_ViewDate($wpsp_exam->e_e_date),'wpschoolpress');?></td>
 									<?php	if($current_user_role=='administrator'){?>
 								<td align="center">
 									<div class="wpsp-action-col">
@@ -205,8 +205,8 @@ else if( $current_user_role=='parent' || $current_user_role='student'){
   							<td><?php echo  esc_html($wpsp_exam->e_name);?></td>
   							<td><?php echo  esc_html($wpsp_exam->c_name);?> </td>
   							<td style="width: 580px;"><?php echo esc_html($sublist); ?> </td>
-  							<td><?php echo  wpsp_ViewDate(esc_html($wpsp_exam->e_s_date)); ?></td>
-  							<td><?php echo  wpsp_ViewDate(esc_html($wpsp_exam->e_e_date));?></td>
+  							<td><?php echo  esc_html(wpsp_ViewDate($wpsp_exam->e_s_date),'wpschoolpress'); ?></td>
+  							<td><?php echo  esc_html(wpsp_ViewDate($wpsp_exam->e_e_date),'wpschoolpress');?></td>
   						</tr>
   						<?php
   						$sno++;

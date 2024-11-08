@@ -110,7 +110,7 @@ foreach($wpsp_clas_data as $clsloop){
                                         <td><?php echo  esc_html($wpsp_stud_data[0]->s_rollno);?></td>
                                         <td> <?php echo  esc_html($clsloop->c_name);?></td>
                                         <td> <?php echo  esc_html($wpsp_teacher_data[0]->first_name.' '. $wpsp_teacher_data[0]->last_name) ;?></td>
-                                        <td><?php if($price != ''){ echo get_woocommerce_currency_symbol() .$price; }else { echo '-'; }?></td>
+                                        <td><?php if($price != ''){ echo esc_html(get_woocommerce_currency_symbol()) .esc_html($price); }else { echo '-'; }?></td>
                                         <td><?php if($newDate != ''){ echo esc_html($newDate); }else { echo '-'; }?></td>
                                         <td><?php echo esc_html($paid);?></td>
 
@@ -314,13 +314,13 @@ $wpsp_teacher_data =$wpdb->get_results("SELECT * FROM  $cteacher
 
                                         <td><?php
                                         $price = esc_html($wpsp_cls_data[0]->fees_amount);
-                                        if($price != ''){ echo get_woocommerce_currency_symbol().$price .'.00'; }else { echo '-'; }?>
+                                        if($price != ''){ echo esc_html(get_woocommerce_currency_symbol()).esc_html($price) .'.00'; }else { echo '-'; }?>
                                         </td>
                                         <td>
                                         <?php
                                         // ->date('Y F j, g:i A');
                                         $order_date_created = esc_html($wpsp_cls_data[0]->created_date);
-                                        if($order_date_created != ''){ echo $newDate = date("F d, Y", strtotime($order_date_created)); }else { echo '-'; }?></td>
+                                        if($order_date_created != ''){ echo esc_html($newDate = date("F d, Y", strtotime($order_date_created))); }else { echo '-'; }?></td>
                                         <td><?php
                                             echo esc_html("Fees Paid","wpschoolpress");?></td>
                                         <!-- <td><a class="wpsp-btn" href="<?php echo esc_url(get_permalink());?>" target="_blank">Pay Now</a></td> -->

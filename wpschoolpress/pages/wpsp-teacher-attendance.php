@@ -12,20 +12,20 @@ wpsp_header();
 			<div class="wpsp-row">
 				<div class="wpsp-col-md-12">
 						<div class="wpsp-card-head">
-							<h3 class="wpsp-card-title"><?php echo apply_filters( 'wpsp_teacher_attendance_heading_item',esc_html("Teacher Attendance","wpschoolpress")); ?></h3>
+							<h3 class="wpsp-card-title"><?php echo esc_html(apply_filters( 'wpsp_teacher_attendance_heading_item',"Teacher Attendance"),"wpschoolpress"); ?></h3>
 						</div>
 						<div class="wpsp-card-body">
 							<div class="wpsp-row">
 								<div class="wpsp-col-md-3" id="AttendanceEnterForm">
 										<div class="wpsp-form-group">
-											<label class="control-label"><?php _e( 'Date', 'wpschoolpress' ); ?> </label>
-											<input type="text" class="wpsp-form-control select_date" id="AttendanceDate" value="<?php echo isset($_POST['entry_date'])? esc_attr($_POST['entry_date']) : date('m/d/Y'); ?>" name="entry_date">
+											<label class="control-label"><?php esc_html_e( 'Date', 'wpschoolpress' ); ?> </label>
+											<input type="text" class="wpsp-form-control select_date" id="AttendanceDate" value="<?php echo isset($_POST['entry_date'])? esc_attr($_POST['entry_date']) : esc_attr(date('m/d/Y')); ?>" name="entry_date">
 										</div>
 										<div class="wpsp-form-group">
 											<?php if($current_user_role=='administrator'){?>
-										<button id="AttendanceEnter" name="attendance" class="wpsp-btn wpsp-btn-success"><?php _e( 'Add', 'wpschoolpress'); ?></button>
+										<button id="AttendanceEnter" name="attendance" class="wpsp-btn wpsp-btn-success"><?php esc_html_e( 'Add', 'wpschoolpress'); ?></button>
 									<?php }?>
-										<button id="AttendanceView" name="attendanceview" class="wpsp-btn wpsp-btn-primary"><?php _e( 'View', 'wpschoolpress'); ?></button>
+										<button id="AttendanceView" name="attendanceview" class="wpsp-btn wpsp-btn-primary"><?php esc_html_e( 'View', 'wpschoolpress'); ?></button>
 									</div>
 								</div>
 							</div>

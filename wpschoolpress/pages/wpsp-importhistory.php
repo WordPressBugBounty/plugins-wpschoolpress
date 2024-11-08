@@ -37,7 +37,7 @@ wpsp_header();
                                      ?>
                                         <tr>
                                         <td><?php echo esc_html($count); ?></td>
-                                        <td><?php echo wpsp_ViewDate(esc_html($value->time)); ?></td>
+                                        <td><?php echo esc_html(wpsp_ViewDate($value->time)); ?></td>
                                         <td><?php echo esc_html($imtype[$value->type]);?></td>
                                         <td><?php echo esc_html($value->count); ?></td>
 <?php if($current_user_role=='administrator'){?>

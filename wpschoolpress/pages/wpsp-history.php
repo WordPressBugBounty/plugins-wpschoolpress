@@ -79,7 +79,7 @@ if( is_user_logged_in() ) {
                 <td>".esc_html($history->t_full_name)."</td>
                 <td>".esc_html($history->start_date)."</td>
                 <td>".esc_html($history->end_date)."</td>
-                <td>".date('Y-m-d',esc_html(strtotime($history->enrollment_date)))."</td>
+                <td>".esc_html(date('Y-m-d',strtotime($history->enrollment_date)),'wpschoolpress')."</td>
                 </tr>";
               }
             }

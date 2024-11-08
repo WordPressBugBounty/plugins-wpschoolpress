@@ -70,7 +70,7 @@ wpsp_header();
 				<div class="tabList">
 				<ul class="wpsp-resp-tabs-list">
 					<?php $i=0; foreach($child as $ch) { ?>
-						<li class="wpsp-tabing <?php echo ($i==0)?'active':''?>"><!-- <a href="#<?php echo str_replace(' ', '', $ch['name'].$i );?>"  data-toggle="tab"> --><?php echo $ch['name'];?><!-- </a> --></li>
+						<li class="wpsp-tabing <?php echo ($i==0)?'active':''?>"><!-- <a href="#<?php echo esc_attr(str_replace(' ', '', $ch['name'].$i ));?>"  data-toggle="tab"> --><?php echo esc_html($ch['name']);?><!-- </a> --></li>
 					<?php $i++; } ?>
 				</ul>
 				</div>
@@ -124,46 +124,46 @@ wpsp_header();
 														<table id="studentchildInfo" class="wpsp-table table-user-information" cellspacing="0" width="100%" style="width:100%">
 															<tbody>
 															<tr>
-																<td class="bold" width="200px"><?php _e( 'Roll No.', 'wpschoolpress'); ?></td>
+																<td class="bold" width="200px"><?php esc_html_e( 'Roll No.', 'wpschoolpress'); ?></td>
 																<td><?php echo esc_html($stinfo->s_rollno);	?></td>
 															</tr>
 															<tr>
-																<td class="bold"><?php _e( 'Class', 'wpschoolpress'); ?> </td>
+																<td class="bold"><?php esc_html_e( 'Class', 'wpschoolpress'); ?> </td>
 																<td><?php echo esc_html(implode(", ",$classname_array));	?></td>
 															</tr>
 															<tr>
-																<td class="bold"><?php _e( 'Gender', 'wpschoolpress'); ?></td>
+																<td class="bold"><?php esc_html_e( 'Gender', 'wpschoolpress'); ?></td>
 																<td><?php echo esc_html($stinfo->s_gender);	?></td>
 															</tr>
 															<tr>
-																<td class="bold"><?php _e( 'Date of Birth', 'wpschoolpress' );?></td>
-																<td><?php echo wpsp_ViewDate($stinfo->s_dob);	?></td>
+																<td class="bold"><?php esc_html_e( 'Date of Birth', 'wpschoolpress' );?></td>
+																<td><?php echo esc_html(wpsp_ViewDate($stinfo->s_dob));	?></td>
 															</tr>
 															<tr>
-																<td class="bold"><?php _e( 'Date of Join', 'wpschoolpress'); ?></td>
-																<td><?php echo wpsp_ViewDate($stinfo->s_doj);	?></td>
+																<td class="bold"><?php esc_html_e( 'Date of Join', 'wpschoolpress'); ?></td>
+																<td><?php echo esc_html(wpsp_ViewDate($stinfo->s_doj));	?></td>
 															</tr>
 															<tr>
-																<td class="bold"><?php _e( 'Permanent Address', 'wpschoolpress'); ?></td>
+																<td class="bold"><?php esc_html_e( 'Permanent Address', 'wpschoolpress'); ?></td>
 																<td><?php echo esc_html($stinfo->s_paddress); ?></td>
 															</tr>
 															<tr>
-																<td class="bold"><?php _e( 'Permanent Country', 'wpschoolpress'); ?></td>
+																<td class="bold"><?php esc_html_e( 'Permanent Country', 'wpschoolpress'); ?></td>
 																<td><?php echo esc_html($stinfo->s_pcountry); ?></td>
 															</tr><tr>
-																<td class="bold"><?php _e( 'Permanent Zipcode', 'wpschoolpress'); ?></td>
+																<td class="bold"><?php esc_html_e( 'Permanent Zipcode', 'wpschoolpress'); ?></td>
 																<td><?php echo esc_html($stinfo->s_pzipcode); ?></td>
 															</tr>
 															<tr>
-																<td class="bold"><?php _e( 'Email', 'wpschoolpress'); ?></td>
+																<td class="bold"><?php esc_html_e( 'Email', 'wpschoolpress'); ?></td>
 																<td><?php echo esc_html($stinfo->user_email); ?></td>
 															</tr>
 															<tr>
-																<td class="bold"><?php _e( 'Phone Number', 'wpschoolpress'); ?></td>
+																<td class="bold"><?php esc_html_e( 'Phone Number', 'wpschoolpress'); ?></td>
 																<td><?php echo esc_html($stinfo->s_phone); ?></td>
 															</tr>
 															<tr>
-																<td class="bold"><?php _e( 'Blood Group', 'wpschoolpress'); ?></td>
+																<td class="bold"><?php esc_html_e( 'Blood Group', 'wpschoolpress'); ?></td>
 																<td><?php echo esc_html($stinfo->s_bloodgrp); ?></td>
 															</tr>
 															</tbody>
@@ -176,7 +176,7 @@ wpsp_header();
 							</div>
 						</div>
 					<?php } else {
-				_e( 'Sorry! No data retrieved', 'wpschoolpress');
+				esc_html_e( 'Sorry! No data retrieved', 'wpschoolpress');
 			}
 			?>
 					</div>
@@ -188,7 +188,7 @@ wpsp_header();
 	</div>
 			<?php
 			} else {
-				 _e('No Child Added, Please contact teacher/admin to add your child');
+				 esc_html_e('No Child Added, Please contact teacher/admin to add your child','wpschoolpress');
 			} ?>
 		<?php
 		wpsp_body_end();
@@ -210,7 +210,7 @@ wpsp_header();
                 <h3 class="wpsp-card-title"><?php
 					$st_class=$student->class_id;
 					if( isset( $student->c_name ) && !empty( $student->c_name ) )
-						_e( 'Your Current Class is '.esc_html($student->c_name), 'wpschoolpress' );
+						echo "Your Current Class is".esc_html( $student->c_name,'wpschoolpress' );
 					?> </h3>
             </div>
 			<div class="wpsp-card-body">
@@ -218,10 +218,10 @@ wpsp_header();
 					<thead>
 					<tr>
 						<th>#</th>
-						<th><?php echo apply_filters( 'wpsp_student_table_rollno_heading',esc_html__('Roll No.','wpschoolpress'));?></th>
-						<th><?php echo apply_filters( 'wpsp_student_table_fullname_heading',esc_html__('Student Name','wpschoolpress'));?></th>
-						<th><?php echo apply_filters( 'wpsp_student_table_parent_heading',esc_html__('Parent Name','wpschoolpress'));?></th>
-						<th><?php echo apply_filters( 'wpsp_student_table_streetaddress_heading',esc_html__('Permanent Address','wpschoolpress'));?></th>
+						<th><?php echo esc_html(apply_filters( 'wpsp_student_table_rollno_heading','Roll No.'),'wpschoolpress');?></th>
+						<th><?php echo esc_html(apply_filters( 'wpsp_student_table_fullname_heading','Student Name'),'wpschoolpress');?></th>
+						<th><?php echo esc_html(apply_filters( 'wpsp_student_table_parent_heading','Parent Name'),'wpschoolpress');?></th>
+						<th><?php echo esc_html(apply_filters( 'wpsp_student_table_streetaddress_heading','Permanent Address'),'wpschoolpress');?></th>
 					</tr>
 					</thead>
 					<tbody>

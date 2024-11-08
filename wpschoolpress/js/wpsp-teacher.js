@@ -290,7 +290,10 @@ $(document).ready(function() {
         1 != $(this).prop("checked") && $("#selectall").prop("checked", !1)
     }), $(document).on("click", "#d_teacher", function(e) {
         var a = $(this).data("id");
-        $("#teacherid").val(a), $("#DeleteModal").css("display", "block")
+        $("#teacherid").val(a);
+        $("#DeleteModal").css("display", "block");
+        $("#DeleteModal").attr('data-single-delete', true);
+        $("#DeleteModal").attr('data-id', a);
     }), $(document).on("click", ".ClassDeleteBt", function(e) {
         // var a = $("#teacherid").val(),
         //     s = [];
@@ -304,6 +307,8 @@ $(document).ready(function() {
         //     "success" == e ? location.reload() : ($(".wpsp-popup-return-data").html("Operation failed.Something went wrong!"), $("#SavingModal").css("display", "none"), $("#WarningModal").css("display", "block"), $("#WarningModal").addClass("wpsp-popVisible"))
         // })
 
+        var singledata = $("#DeleteModal").attr("data-single-delete");
+        if (singledata == 'true'){
         $("#DeleteModal").css("display", "none");
         $("#SavingModal").css("display", "block");
         $("#SavingModal").addClass("wpsp-popVisible");
@@ -324,15 +329,20 @@ $(document).ready(function() {
                 name: "wps_generate_nonce",
                 value: n
             }), jQuery.post(ajax_url, s, function(e) {
-                if ("success" == e) {
-                    $(".wpsp-success-text").html("Teacher deleted successfully !"), $("#SuccessModal").css("display", "block"), $("#SavingModal").css("display", "none"), $("#SuccessModal").addClass("wpsp-popVisible"), location.reload()
+                //alert(e);
+                if ("success" == $.trim(e)) {
+                    $(".wpsp-success-text").html("Teacher deleted successfully !"), 
+                    $("#SuccessModal").css("display", "block"); 
+                    $("#SavingModal").css("display", "none"); 
+                    $("#SuccessModal").addClass("wpsp-popVisible");
+                    location.reload();
                 } else {
                     $(".wpsp-popup-return-data").html("Operation failed.Something went wrong!"), $("#SavingModal").css("display", "none"), $("#WarningModal").css("display", "block"), $("#WarningModal").addClass("wpsp-popVisible")
                 }
             })
-        // } else {
+        } else {
 
-        // }
+        }
     }), $("#bulkaction").change(function() {
         if ("bulkUsersDelete" == $(this).val()) {
             var e = $('input[name^="UID"]').map(function() {
@@ -348,7 +358,7 @@ $(document).ready(function() {
                 }), s.push({
                     name: "UID",
                     value: e
-                }), s.push({
+                }),s.push({
                     name: "type",
                     value: "teacher"
                 }),s.push({
@@ -356,8 +366,13 @@ $(document).ready(function() {
                     value: n
                 }), jQuery.post(ajax_url, s, function(e) {
                     // "success" == e ? location.reload() : ($(".wpsp-popup-return-data").html("Operation failed.Something went wrong!"), $("#SavingModal").css("display", "none"), $("#WarningModal").css("display", "block"), $("#WarningModal").addClass("wpsp-popVisible"))
-                    if ("success" == e) {
-                        $(".wpsp-success-text").html("Teacher deleted successfully!"), $("#SuccessModal").css("display", "block"), $("#SavingModal").css("display", "none"), $("#SuccessModal").addClass("wpsp-popVisible"), location.reload()
+                    // alert(e);
+                    if ("success" == $.trim(e)) {
+                        $(".wpsp-success-text").html("Teacher deleted successfully!"); 
+                        $("#SuccessModal").css("display", "block");
+                         $("#SavingModal").css("display", "none");
+                         $("#SuccessModal").addClass("wpsp-popVisible");
+                         location.reload();
                     } else {
                         ($(".wpsp-popup-return-data").html("Operation failed.Something went wrong!"), $("#SavingModal").css("display", "none"), $("#WarningModal").css("display", "block"), $("#WarningModal").addClass("wpsp-popVisible"))
                     }

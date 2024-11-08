@@ -55,11 +55,11 @@ if ( !defined( 'ABSPATH' ) ) exit;
                             </div>
                             <hr>
                             <div class="col-md-12">
-                                <span class="col-md-10 PZero" title="<?php echo wpsp_ViewDate(esc_attr($sdate))." - ".wpsp_ViewDate(esc_attr($edate)); ?>"><?php esc_html_e( 'No. of Working Days:', 'wpschoolpress' )?></span>
+                                <span class="col-md-10 PZero" title="<?php echo esc_attr(wpsp_ViewDate($sdate))." - ".esc_attr(wpsp_ViewDate($edate)); ?>"><?php esc_html_e( 'No. of Working Days:', 'wpschoolpress' )?></span>
                                 <span class="label label-info"><?php echo esc_html($work_days['wdays']);?></span>
                             </div>
                             <div class="col-md-12">
-                                <span class="col-md-10 PZero" title="<?php echo wpsp_ViewDate(esc_attr($sdate))." - ".wpsp_ViewDate(esc_attr($edate)); ?>"><?php esc_html_e( 'No. of days not entered:', 'wpschoolpress' )?></span>
+                                <span class="col-md-10 PZero" title="<?php echo esc_attr(wpsp_ViewDate($sdate))." - ".esc_attr(wpsp_ViewDate($edate)); ?>"><?php esc_html_e( 'No. of days not entered:', 'wpschoolpress' )?></span>
                                 <span class="label label-warning"><?php echo esc_html($work_days['not_entered']); ?></span>
                             </div>
                             <div class="col-md-12 red"><?php echo esc_html($date_warning);?></div>
@@ -88,11 +88,11 @@ if ( !defined( 'ABSPATH' ) ) exit;
                             </div>
                             <hr>
                             <div class="col-md-12">
-                                <span class="col-md-10 PZero" title="<?php echo wpsp_ViewDate(esc_attr($sdate))." - ".wpsp_ViewDate(esc_attr($edate)); ?>"><?php esc_html_e( 'No. of Working Days:', 'wpschoolpress' );?></span>
+                                <span class="col-md-10 PZero" title="<?php echo esc_attr(wpsp_ViewDate($sdate))." - ".esc_attr(wpsp_ViewDate($edate)); ?>"><?php esc_html_e( 'No. of Working Days:', 'wpschoolpress' );?></span>
                                 <span class="label label-info"><?php echo esc_html($work_days['wdays']);?></span>
                             </div>
                             <div class="col-md-12">
-                                <span class="col-md-10 PZero" title="<?php echo wpsp_ViewDate(esc_attr($sdate))." - ".wpsp_ViewDate(esc_attr($edate)); ?>"><?php esc_html_e( 'No. of days not entered:', 'wpschoolpress' );?></span>
+                                <span class="col-md-10 PZero" title="<?php echo esc_attr(wpsp_ViewDate($sdate))." - ".esc_attr(wpsp_ViewDate($edate)); ?>"><?php esc_html_e( 'No. of days not entered:', 'wpschoolpress' );?></span>
                                 <span class="label label-warning"><?php echo esc_html($work_days['not_entered']); ?></span>
                             </div>
                             <?php if(count($check_leave)>0){ ?>

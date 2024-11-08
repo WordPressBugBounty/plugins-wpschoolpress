@@ -28,7 +28,7 @@ if (!defined( 'ABSPATH' ) )exit('No Such File');
                 ?>
                 <div class="wpsp-card">
                     <div class="wpsp-card-head">
-                        <h3 class="wpsp-card-title"><?php echo apply_filters( 'wpsp_leaveclendar_heading_item',esc_html__( 'Generate Leave days for a class', 'wpschoolpress')); ?></h3>
+                        <h3 class="wpsp-card-title"><?php echo esc_html(apply_filters( 'wpsp_leaveclendar_heading_item', 'Generate Leave days for a class'), 'wpschoolpress'); ?></h3>
                     </div>
                     <?php if ($current_user_role == 'administrator') { ?>
                     <div class="wpsp-card-body" id="addLeaveDaysBody">
@@ -65,8 +65,13 @@ if (!defined( 'ABSPATH' ) )exit('No Such File');
                                     $weeklyoff=array(sanitize_text_field($_POST['weeklyoff']));
                                 }
                                 $leave_dates=wpsp_leaveDates($strDateFrom,$strDateTo,$weeklyoff);
+                                if(isset($weeklyoff[1])){ //Sat-sun Off
+                                    $des = $weeklyoff[0].','.$weeklyoff[1];
+                                }else{
+                                    $des = $weeklyoff[0];
+                                }
                                 foreach($leave_dates as $ldate){
-                                    $leave_table_data = array('class_id'=>intval($_POST['ClassID']),'leave_date'=>$ldate,'description'=>'Weekend');
+                                    $leave_table_data = array('class_id'=>intval($_POST['ClassID']),'leave_date'=>$ldate,'description'=>$des);
                                     $dt_ins=$wpdb->insert($leave_table,$leave_table_data);
                                 }
                             } }
@@ -165,7 +170,7 @@ if (!defined( 'ABSPATH' ) )exit('No Such File');
                                             <td><?php echo esc_html($classes[$leave->class_id]['c_name']);?></td>
                                             <td>
                                                 <?php
-                                                echo wpsp_ViewDate(esc_html($classes[$leave->class_id]['c_sdate'])).' to '.wpsp_ViewDate(esc_html($classes[$leave->class_id]['c_edate']));
+                                                echo esc_html(wpsp_ViewDate($classes[$leave->class_id]['c_sdate'])).' to '.esc_html(wpsp_ViewDate($classes[$leave->class_id]['c_edate']));
                                                 ?></td>
                                             <td><?php echo esc_html($leave->numleaves);?></td>
                                                <?php  if ($current_user_role == 'administrator'){?>
@@ -263,9 +268,10 @@ if (!defined( 'ABSPATH' ) )exit('No Such File');
                                             <td><?php echo esc_html($classes[$leave->class_id]['c_name']);?></td>
                                             <td>
                                                 <?php
-                                                echo wpsp_ViewDate(esc_html($classes[$leave->class_id]['c_sdate'])).' to '.wpsp_ViewDate(esc_html($classes[$leave->class_id]['c_edate']));
+                                                echo esc_html(wpsp_ViewDate($classes[$leave->class_id]['c_sdate'])).' to '.esc_html(wpsp_ViewDate($classes[$leave->class_id]['c_edate']));
                                                 ?></td>
-                                            <td><?php echo esc_html($leave->numleaves-1);?></td>
+                                            <!-- <td><?php //echo esc_html($leave->numleaves-1);?></td> -->
+                                            <td><?php echo esc_html($leave->numleaves);?></td>
                                             <td align="center">
                                                 <div class="wpsp-action-col minWidthAuto">
                                                 <span><a href="javascript:;" class="leaveView wpsp-popclick" data-pop="ViewModal" data-id="<?php echo esc_attr(intval($leave->class_id));?>"><i class="icon wpsp-view wpsp-view-icon"></i></a></span>

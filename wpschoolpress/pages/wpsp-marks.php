@@ -39,7 +39,7 @@ if( is_user_logged_in() ) {
 				?>
 				<div class="wpsp-card">
 						<div class="wpsp-card-head">
-								<h3 class="wpsp-card-title"><?php echo apply_filters( 'wpsp_student_marks_heading_item',esc_html("Students Marks","wpschoolpress")); ?></h3>
+								<h3 class="wpsp-card-title"><?php echo esc_html(apply_filters( 'wpsp_student_marks_heading_item',"Students Marks"),"wpschoolpress"); ?></h3>
 						</div>
 						 <div class="wpsp-card-body">
 										<?php
@@ -56,7 +56,7 @@ if( is_user_logged_in() ) {
 										                  esc_html_e("Class","wpschoolpress");
 										              ?></label>
 													<select name="ClassID"  id="ClassID" class="wpsp-form-control" required>
-														<option value=""><?php _e( 'Select Class', 'wpschoolpress' ); ?> </option>
+														<option value=""><?php esc_html_e( 'Select Class', 'wpschoolpress' ); ?> </option>
 														<?php foreach( $clt as $cnm ) { ?>
                                                             <option value="<?php echo esc_attr(intval($cnm->cid));?>" <?php if($cnm->cid==$class_id) echo esc_html("selected","wpschoolpress");?>><?php echo esc_html($cnm->c_name);?></option>
 															<?php } ?>
@@ -76,7 +76,7 @@ if( is_user_logged_in() ) {
 																						<option value="<?php echo esc_attr(intval($exam->eid));?>" <?php if($exam->eid==$exam_id) echo esc_html("selected","wpschoolpress");?>><?php echo esc_html($exam->e_name);?></option>
 																				<?php }
 																		} else { ?>
-																				<option value=""><?php _e( 'Select Exam', 'wpschoolpress' ); ?> </option>
+																				<option value=""><?php esc_html_e( 'Select Exam', 'wpschoolpress' ); ?> </option>
 																		<?php } ?>
 																</select>
 														</div>
@@ -101,18 +101,18 @@ if( is_user_logged_in() ) {
 
                                                                             foreach( $subInfo as $sub_list ) {
                                                                                     if( in_array( $sub_list->id, $subjectlist ) ) {
-                                                                                    echo "<option value='".esc_attr($sub_list->id)."'". selected( $subject_id, $sub_list->id, false ).">".$sub_list->sub_name."</option>";
+                                                                                    echo "<option value='".esc_attr($sub_list->id)."'". selected( $subject_id, $sub_list->id, false ).">".esc_html($sub_list->sub_name)."</option>";
                                                                                     }
 																				}
 																		} else { ?>
-																				<option value=""><?php _e( 'Select Subject', 'wpschoolpress' ); ?></option>
+																				<option value=""><?php esc_html_e( 'Select Subject', 'wpschoolpress' ); ?></option>
 																		<?php } ?>
 																		</select>
 														</div>
 												</div>
 												<div class="wpsp-col-lg-3 wpsp-col-md-4 wpsp-col-sm-4 wpsp-col-xs-12 <?php echo esc_attr($proclass);?>" title="" <?php echo esc_html($prodisable); ?>>
 														<div class="wpsp-form-group">
-																<label class="wpsp-label"><?php _e( 'Attach CSV', 'wpschoolpress'); ?></label>
+																<label class="wpsp-label"><?php esc_html_e( 'Attach CSV', 'wpschoolpress'); ?></label>
 																<span <?php if($proversion['status'] != "1") {?> wpsp-tooltip="<?php echo esc_attr($protitle);?>" <?php } ?>>
 																		<div class="wpsp-btn wpsp-btn-file" <?php echo esc_html($prodisable); ?>>
 																		<span><i class="fa fa-file-text-o"></i> <?php esc_html_e( 'Attach CSV File', 'wpschoolpress' );?></span>
@@ -126,11 +126,11 @@ if( is_user_logged_in() ) {
 												<div class="clearfix"></div>
 												<div class="wpsp-col-sm-8">
 														<div class="wpsp-form-group">
-																<button type="submit" class="wpsp-btn wpsp-btn-success MarkAction update-btn" name="MarkAction"  value="Add Marks"><?php _e( 'Add/Update', 'wpschoolpress'); ?> </button>
+																<button type="submit" class="wpsp-btn wpsp-btn-success MarkAction update-btn" name="MarkAction"  value="Add Marks"><?php esc_html_e( 'Add/Update', 'wpschoolpress'); ?> </button>
 																<span <?php if($proversion['status'] != "1") {?> wpsp-tooltip="<?php echo esc_attr($protitle);?>" <?php } ?>>
-																<button type="submit" name="MarkAction" class="wpsp-btn wpsp-dark-btn update-btn MarkAction <?php echo esc_attr($proclass);?>" <?php echo esc_html($prodisable); ?> value="ImportCSV"><?php _e( 'Upload CSV', 'wpschoolpress'); ?></button>
+																<button type="submit" name="MarkAction" class="wpsp-btn wpsp-dark-btn update-btn MarkAction <?php echo esc_attr($proclass);?>" <?php echo esc_html($prodisable); ?> value="ImportCSV"><?php esc_html_e( 'Upload CSV', 'wpschoolpress'); ?></button>
 																</span>
-																<button name="MarkAction" class="wpsp-btn wpsp-btn-primary update-btn" id="viewmarks" value="View Marks"><?php _e( 'View Marks', 'wpschoolpress'); ?> </button>
+																<button name="MarkAction" class="wpsp-btn wpsp-btn-primary update-btn" id="viewmarks" value="View Marks"><?php esc_html_e( 'View Marks', 'wpschoolpress'); ?> </button>
 														</div>
 												</div>
 												</div>
@@ -153,9 +153,9 @@ if( is_user_logged_in() ) {
 												?>
 												<div id="mark_entry" class="col-md-12 col-lg-12 col-sm-12">
 														<?php if( $mark_entered ==1 ) { ?>
-																<h3 class="wpsp-card-title"><?php _e( 'Marks Already Entered update here!', 'wpschoolpress'); ?></h3><br/>
+																<h3 class="wpsp-card-title"><?php esc_html_e( 'Marks Already Entered update here!', 'wpschoolpress'); ?></h3><br/>
 														<?php } else {  ?>
-																<h3 class="wpsp-card-title"><?php _e( 'Enter Marks', 'wpschoolpress'); ?></h3>
+																<h3 class="wpsp-card-title"><?php esc_html_e( 'Enter Marks', 'wpschoolpress'); ?></h3>
 														<?php } ?>
 														<div class="">
 																<form class="form-horizontal group-border-dashed" id="AddMarkForm" action="" style="border-radius: 0px;" method="post">
@@ -166,17 +166,17 @@ if( is_user_logged_in() ) {
 <table class="wpsp-table" cellspacing="0" width="100%" style="width: 100%;">
 <thead>
 <tr>
-<th><?php _e( 'RollNo.', 'wpschoolpress'); ?></th>
-<th><?php _e( 'Name', 'wpschoolpress' ); ?></th>
-<!-- <th><?php _e( 'Mark', 'wpschoolpress' );?></th> -->
+<th><?php esc_html_e( 'RollNo.', 'wpschoolpress'); ?></th>
+<th><?php esc_html_e( 'Name', 'wpschoolpress' ); ?></th>
+<!-- <th><?php esc_html_e( 'Mark', 'wpschoolpress' );?></th> -->
 <?php  if((!isset($settings_data['markstype'])) || ($settings_data['markstype'] == "Number"))
 																								{ ?>
-<th><?php _e( 'Marks', 'wpschoolpress' );?></th>
+<th><?php esc_html_e( 'Marks', 'wpschoolpress' );?></th>
 																								<?php }
 else {?>
-						<th><?php _e( 'Grade', 'wpschoolpress' );?></th>
+						<th><?php esc_html_e( 'Grade', 'wpschoolpress' );?></th>
 										<?php } ?>
-<th><?php _e( 'Remarks', 'wpschoolpress');?></th>
+<th><?php esc_html_e( 'Remarks', 'wpschoolpress');?></th>
 <?php if(!empty($extra_fields)){
 foreach($extra_fields as $extf){
 																								?>
@@ -207,7 +207,7 @@ $stable     =   $wpdb->prefix."wpsp_student";
 												}
 											}
 							if (empty($stl)) {
-							echo "<tr><td>".__( 'No Students to retrive', 'wpschoolpress')."</td></tr>";
+							echo "<tr><td>".esc_html( 'No Students to retrive', 'wpschoolpress')."</td></tr>";
 							}else {
 						foreach ($stl as $id ) {
                             $getslist  =   $wpdb->get_results("select * from $stable WHERE sid = $id order by CAST('s_rollno' as SIGNED)");
@@ -246,7 +246,7 @@ $stable     =   $wpdb->prefix."wpsp_student";
 									<?php if(!empty($extra_fields)){
 									foreach($extra_fields as $extf){
 													?>
-								<td><input type="text" class="numbers wpsp-form-control" id="v_exmark" min="0" name="exmarks[<?php echo $usid;?>][<?php echo esc_html($extf->field_id);?>]" value="<?php echo ((isset($extra_marks[$usid][$extf->field_id]) ? esc_attr($extra_marks[$usid][$extf->field_id]) : ''));?>"></td>
+								<td><input type="text" class="numbers wpsp-form-control" id="v_exmark" min="0" name="exmarks[<?php echo esc_attr($usid);?>][<?php echo esc_html($extf->field_id);?>]" value="<?php echo ((isset($extra_marks[$usid][$extf->field_id]) ? esc_attr($extra_marks[$usid][$extf->field_id]) : ''));?>"></td>
 									<?php } } ?>
 								</tr>
                                 <?php
@@ -275,7 +275,7 @@ $stable     =   $wpdb->prefix."wpsp_student";
 												}
 									}
 							if (empty($stl)) {
-								echo "<tr><td>".__( 'No Students to retrive3', 'wpschoolpress')."</td></tr>";
+								echo "<tr><td>".esc_html( 'No Students to retrive3', 'wpschoolpress')."</td></tr>";
 								}else {
 									foreach ($stl as $id ) {
                                         $id = esc_sql($id);
@@ -315,7 +315,7 @@ $stable     =   $wpdb->prefix."wpsp_student";
 						?>
 			<?php
 				if(empty($stl) && $mark_entered=='0'){
-					 echo "<tr><td>".__( 'No Students to retrive', 'wpschoolpress')."</td></tr>";
+					 echo "<tr><td>".esc_html( 'No Students to retrive', 'wpschoolpress')."</td></tr>";
 					}else { ?><?php }} ?></tbody></table>
 					<div class="wpsp-row">
 						<div class="wpsp-col-md-12">
@@ -363,7 +363,7 @@ $stable     =   $wpdb->prefix."wpsp_student";
 
 						<div class="wpsp-card">
 								<div class="wpsp-card-head">
-								<h3 class="wpsp-card-title"><?php echo apply_filters( 'wpsp_student_marks_heading_item',esc_html("Students Marks","wpschoolpress")); ?></h3>
+								<h3 class="wpsp-card-title"><?php echo esc_html(apply_filters( 'wpsp_student_marks_heading_item',"Students Marks"),"wpschoolpress"); ?></h3>
 						</div>
 						<div class="wpsp-card-body">
 								<div class="tabbable-line">
@@ -385,7 +385,7 @@ $stable     =   $wpdb->prefix."wpsp_student";
 												foreach( $child as $ch ) {
 														$ch_class=$ch['class_id'];
 												?>
-												<div class="tab-pane wpsp-tabMain <?php echo ($i==0)?'active':''?>" id="<?php echo 'student'.$i;?>">
+												<div class="tab-pane wpsp-tabMain <?php echo ($i==0)?'active':''?>" id="<?php echo 'student'.esc_attr($i);?>">
 														<?php
 														$student_id =   sanitize_text_field($ch['student_id']);
 														wpsp_MarkReport( $student_id, $class_id );

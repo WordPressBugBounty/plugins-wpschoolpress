@@ -17,7 +17,7 @@ foreach($classQuery as $classdata){
 				<div class="wpsp-card-head">
 					<div class="wpsp-row">
 						<div class="wpsp-col-xs-12">
-						 <h3 class="wpsp-card-title"><?php echo apply_filters( 'wpsp_subject_heading_item', esc_html__( 'New Subject Entry', 'wpschoolpress' )); ?></h3>
+						 <h3 class="wpsp-card-title"><?php echo esc_html__( 'New Subject Entry', 'wpschoolpress' ); ?></h3>
 						</div>
 					</div>
 				</div>
@@ -147,8 +147,8 @@ foreach($classQuery as $classdata){
 						<?php  do_action('wpsp_after_subject_detail_fields'); ?>
 					</div>
 					<div class="wpsp-col-md-12">
-						<button type="submit" class="wpsp-btn wpsp-btn-success" id="s_submit"><?php echo apply_filters( 'wpsp_subject_button_submit_label',esc_html("Submit","wpschoolpress"));?></button>
-						 <a href="<?php echo esc_url(wpsp_admin_url().'sch-subject')?>" class="wpsp-btn wpsp-dark-btn" ><?php echo apply_filters( 'wpsp_subject_button_back_label',esc_html("Back","wpschoolpress"));?></a>
+						<button type="submit" class="wpsp-btn wpsp-btn-success" id="s_submit"><?php echo esc_html(apply_filters( 'wpsp_subject_button_submit_label',"Submit"),'wpschoolpress');?></button>
+						 <a href="<?php echo esc_url(wpsp_admin_url().'sch-subject')?>" class="wpsp-btn wpsp-dark-btn" ><?php echo esc_html(apply_filters( 'wpsp_subject_button_back_label',"Back"),'wpschoolpress');?></a>
 					</div>
 				</div>
 			</div>

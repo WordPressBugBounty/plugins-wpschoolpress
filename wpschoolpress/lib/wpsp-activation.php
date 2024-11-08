@@ -833,9 +833,9 @@ $sql_student = "CREATE TABLE $student_table  (
 
 	$admin_cap = array( 'action_all' => true );
 
-	$teacher_role_new = $wp_roles->add_role('teacher', __('Teacher' ),$teacher_cap);
+	$teacher_role_new = $wp_roles->add_role('teacher', __('Teacher','wpschoolpress' ),$teacher_cap);
 
-	$student_role_new = $wp_roles->add_role('student',__('Student' ),$student_cap);
+	$student_role_new = $wp_roles->add_role('student',__('Student','wpschoolpress' ),$student_cap);
 
 	$parent_role_new  = $wp_roles->add_role('parent', 'Parent', $parent_cap);
 	?>

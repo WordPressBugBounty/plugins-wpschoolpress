@@ -495,8 +495,6 @@ function wpsp_UpdateStudent(){
 		echo esc_html("Unauthorized Submission1!!", "wpschoolpress");
 		exit;
 	}
-	
-	$user_id = intval($_POST['wp_usr_id']);
 	global $wpdb;
 	$wpsp_student_table = $wpdb->prefix . "wpsp_student";
 	$errors = wpsp_validation(array(
@@ -618,6 +616,9 @@ function wpsp_UpdateStudent(){
 
 		wpsp_StudentAuthenticate();
 
+		// $user_id = intval($_POST['wp_usr_id']);
+		$user_id = get_current_user_id();
+
 		if(! isset( $_POST['sregister_nonce'] ) || ! wp_verify_nonce( $_POST['sregister_nonce'], 'StudentRegister' ) ){
 			echo esc_html("Unauthorized Submission or nonce!!", "wpschoolpress");
 		    exit;
@@ -646,6 +647,8 @@ function wpsp_UpdateStudent(){
 	} elseif ($studentprofileparentnew == 'studentprofileparentnew'){
 
 		wpsp_Authenticate();
+
+		$user_id = intval($_POST['wp_usr_id']);
 
 		$studenttable = array(
 
@@ -794,6 +797,7 @@ function wpsp_UpdateStudent(){
 	} else {
 
 		// wpsp_Authenticate();
+		$user_id = intval($_POST['wp_usr_id']);
 
 		$studenttable = array(
 		'class_id' => isset($_POST['Class']) ? serialize(sanitize_price_array($_POST['Class'])) : '0',
@@ -1022,7 +1026,7 @@ function wpsp_StudentPublicProfile()
 	{
 		$profile = esc_html("No data retrived", "wpschoolpress");
 	}
-	echo apply_filters('wpsp_student_profile', wp_kses_post($profile), intval($sid));
+	echo wp_kses_post($profile), intval($sid);
 	wp_die();
 }
 

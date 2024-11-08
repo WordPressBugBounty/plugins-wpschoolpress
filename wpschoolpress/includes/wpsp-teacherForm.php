@@ -6,7 +6,7 @@
         <div class="wpsp-col-sm-12">
             <div class="wpsp-card">
                 <div class="wpsp-card-head">
-                    <h3 class="wpsp-card-title"><?php echo apply_filters( 'wpsp_teacher_title_personal_detail', esc_html__( 'Personal Details', 'wpschoolpress' )); ?></h3>
+                    <h3 class="wpsp-card-title"><?php echo esc_html__( 'Personal Details', 'wpschoolpress' ); ?></h3>
                 </div>
                 <div class="wpsp-card-body"> <?php wp_nonce_field( 'TeacherRegister', 'tregister_nonce', '', true ) ?> <div class="wpsp-row"> <?php
                       do_action('wpsp_before_teacher_personal_detail_fields');
@@ -110,15 +110,15 @@
                                     }
                                     ?> <span class="wpsp-required"><?php echo esc_html(($is_required))?"*":""; ?></span></label>
                                 <select data-is_required="<?php echo esc_attr($is_required); ?>" class="wpsp-form-control" id="Bloodgroup" name="Bloodgroup">
-                                    <option value=""><?php echo __("Select Blood Group","wpschoolpress");?></option>
-                                    <option value="O+"><?php echo __("O +","wpschoolpress");?></option>
-                                    <option value="O-"><?php echo __("O -","wpschoolpress");?></option>
-                                    <option value="A+"><?php echo __("A +","wpschoolpress");?></option>
-                                    <option value="A-"><?php echo __("A -","wpschoolpress");?></option>
-                                    <option value="B+"><?php echo __("B +","wpschoolpress");?></option>
-                                    <option value="B-"><?php echo __("B -","wpschoolpress");?></option>
-                                    <option value="AB+"><?php echo __("AB +","wpschoolpress");?></option>
-                                    <option value="AB-"><?php echo __("AB -","wpschoolpress");?></option>
+                                    <option value=""><?php echo esc_html("Select Blood Group","wpschoolpress");?></option>
+                                    <option value="O+"><?php echo esc_html("O +","wpschoolpress");?></option>
+                                    <option value="O-"><?php echo esc_html("O -","wpschoolpress");?></option>
+                                    <option value="A+"><?php echo esc_html("A +","wpschoolpress");?></option>
+                                    <option value="A-"><?php echo esc_html("A -","wpschoolpress");?></option>
+                                    <option value="B+"><?php echo esc_html("B +","wpschoolpress");?></option>
+                                    <option value="B-"><?php echo esc_html("B -","wpschoolpress");?></option>
+                                    <option value="AB+"><?php echo esc_html("AB +","wpschoolpress");?></option>
+                                    <option value="AB-"><?php echo esc_html("AB -","wpschoolpress");?></option>
                                 </select>
                             </div>
                         </div>
@@ -223,7 +223,7 @@
         <div class="wpsp-col-md-6 wpsp-col-sm-12">
             <div class="wpsp-card">
                 <div class="wpsp-card-head">
-                    <h3 class="wpsp-card-title"><?php echo apply_filters( 'wpsp_teacher_title_account_detail', esc_html__( 'Account Information', 'wpschoolpress' )); ?></h3>
+                    <h3 class="wpsp-card-title"><?php echo esc_html__( 'Account Information', 'wpschoolpress' ); ?></h3>
                 </div>
                 <div class="wpsp-card-body"> <?php  do_action('wpsp_before_teacher_account_detail_fields');
               /*Required field Hook*/
@@ -280,7 +280,7 @@
         <div class="wpsp-col-md-6 wpsp-col-sm-12">
             <div class="wpsp-card">
                 <div class="wpsp-card-head">
-                    <h3 class="wpsp-card-title"><?php echo apply_filters( 'wpsp_teacher_title_school_detail', esc_html__( 'School Details', 'wpschoolpress' )); ?></h3>
+                    <h3 class="wpsp-card-title"><?php echo esc_html__( 'School Details', 'wpschoolpress' ); ?></h3>
                 </div>
                 <div class="wpsp-card-body"> <?php  do_action('wpsp_before_teacher_school_detail_fields');
                    /*Required field Hook*/

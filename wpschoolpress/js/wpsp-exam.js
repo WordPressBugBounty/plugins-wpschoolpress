@@ -51,7 +51,8 @@ $(document).ready(function() {
     onkeyup: !1,
     rules: {
       class_name: {
-        required: (jQuery("input[name='class_name']").data("is_required")) ? true : false,
+        // required: (jQuery("input[name='class_name']").data("is_required")) ? true : false,
+        required: (jQuery("select[name='class_name']").data("is_required")) ? true : false,
       },
       ExName: {
         required: (jQuery("input[name='ExName']").data("is_required")) ? true : false,

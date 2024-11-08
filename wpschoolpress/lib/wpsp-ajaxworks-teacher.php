@@ -401,7 +401,7 @@ function wpsp_TeacherPublicProfile()
 
 	}
 
-	echo apply_filters('wpsp_teacher_profile', wp_kses_post($profile), intval($tid));
+	echo wp_kses_post($profile), intval($tid);
 
 	wp_die();
 
@@ -418,8 +418,6 @@ function wpsp_UpdateTeacher()
 		exit;
 	}
 	wpsp_Authenticate();
-
-	$user_id = intval($_POST['UserID']);
 
 	global $wpdb;
 
@@ -502,6 +500,8 @@ function wpsp_UpdateTeacher()
 	{
 		wpsp_TeacherAuthenticate();
 
+		$user_id =  get_current_user_id();
+
 		$teacher_data = array(
 
 			'first_name' => $firstname,
@@ -539,11 +539,10 @@ function wpsp_UpdateTeacher()
 		));
 
 	}
-
 	else
-
 	{
-
+		$user_id = intval($_POST['UserID']);
+		
 		$empcode = sanitize_text_field($_POST['Empcode']);
 
 		$teacher_data = array(

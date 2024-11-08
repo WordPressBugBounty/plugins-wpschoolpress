@@ -161,12 +161,12 @@ $usersList1	=	array_merge( $student_ids1,$teacher_ids1);
 		<?php if( isset($_GET['ac']) && sanitize_text_field($_GET['ac'])=='add' ) { ?>
 		<div class="wpsp-card">
 			<div class="wpsp-card-head">
-                <h3 class="wpsp-card-title"><?php echo apply_filters('wpsp_add_notify_heading_item',esc_html("Notification :","wpschoolpress")); ?> </h3>
+                <h3 class="wpsp-card-title"><?php echo esc_html(apply_filters('wpsp_add_notify_heading_item',"Notification :"),"wpschoolpress"); ?> </h3>
             </div>
                  <div class="wpsp-card-body">
 							<form  method="post" class="form-horizontal" id="NotifyEntryForm" enctype="multipart/form-data">
 							    <?php wp_nonce_field( 'WPSAddNotifica', 'wps_addnoti_nonce', '', true ); ?>
-							    <input type="hidden"  id="wpsp_locationginal" value="<?php echo admin_url();?>"/>
+							    <input type="hidden"  id="wpsp_locationginal" value="<?php echo esc_url(admin_url());?>"/>
 								<div class="wpsp-row">
 										<?php  do_action('wpsp_before_notification');
 										$item =  apply_filters('wpsp_add_event_popup_title_item',array());
@@ -204,7 +204,7 @@ $usersList1	=	array_merge( $student_ids1,$teacher_ids1);
 
                             		</select>
 											<!-- <select name="receiver" class="wpsp-form-control">
-												<option value=""><?php _e( 'Whom to notify?', 'wpschoolpress'); ?></option>
+												<option value=""><?php esc_html_e( 'Whom to notify?', 'wpschoolpress'); ?></option>
 												<?php
 													foreach( $receiverTypeList as $key => $value ) {
 														echo '<option value="'.esc_attr($key).'">'.esc_html($value).'</option>';
@@ -225,13 +225,13 @@ $usersList1	=	array_merge( $student_ids1,$teacher_ids1);
 													$prodisable		=	!$proversion['status'] ? 'disabled="disabled"'	: '';
 												?>
 												<select name="type" class="wpsp-form-control">
-													<option value=""><?php _e( 'How to notify?', 'wpschoolpress'); ?></option>
-													<option value="1"><?php _e( 'Email', 'wpschoolpress'); ?></option>
+													<option value=""><?php esc_html_e( 'How to notify?', 'wpschoolpress'); ?></option>
+													<option value="1"><?php esc_html_e( 'Email', 'wpschoolpress'); ?></option>
 													<option value="2" title="<?php echo esc_attr($protitle); ?>" class="<?php echo esc_attr($proclass); ?>"
 														<?php if( !empty( $prodisable ) ) { ?> disabled <?php  } ?>>
-														<?php _e( 'SMS', 'wpschoolpress'); ?>
+														<?php esc_html_e( 'SMS', 'wpschoolpress'); ?>
 													</option>
-													<option value="0"><?php _e( 'All', 'wpschoolpress'); ?></option>
+													<option value="0"><?php esc_html_e( 'All', 'wpschoolpress'); ?></option>
 												</select>
 												<?php
 												if( !isset( $wpsp_settings_data['notification_sms_alert'] ) || ( isset( $wpsp_settings_data['notification_sms_alert'] ) && $wpsp_settings_data['notification_sms_alert'] != 1 ) ) {
@@ -272,12 +272,12 @@ $usersList1	=	array_merge( $student_ids1,$teacher_ids1);
 								<thead>
 									<tr>
 										<th class="nosort">#</th>
-										<th><?php _e( 'Name', 'wpschoolpress' ); ?></th>
-										<th><?php _e( 'Description', 'wpschoolpress' );?></th>
-										<!-- <th><?php _e( 'Receiver', 'wpschoolpress' ); ?></th> -->
-										<th><?php _e( 'Type', 'wpschoolpress' ); ?></th>
-										<th><?php _e( 'Date', 'wpschoolpress');  ?></th>
-										<th class="nosort" align="center"><?php _e( 'Action', 'wpschoolpress'); ?></th>
+										<th><?php esc_html_e( 'Name', 'wpschoolpress' ); ?></th>
+										<th><?php esc_html_e( 'Description', 'wpschoolpress' );?></th>
+										<!-- <th><?php esc_html_e( 'Receiver', 'wpschoolpress' ); ?></th> -->
+										<th><?php esc_html_e( 'Type', 'wpschoolpress' ); ?></th>
+										<th><?php esc_html_e( 'Date', 'wpschoolpress');  ?></th>
+										<th class="nosort" align="center"><?php esc_html_e( 'Action', 'wpschoolpress'); ?></th>
 									</tr>
 								</thead>
 								<tbody>
@@ -292,7 +292,7 @@ $usersList1	=	array_merge( $student_ids1,$teacher_ids1);
 													<td>'.esc_html($value->name).'</td>
 													<td>'.esc_html(substr( $value->description, 0, 20)).'</td>
 													<td>'.esc_html($type).'</td>
-													<td>'.wpsp_ViewDate( esc_html($value->date) ).'</td>
+													<td>'.esc_html(wpsp_ViewDate( $value->date) ).'</td>
 													<td align="center">
 														<div class="wpsp-action-col">
 														<a href="javascript:;" class="wpsp-popclick notify-view"  data-id="'.esc_attr(intval($value->nid)).'"  data-pop="ViewModal"><i class="icon wpsp-view wpsp-view-icon"></i></a>
@@ -308,12 +308,12 @@ $usersList1	=	array_merge( $student_ids1,$teacher_ids1);
 								<tfoot>
 									<tr>
 										<th class="nosort">#</th>
-										<th><?php _e( 'Name', 'wpschoolpress' ); ?></th>
-										<th><?php _e( 'Description', 'wpschoolpress' );?></th>
-										<!-- <th><?php _e( 'Receiver', 'wpschoolpress' ); ?></th> -->
-										<th><?php _e( 'Type', 'wpschoolpress' ); ?></th>
-										<th><?php _e( 'Date', 'wpschoolpress');  ?></th>
-										<th class="nosort"><?php _e( 'Action', 'wpschoolpress'); ?></th>
+										<th><?php esc_html_e( 'Name', 'wpschoolpress' ); ?></th>
+										<th><?php esc_html_e( 'Description', 'wpschoolpress' );?></th>
+										<!-- <th><?php esc_html_e( 'Receiver', 'wpschoolpress' ); ?></th> -->
+										<th><?php esc_html_e( 'Type', 'wpschoolpress' ); ?></th>
+										<th><?php esc_html_e( 'Date', 'wpschoolpress');  ?></th>
+										<th class="nosort"><?php esc_html_e( 'Action', 'wpschoolpress'); ?></th>
 									</tr>
 								</tfoot>
 							</table>

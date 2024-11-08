@@ -11,11 +11,11 @@ wpsp_header();
 		$header	=	'Posts';
 
 		if( isset($_GET['tab'] ) && sanitize_text_field($_GET['tab']) == 'addposts' ) {
-			$header	=	$label	=	__( 'Add New Post', 'WPSchoolPress');
+			$header	=	$label	=	__( 'Add New Post', 'wpschoolpress');
 			//$filename	=	WPSP_PLUGIN_PATH .'includes/wpsp-classForm.php';
 			do_action('wpspsmpro_add_posts_html');
 		}elseif((isset($_GET['id']) && is_numeric($_GET['id'])))  {
-			$header	=	$label	=	__( 'Update Post', 'WPSchoolPress');
+			$header	=	$label	=	__( 'Update Post', 'wpschoolpress');
 			// $filename	=	WPSP_PLUGIN_PATH .'includes/wpsp-classForm.php';
 			do_action('wpspsmpro_edit_posts_html');
 		} else {

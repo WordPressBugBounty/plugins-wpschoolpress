@@ -12,13 +12,13 @@ wpsp_header();
 		?>
 		<div class="wpsp-card">
 						<div class="wpsp-card-head">
-							<h3 class="wpsp-card-title"><?php echo apply_filters( 'wpsp_student_attendance_heading_detail', esc_html__( 'Attendance Report', 'wpschoolpress' )); ?></h3>
+							<h3 class="wpsp-card-title"><?php echo esc_html(apply_filters( 'wpsp_student_attendance_heading_detail', 'Attendance Report' ),'wpschoolpress'); ?></h3>
 							<hr>
 						</div>
 						<div class="wpsp-card-body text-black">
 							<div class="wpsp-row">
 								<?php
-								$item =  apply_filters( 'wpsp_student_attendance_title_item',esc_html("Attendance","wpschoolpress"));
+								$item =  esc_html(apply_filters( 'wpsp_student_attendance_title_item',"Attendance"),"wpschoolpress");
 								?>
 							<div class="wpsp-col-lg-5 wpsp-col-md-5 wpsp-col-sm-12 wpsp-col-xs-12" id="AttendanceEnterForm">
 							<h3 class="wpsp-card-title"><?php esc_html_e( 'Attendance', 'wpschoolpress' ); ?></h3>
@@ -26,7 +26,7 @@ wpsp_header();
 									<div class="wpsp-form-group">
 										<label for="Class">
 											<?php if( isset($item['classid'])){
-												esc_html_e($item['classid'],"wpschoolpress");
+												esc_html($item['classid'],"wpschoolpress");
 											}else{
 												esc_html_e("Select Class","wpschoolpress");
 											}
@@ -57,12 +57,12 @@ wpsp_header();
 									</div>
 									<div class="wpsp-form-group">
 										<label for="date">	<?php if( isset($item['entry_date'])){
-												esc_html_e($item['entry_date'],"wpschoolpress");
+												esc_html($item['entry_date'],"wpschoolpress");
 											}else{
 												esc_html_e('Date',"wpschoolpress");
 											}
 											?></label>
-										<input type="text" class="wpsp-form-control select_date" id="AttendanceDate" value="<?php if(isset($_POST['entry_date'])) { echo esc_attr($_POST['entry_date']); } else { echo date('m/d/Y'); }?>" name="entry_date">
+										<input type="text" class="wpsp-form-control select_date" id="AttendanceDate" value="<?php if(isset($_POST['entry_date'])) { echo esc_attr($_POST['entry_date']); } else { echo esc_attr(date('m/d/Y')); }?>" name="entry_date">
 										<span class="clsdate"><?php echo esc_html( 'Please select Date', 'wpschoolpress' ); ?></span>
 									</div>
 									<div class="wpsp-row wpsp-text-center">
@@ -229,7 +229,10 @@ wpsp_header();
 					$att_table = $wpdb->prefix . "wpsp_attendance";
 					$st_table = $wpdb->prefix . "wpsp_student";
 					$class_table = $wpdb->prefix . "wpsp_class";
-					$ser = '%' . $st_id . '%';
+					$st_wp_id = $wpdb->get_row("select wp_usr_id from $st_table where sid = $st_id");
+					$wp_usr_id = $st_wp_id->wp_usr_id; 
+					$ser = '%' . $wp_usr_id . '%';
+					//$ser = '%' . $st_id . '%';
 					$stinfo = $wpdb->get_row("select st.class_id, st.s_rollno, st.wp_usr_id, CONCAT_WS(' ', st.s_fname, st.s_mname, st.s_lname ) AS full_name, c.c_name, c.c_sdate, c.c_edate from $st_table st LEFT JOIN $class_table c ON c.cid='".esc_sql($class_id)."' where st.sid='".esc_sql($st_id)."'");
 					if(is_numeric($stinfo->class_id) ){
 						if($stinfo->class_id == $class_id){

@@ -113,11 +113,11 @@ $plugins_url=plugins_url();
 
 				<form name="TeacherClass" id="TeacherClass" method="post" action="">
 
-					<label class="wpsp-labelMain"><?php _e( 'Select Class Name', 'wpschoolpress' ); ?></label>
+					<label class="wpsp-labelMain"><?php esc_html_e( 'Select Class Name', 'wpschoolpress' ); ?></label>
 
 					<select name="ClassID" id="ClassID" class="wpsp-form-control">
 
-						<option value="all" <?php if($sel_classid=='all') echo esc_html("selected","wpschoolpress"); ?>><?php _e( 'All', 'wpschoolpress' ); ?></option>
+						<option value="all" <?php if($sel_classid=='all') echo esc_html("selected","wpschoolpress"); ?>><?php esc_html_e( 'All', 'wpschoolpress' ); ?></option>
 						<?php
 
 						$class_table	=	$wpdb->prefix."wpsp_class";
@@ -148,16 +148,16 @@ $plugins_url=plugins_url();
 
 						<div class="wpsp-button-group wpsp-dropdownmain wpsp-left">
 							<button type="button" class="wpsp-btn wpsp-btn-success print" id="PrintTeacher" data-toggle="dropdown" <?php echo esc_html($prodisable);?> title="<?php //echo esc_attr($protitle);?>">
-								<i class="fa fa-print"></i> <?php _e( 'Print', 'wpschoolpress'); ?>
+								<i class="fa fa-print"></i> <?php esc_html_e( 'Print', 'wpschoolpress'); ?>
 							</button>
 							<button type="button" class="wpsp-btn wpsp-btn-success wpsp-dropdown-toggle" <?php echo esc_html($prodisable);?>  title="<?php //echo $protitle;?>">
-								<!-- <span class="sr-only"><?php _e( 'Toggle Dropdown', 'wpschoolpress' );?></span> -->
+								<!-- <span class="sr-only"><?php esc_html_e( 'Toggle Dropdown', 'wpschoolpress' );?></span> -->
 							</button>
 							<div class="wpsp-dropdown wpsp-dropdown-md">
 
 							<ul>
 
-								<li class="wpsp-drop-title wpsp-checkList"><?php _e( 'Select Columns to Print', 'wpschoolpress' );?> </li>
+								<li class="wpsp-drop-title wpsp-checkList"><?php esc_html_e( 'Select Columns to Print', 'wpschoolpress' );?> </li>
 
 								<form id="TeacherColumnForm" name="TeacherColumnForm" method="POST">
 
@@ -189,16 +189,16 @@ $plugins_url=plugins_url();
 						<div class="wpsp-button-group wpsp-dropdownmain wpsp-left">
 
 							<button type="button" class="wpsp-btn wpsp-btn-success print" id="PrintTeacher" data-toggle="dropdown" <?php echo esc_html($prodisable);?> title="<?php //echo esc_attr($protitle);?>">
-								<i class="fa fa-print"></i> <?php _e( 'Print', 'wpschoolpress'); ?>
+								<i class="fa fa-print"></i> <?php esc_html_e( 'Print', 'wpschoolpress'); ?>
 							</button>
 							<button type="button" class="wpsp-btn wpsp-btn-success wpsp-dropdown-toggle" <?php echo esc_html($prodisable);?>  title="<?php //echo esc_attr($protitle);?>">
-								<!-- <span class="sr-only"><?php _e( 'Toggle Dropdown', 'wpschoolpress' );?></span> -->
+								<!-- <span class="sr-only"><?php esc_html_e( 'Toggle Dropdown', 'wpschoolpress' );?></span> -->
 							</button>
 							<div class="wpsp-dropdown wpsp-dropdown-md">
 
 							<ul>
 
-								<li class="wpsp-drop-title wpsp-checkList"><?php _e( 'Select Columns to Print', 'wpschoolpress' );?> </li>
+								<li class="wpsp-drop-title wpsp-checkList"><?php esc_html_e( 'Select Columns to Print', 'wpschoolpress' );?> </li>
 
 								<form id="TeacherColumnForm" name="TeacherColumnForm" method="POST">
 									<?php foreach( $teacherFieldList as $key=>$value ) { ?>
@@ -241,13 +241,13 @@ $plugins_url=plugins_url();
 
 							<button type="button" class="wpsp-btn  print" id="ExportTeachers" <?php echo esc_html($prodisable);?> title="<?php //esc_attr(echo $protitle);?>">
 
-								<i class="fa fa-download"></i> <?php _e( 'Export', 'wpschoolpress'); ?>
+								<i class="fa fa-download"></i> <?php esc_html_e( 'Export', 'wpschoolpress'); ?>
 
 							</button>
 
 							<button type="button" class="wpsp-btn wpsp-btn-blue wpsp-dropdown-toggle" <?php echo esc_html($prodisable);?> title="<?php //echo esc_attr($protitle);?>">
 								<!-- <span class="caret"></span>
-								<span class="sr-only"><?php _e( 'Toggle Dropdown', 'wpschoolpress' );?></span> -->
+								<span class="sr-only"><?php esc_html_e( 'Toggle Dropdown', 'wpschoolpress' );?></span> -->
 							</button>
 
 
@@ -256,7 +256,7 @@ $plugins_url=plugins_url();
 
 							<div class="wpsp-dropdown wpsp-dropdown-md wpsp-dropdown-right">
 								<ul >
-									<li class="wpsp-drop-title wpsp-checkList"><?php _e( 'Select Columns to Export', 'wpschoolpress' );?> </li>
+									<li class="wpsp-drop-title wpsp-checkList"><?php esc_html_e( 'Select Columns to Export', 'wpschoolpress' );?> </li>
 									<form id="ExportColumnForm" name="ExportTeacherColumn" method="POST">
 
 										<?php foreach( $teacherFieldList as $key=>$value ) { ?>
@@ -325,23 +325,23 @@ $plugins_url=plugins_url();
 
 							<?php  } else if(  $current_user_role=='teacher' ) { ?>
 
-								<?php _e( 'Sr. No.', 'wpschoolpress' ); ?>
+								<?php esc_html_e( 'Sr. No.', 'wpschoolpress' ); ?>
 
 							<?php } ?>
 
 						</th>
 
-						<th> <?php _e( 'Employee Code', 'wpschoolpress' );?></th>
+						<th> <?php esc_html_e( 'Employee Code', 'wpschoolpress' );?></th>
 
-						<th> <?php _e( 'Name', 'wpschoolpress' );?> </th>
+						<th> <?php esc_html_e( 'Name', 'wpschoolpress' );?> </th>
 
-						<th> <?php _e( 'Incharge Class', 'wpschoolpress' );?></th>
+						<th> <?php esc_html_e( 'Incharge Class', 'wpschoolpress' );?></th>
 
-						<th> <?php _e( 'Subjects Handling', 'wpschoolpress' );?></th>
+						<th> <?php esc_html_e( 'Subjects Handling', 'wpschoolpress' );?></th>
 
-						<th> <?php _e( 'Phone', 'wpschoolpress' );?></th>
+						<th> <?php esc_html_e( 'Phone', 'wpschoolpress' );?></th>
 
-						<th align="center" class="nosort"><?php _e( 'Action', 'wpschoolpress' );?></th>
+						<th align="center" class="nosort"><?php esc_html_e( 'Action', 'wpschoolpress' );?></th>
 
 					</tr>
 
@@ -402,22 +402,22 @@ $plugins_url=plugins_url();
 					<tr>
 
 						<th><?php if(  $current_user_role=='teacher' ) { ?>
-							<?php _e( 'Sr. No.', 'wpschoolpress' ); ?>
+							<?php esc_html_e( 'Sr. No.', 'wpschoolpress' ); ?>
 						<?php } ?>
 
 						</th>
 
-						<th><?php _e( 'Employee Code', 'wpschoolpress' );?></th>
+						<th><?php esc_html_e( 'Employee Code', 'wpschoolpress' );?></th>
 
-						<th><?php _e( 'Name', 'wpschoolpress' );?> </th>
+						<th><?php esc_html_e( 'Name', 'wpschoolpress' );?> </th>
 
-						<th><?php _e( 'Incharge Class', 'wpschoolpress' );?></th>
+						<th><?php esc_html_e( 'Incharge Class', 'wpschoolpress' );?></th>
 
-						<th><?php _e( 'Subjects Handling', 'wpschoolpress' );?></th>
+						<th><?php esc_html_e( 'Subjects Handling', 'wpschoolpress' );?></th>
 
-						<th><?php _e( 'Phone', 'wpschoolpress' );?></th>
+						<th><?php esc_html_e( 'Phone', 'wpschoolpress' );?></th>
 
-						<th align="center"><?php _e( 'Action', 'wpschoolpress' );?></th>
+						<th align="center"><?php esc_html_e( 'Action', 'wpschoolpress' );?></th>
 
 					</tr>
 

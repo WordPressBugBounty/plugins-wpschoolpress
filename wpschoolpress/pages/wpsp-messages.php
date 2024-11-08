@@ -165,7 +165,7 @@ if (is_user_logged_in()) {
                       <ul class="list-unstyled mailbox-nav">
                         <li class="active">
                           <a href="<?php echo esc_url(wpsp_admin_url().'sch-messages&tab=inbox');?>">
-                            <i class="fa fa-inbox"></i> <?php esc_html_e( 'Inbox', 'wpschoolpress' );?><span class="badge badge-success pull-right btn-primary"><?php echo wpsp_UnreadCount(); ?></span>
+                            <i class="fa fa-inbox"></i> <?php esc_html_e( 'Inbox', 'wpschoolpress' );?><span class="badge badge-success pull-right btn-primary"><?php echo esc_html(wpsp_UnreadCount()); ?></span>
                           </a>
                         </li>
 
@@ -345,12 +345,12 @@ if (is_user_logged_in()) {
                                       <td><input type="checkbox" class="mid_checkbox ccheckbox" name="mid[]" value="<?php echo esc_attr(intval($msgb[0]->mid)); ?>" /></td>
                                       <td class="name"><?php echo esc_html($nickname); ?> (<span class="label label-role-msg label-role-<?php echo esc_attr($role); ?>"><?php echo esc_html($role);?></span>)</td>
                                       <td class="subject"><?php echo (($sub_msg_count != 0)? "<strong>(".esc_html($sub_msg_count).")</strong> " : ""); ?><?php echo esc_html($msg_text); ?></td>
-                                      <td class="time"><?php echo wpsp_ViewDate(esc_html($msgb[0]->m_date)); ?></td>
+                                      <td class="time"><?php echo esc_html(wpsp_ViewDate($msgb[0]->m_date)); ?></td>
                                       <td class="small-col">
                                         <?php
                                         if (sanitize_text_field($_REQUEST['tab']) != 'trash') {
                                         ?>
-                                        <a class="pointer text-blue viewMess" title="view" href="<?php echo wpsp_admin_url(); ?>sch-messages&tab=<?php echo esc_attr($currentTab);?>&mid=<?php echo esc_attr(intval($msgb[0]->mid)); ?>">
+                                        <a class="pointer text-blue viewMess" title="view" href="<?php echo esc_url(wpsp_admin_url()); ?>sch-messages&tab=<?php echo esc_attr($currentTab);?>&mid=<?php echo esc_attr(intval($msgb[0]->mid)); ?>">
                                           <i class="fa fa-eye btn btn-success"></i>
                                         </a>
                                       <?php } ?>

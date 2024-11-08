@@ -86,7 +86,7 @@ function wpsp_topbar(){
         <span class='wpsp-logo-mini'>
             <img src="<?php echo esc_url($imglogo); ?>" class="img wpsp-school-logo" width="45px" height="40px">
         </span>
-        <span class='wpsp-schoolname'><?php echo stripslashes(esc_html($schoolname));?></span>
+        <span class='wpsp-schoolname'><?php echo esc_html($schoolname,'wpschoolpress');?></span>
     </a>
     <div class="wpsp-head">
         <div class="wpsp-menuIcon"><span></span></div>
@@ -99,9 +99,13 @@ function wpsp_topbar(){
                     <span class="wpsp-username"><?php echo esc_html($current_user_name);?></span>
                 </div>
                 <div class="wpsp-dropdown">
-                    <ul> <?php if($roles[0]=='administrator') {?> <li class='wpsp-back-wp'><a href='<?php echo esc_url( admin_url() ); ?>'><?php echo esc_html( 'Back to wp-admin', 'wpschoolpress' );?></a></li><?php }?> <?php if($roles[0]!='administrator') {?><?php echo "<li class='wpsp-back-wp-editprofile'><a href='".esc_url(site_url('wp-admin/admin.php?page=sch-editprofile'))."'>".__('Edit Profile','wpschoolpress')."</a></li>"; }
+                    <ul> <?php if($roles[0]=='administrator') {?> 
+                    <li class='wpsp-back-wp'><a href='<?php echo esc_url( admin_url() ); ?>'>
+                      <?php echo esc_html( 'Back to wp-admin', 'wpschoolpress' );?></a></li>
+                      <?php }?> <?php if($roles[0]!='administrator') {?>
+                      <?php echo "<li class='wpsp-back-wp-editprofile'><a href='".esc_url(site_url('wp-admin/admin.php?page=sch-editprofile'))."'>".esc_html('Edit Profile','wpschoolpress')."</a></li>"; }
 
-              echo "<li class='wpsp-back-wp-changepassword'><a href='".esc_url(site_url('wp-admin/admin.php?page=sch-changepassword'))."'>".__('Change Password','wpschoolpress')."</a></li>"; ?> <li><a href='<?php echo esc_url(wp_logout_url());?>'><?php echo esc_html( 'Sign Out', 'wpschoolpress' );?></a></li> <?php if ( !empty($schoolyear ) ) { ?> <button class="btn"><?php echo esc_html( 'Academic year', 'wpschoolpress' );?> <span class="badge"> <?php echo esc_html($schoolyear); ?></span></button> <?php } ?> </ul>
+              echo "<li class='wpsp-back-wp-changepassword'><a href='".esc_url(site_url('wp-admin/admin.php?page=sch-changepassword'))."'>".esc_html('Change Password','wpschoolpress')."</a></li>"; ?> <li><a href='<?php echo esc_url(wp_logout_url());?>'><?php echo esc_html( 'Sign Out', 'wpschoolpress' );?></a></li> <?php if ( !empty($schoolyear ) ) { ?> <button class="btn"><?php echo esc_html( 'Academic year', 'wpschoolpress' );?> <span class="badge"> <?php echo esc_html($schoolyear); ?></span></button> <?php } ?> </ul>
                 </div>
             </div>
         </div>
@@ -269,13 +273,13 @@ function wpsp_sidebar(){
           </li>";
           if($prosocial == 'installed'){
             if($current_user_role=='administrator' || $current_user_role=='teacher'){
-             echo "<li class='has-submenu ".((isset($posts_page_main)? $posts_page_main : ''))."'>
+             echo "<li class='has-submenu ".((isset($posts_page_main)  ? esc_html($posts_page_main,'wpschoolpress') : ''))."'>
   
               <a href='".site_url('wp-admin/admin.php?page=sch-posts')."'>
   
                 <i class='dashicons dashicons-admin-post'></i>
   
-                <span>".$sch_posts."</span>
+                <span>".esc_html($sch_posts,'wpschoolpress')."</span>
   
               </a>
   
@@ -962,10 +966,15 @@ foreach($courses as $key => $value) {
             else {
               echo "<li class='has-submenu'>";
             }
+            if(empty($clasname)){
+              $cls = 'This student has not assigned class';
+            }else{
+              $cls = $clasname->c_name;
+            }
 
 
                echo "<a href='".esc_url(site_url('wp-admin/admin.php?page=sch-class'))."'>
-                  <i class='dashicons dashicons-welcome-widgets-menus icon'></i><span>".esc_html($clasname->c_name)."</span>
+                  <i class='dashicons dashicons-welcome-widgets-menus icon'></i><span>".esc_html($cls)."</span>
                 </a>
                 <ul class='sub-menu ".((isset($nonemenu)? esc_attr($nonemenu) : ''))."'>
                 <li class='".esc_attr($timetable_page)."'>
@@ -1285,7 +1294,7 @@ if(isset($_GET['cid'])){
 function wpsp_body_end()
 {
   echo "<footer class='wpsp-footer'>
-        <p>Copyright &copy;".date('Y')." <a href='http://wpschoolpress.com' target='_blank'>WPSchoolPress</a>. All rights reserved. <span class='wpsp-right'>WPSchoolPress Version ".WPSP_PLUGIN_VERSION."</span></p></footer>
+        <p>Copyright &copy;".date('Y')." <a href='http://wpschoolpress.com' target='_blank'>WPSchoolPress</a>. All rights reserved. <span class='wpsp-right'>WPSchoolPress Version ".esc_html(WPSP_PLUGIN_VERSION,'wpschoolpress')."</span></p></footer>
     <!-- Control Sidebar -->
     </section><!-- /.wpsp-container -->
   </div><!-- /.wpsp-wrapper -->
@@ -1296,7 +1305,7 @@ function wpsp_footer()
 {
    echo "<script>
       jQuery(function($) {
-        ajax_url ='".admin_url( 'admin-ajax.php' )."';
+        ajax_url ='".esc_url(admin_url( 'admin-ajax.php' ))."';
         date_format='mm/dd/yy';
         $('.content-wrapper').on('click',function(){
           $('.control-sidebar').removeClass('control-sidebar-open');

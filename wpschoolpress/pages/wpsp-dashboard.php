@@ -162,7 +162,7 @@ if($paymenconfirmationid > 0)
 .nopayment-none10 {
     display: block !important;
 }
-</style> <?php if($propayment == "installed"){?> <table class="wpsp-table <?php echo $nonemenu;?>" id="status-table" cellspacing="0" width="100%" style="width:100%;margin-bottom: 30px !important;">
+</style> <?php if($propayment == "installed"){?> <table class="wpsp-table <?php echo esc_attr($nonemenu);?>" id="status-table" cellspacing="0" width="100%" style="width:100%;margin-bottom: 30px !important;">
     <thead>
         <tr>
             <th><?php esc_html_e( 'Student Name', 'wpschoolpress' ); ?></th>
@@ -299,7 +299,7 @@ if($paymenconfirmationid > 0)
             <td><?php echo  esc_html($wpsp_tech_data[0]->first_name.' '.$wpsp_tech_data[0]->last_name);?></td>
             <td><?php echo esc_html('Not Paid','wpschoolpress')?> </td>
             <td><?php echo esc_html($product_title);?></td>
-            <td><a class="wpsp-btn" href="<?php echo get_permalink();?>?sid=<?php echo esc_attr($sclas->wp_usr_id);?>&cid=<?php echo esc_attr($value);?>" target="_blank"> <?php echo esc_html($currency."".$price) ;?> <?php echo esc_html('Pay Now','wpschoolpress');?></a></td>
+            <td><a class="wpsp-btn" href="<?php echo esc_url(get_permalink());?>?sid=<?php echo esc_attr($sclas->wp_usr_id);?>&cid=<?php echo esc_attr($value);?>" target="_blank"> <?php echo esc_html($currency."".$price) ;?> <?php echo esc_html('Pay Now','wpschoolpress');?></a></td>
         </tr>
     </tbody> <?php
 										}
@@ -419,7 +419,7 @@ if($paymenconfirmationid > 0){
 						{
 									$nonemenu = ' nopayment-none';
 						}
-		?> <table class="wpsp-table <?php echo $nonemenu; ?>" id="status-table" cellspacing="0" width="100%" style="width:100%;margin-bottom: 30px !important;">
+		?> <table class="wpsp-table <?php echo esc_attr($nonemenu); ?>" id="status-table" cellspacing="0" width="100%" style="width:100%;margin-bottom: 30px !important;">
     <thead>
         <tr>
             <th><?php esc_html_e( 'Student Name', 'wpschoolpress' ); ?></th>
@@ -517,7 +517,7 @@ if($paymenconfirmationid > 0){
             <td> <?php echo  esc_html($wpsp_tech_data[0]->first_name.' '.$wpsp_tech_data[0]->last_name);?></td>
             <td><?php esc_html_e( 'Not Paid', 'wpschoolpress' ); ?></td>
             <td> <?php echo esc_html($product_title);?></td>
-            <td><a class="wpsp-btn" href="<?php echo get_permalink();?>" target="_blank"><?php echo esc_html($currency."".$price) ;?> <?php esc_html_e( 'Pay Now', 'wpschoolpress' ); ?></a></td>
+            <td><a class="wpsp-btn" href="<?php echo esc_url(get_permalink());?>" target="_blank"><?php echo esc_html($currency."".$price) ;?> <?php esc_html_e( 'Pay Now', 'wpschoolpress' ); ?></a></td>
         </tr>
     </tbody> <?php
 								}
@@ -541,26 +541,26 @@ if($propayment != "installed"){
 	$nonemenu='';
 }
 if( $current_user_role=='administrator' || $current_user_role == 'parent'){?> <div class="wpsp-row "><?php } else { ?> <div class="wpsp-row"> <?php  } ?> <div class="wpsp-col-sm-3 wpsp-col-xs-6">
-            <a class="wpsp-colorBox" <?php if($current_user_role == 'parent' || $current_user_role == 'student'){ }else {?> href="<?php echo wpsp_admin_url();?>sch-student" <?php } ?>>
-                <span class="wpsp-colorBox-title"><?php echo apply_filters('wpsp_sidebar_student_title_menu',esc_html__('Students','wpschoolpress')); ?></span>
+            <a class="wpsp-colorBox" <?php if($current_user_role == 'parent' || $current_user_role == 'student'){ }else {?> href="<?php echo esc_url(wpsp_admin_url());?>sch-student" <?php } ?>>
+                <span class="wpsp-colorBox-title"><?php echo esc_html(apply_filters('wpsp_sidebar_student_title_menu','Students'),'wpschoolpress'); ?></span>
                 <h4 class="wpsp-colorBox-head"><?php echo isset( $usercount->countstudent ) ?  intval($usercount->countstudent) : 0; ?><sup>+</sup></h4>
             </a>
         </div>
         <div class="wpsp-col-sm-3 wpsp-col-xs-6">
-            <a class="wpsp-colorBox wpsp-orangebox wpsp-teacherInfo" <?php if($current_user_role == 'parent'  || $current_user_role == 'student'){ }else {?> href="<?php echo wpsp_admin_url();?>sch-teacher" <?php } ?>>
-                <span class="wpsp-colorBox-title"><?php echo apply_filters('wpsp_sidebar_teacher_title_menu',esc_html__('Teachers','wpschoolpress')); ?></span>
+            <a class="wpsp-colorBox wpsp-orangebox wpsp-teacherInfo" <?php if($current_user_role == 'parent'  || $current_user_role == 'student'){ }else {?> href="<?php echo esc_url(wpsp_admin_url());?>sch-teacher" <?php } ?>>
+                <span class="wpsp-colorBox-title"><?php echo esc_html(apply_filters('wpsp_sidebar_teacher_title_menu','Teachers'),'wpschoolpress'); ?></span>
                 <h4 class="wpsp-colorBox-head"><?php echo isset($teachercount->countteacher)  ?  intval($teachercount->countteacher) : 0; ?><sup>+</sup></h4>
             </a>
         </div>
         <div class="wpsp-col-sm-3 wpsp-col-xs-6">
-            <a class="wpsp-colorBox wpsp-yellowbox wpsp-parentsInfo" <?php if($current_user_role == 'parent'  || $current_user_role == 'student'){ }else {?> href="<?php echo wpsp_admin_url();?>sch-parent" <?php } ?>>
-                <span class="wpsp-colorBox-title"><?php echo apply_filters('wpsp_sidebar_parent_title_menu',esc_html__('Parents','wpschoolpress')); ?></span>
+            <a class="wpsp-colorBox wpsp-yellowbox wpsp-parentsInfo" <?php if($current_user_role == 'parent'  || $current_user_role == 'student'){ }else {?> href="<?php echo esc_url(wpsp_admin_url());?>sch-parent" <?php } ?>>
+                <span class="wpsp-colorBox-title"><?php echo esc_html(apply_filters('wpsp_sidebar_parent_title_menu','Parents'),'wpschoolpress'); ?></span>
                 <h4 class="wpsp-colorBox-head"><?php echo isset($parentscount->countparents) ?  intval($parentscount->countparents) : 0; ?><sup>+</sup></h4>
             </a>
         </div>
         <div class="wpsp-col-sm-3 wpsp-col-xs-6">
-            <a class="wpsp-colorBox wpsp-greenbox wpsp-classInfo" <?php if($current_user_role == 'parent'  || $current_user_role == 'student'){ }else {?> href="<?php echo wpsp_admin_url();?>sch-class" <?php } ?>>
-                <span class="wpsp-colorBox-title"><?php echo apply_filters('wpsp_sidebar_classes_title_menu',esc_html__('Classes','wpschoolpress'));?></span>
+            <a class="wpsp-colorBox wpsp-greenbox wpsp-classInfo" <?php if($current_user_role == 'parent'  || $current_user_role == 'student'){ }else {?> href="<?php echo esc_url(wpsp_admin_url());?>sch-class" <?php } ?>>
+                <span class="wpsp-colorBox-title"><?php echo esc_html(apply_filters('wpsp_sidebar_classes_title_menu','Classes'),'wpschoolpress');?></span>
                 <h4 class="wpsp-colorBox-head"><?php echo isset(  $users_count->clcount ) ?  intval($users_count->clcount) : 0; ?><sup>+</sup></h4>
             </a>
         </div>
@@ -609,7 +609,7 @@ if( $current_user_role=='administrator' || $current_user_role == 'parent'){?> <d
                                 </tr>
                             </thead>
                             <tbody> <?php foreach($examinfo as $exam) { ?> <tr>
-                                    <td><?php echo wpsp_ViewDate(esc_html($exam->e_s_date))." TO ".wpsp_ViewDate(esc_html($exam->e_e_date));?></td>
+                                    <td><?php echo esc_html(wpsp_ViewDate($exam->e_s_date),'wpschoolpress')." TO ".esc_html(wpsp_ViewDate($exam->e_e_date),'wpschoolpress');?></td>
                                     <td><?php echo esc_html($exam->e_name); ?></td>
                                 </tr> <?php } ?> </tbody>
                         </table> <?php } } elseif($current_user_role == 'parent')
@@ -649,7 +649,7 @@ if( $current_user_role=='administrator' || $current_user_role == 'parent'){?> <d
                                 </tr>
                             </thead>
                             <tbody> <?php foreach($examinfo as $exam) { ?> <tr>
-                                    <td><?php echo wpsp_ViewDate(esc_html($exam->e_s_date))." TO ".wpsp_ViewDate(esc_html($exam->e_e_date));?></td>
+                                    <td><?php echo esc_html(wpsp_ViewDate($exam->e_s_date),'wpschoolpress')." TO ".esc_html(wpsp_ViewDate($exam->e_e_date),'wpschoolpress');?></td>
                                     <td><?php echo esc_html($exam->e_name); ?></td>
                                 </tr> <?php } ?> </tbody>
                         </table> <?php }}else {
@@ -668,7 +668,7 @@ if( $current_user_role=='administrator' || $current_user_role == 'parent'){?> <d
                                 </tr>
                             </thead>
                             <tbody> <?php foreach($examinfo as $exam) { ?> <tr>
-                                    <td><?php echo wpsp_ViewDate(esc_html($exam->e_s_date))." TO ".wpsp_ViewDate(esc_html($exam->e_e_date));?></td>
+                                    <td><?php echo esc_html(wpsp_ViewDate($exam->e_s_date),'wpschoolpress')." TO ".esc_html(wpsp_ViewDate($exam->e_e_date),'wpschoolpress');?></td>
                                     <td><?php echo esc_html($exam->e_name."(".$exam->c_name.")"); ?></td>
                                 </tr> <?php } ?> </tbody>
                         </table> <?php } } ?> </div>
@@ -684,7 +684,7 @@ if( $current_user_role=='administrator' || $current_user_role == 'parent'){?> <d
 		wpsp_body_end();
 		wpsp_footer();
 	} else {
-		echo WPSP_PERMISSION_MSG;
+		echo esc_html(WPSP_PERMISSION_MSG,'wpschoolpress');
 	}
  } else {
     include_once( WPSP_PLUGIN_PATH .'/includes/wpsp-login.php');

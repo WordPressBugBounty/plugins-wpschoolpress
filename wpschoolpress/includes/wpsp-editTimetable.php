@@ -8,14 +8,14 @@ if ( !defined( 'ABSPATH' ) ) exit;
 ?>
 <!-- This form is used for Edit Timetable Form -->
 <section class="content">
-	<div class="wpsp-row">
-		<div class="wpsp-col-md-12">
-			<div class="wpsp-card">
-				<div class="wpsp-card-head">
-					<h3 class="wpsp-card-title"><?php esc_html_e( 'Drag and Drop Subjects', 'wpschoolpress' );?> </h3>
-				</div>
-				<div class="wpsp-card-body">
-					<?php
+  <div class="wpsp-row">
+    <div class="wpsp-col-md-12">
+      <div class="wpsp-card">
+        <div class="wpsp-card-head">
+          <h3 class="wpsp-card-title"><?php esc_html_e( 'Drag and Drop Subjects', 'wpschoolpress' );?> </h3>
+        </div>
+        <div class="wpsp-card-body">
+          <?php
 						$check_tt = $wpdb->get_row("Select heading from $tt_table where class_id='".esc_sql($class_id)."' and heading!=''");
                         $error = ''; $session = array();
 						if (!empty($check_tt)) {
@@ -53,16 +53,16 @@ if ( !defined( 'ABSPATH' ) ) exit;
 							$timetable[$ttd['day']][$ttd['time_id']]	=	$ttd['subject_id'];
 						}
 						?>
-						<div class="wpsp-row">
-							<div class="wpsp-col-md-12">
-								<div class="wpsp-form-group">
-									<label class="wpsp-labelMain">
-									<?php esc_html_e("Class","wpschoolpress");?> :  <?php echo wpsp_GetClassName( $class_id ); ?>
-									</label>
-								</div>
-							</div>
-						</div>
-					<!-- <div class="table-responsive" cellspacing="0" width="100%" style="width:100%">
+          <div class="wpsp-row">
+            <div class="wpsp-col-md-12">
+              <div class="wpsp-form-group">
+                <label class="wpsp-labelMain">
+                  <?php esc_html_e("Class","wpschoolpress");?> : <?php echo esc_html(wpsp_GetClassName( $class_id )); ?>
+                </label>
+              </div>
+            </div>
+          </div>
+          <!-- <div class="table-responsive" cellspacing="0" width="100%" style="width:100%">
 							<table align="center" class="wpsp-table" cellspacing="0" width="100%" style="width:100%">
 								<tbody>
 								<tr style="background: transparent;">
@@ -76,8 +76,8 @@ if ( !defined( 'ABSPATH' ) ) exit;
 								</tbody>
 							</table>
 					</div> -->
-					<div class="wpsp-form-group">
-					<?php
+          <div class="wpsp-form-group">
+            <?php
 					foreach ($clt as $id) {
 					echo '<div class="removesubject">
 						<div class="item" id="' . esc_attr($id->id) . '" style="width:auto; color:#5cb85c; font-weight:500;">' . esc_html($id->sub_name) . '
@@ -85,25 +85,46 @@ if ( !defined( 'ABSPATH' ) ) exit;
 					</div>';
 					}
 					?>
-					</div>
-					<div class="text-right" id="ajax_response_exist" style="width: auto;float: right;text-align: center;"></div>
-						<div class="right wpsp-table-responsive" id="TimetableContainer">
-							<table class="wpsp-table wpsp-table-bordered" cellspacing="0" width="100%" style="width:100%">
-								<thead>
-									<tr><th><!-- <select class="daytype"><option value="0">Days</option><option value="1"> -->Week<!-- </option></select> --></th>
-										<?php foreach ($session as $sess) { ?>
-											<th><?php  $sess = esc_sql($sess); $ses_info = $wpdb->get_row("Select * from $wpsp_hours_table where id='$sess'");
+          </div>
+          <div class="text-right" id="ajax_response_exist" style="width: auto;float: right;text-align: center;"></div>
+          <div class="right wpsp-table-responsive" id="TimetableContainer">
+            <table class="wpsp-table wpsp-table-bordered" cellspacing="0" width="100%" style="width:100%">
+              <thead>
+                <tr>
+                  <th>
+                    <!-- <select class="daytype"><option value="0">Days</option><option value="1"> -->Week
+                    <!-- </option></select> -->
+                  </th>
+                  <?php foreach ($session as $sess) { ?>
+                  <th><?php  $sess = esc_sql($sess); $ses_info = $wpdb->get_row("Select * from $wpsp_hours_table where id='$sess'");
 												echo esc_html($ses_info->begintime . " to " . $ses_info->endtime) ?></th>
-										<?php } ?>
-									</tr>
-								</thead>
-								<tbody>
-									<?php
+                  <?php } ?>
+                </tr>
+              </thead>
+              <tbody>
+                <?php
 									$dayname = array("Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday");
-									for ($j = 1; $j <= 7; $j++) { ?>
-										<tr id="<?php echo $j; ?>">
-											<td><!-- <span class="dayval">Day <?php echo esc_html($j); ?></span> --><span class="daynam"><?php echo esc_html($dayname[$j - 1]); ?></span> </td>
-											<?php
+									$leave_table=$wpdb->prefix."wpsp_leavedays"; /* Sat-sun Off */
+									$check      =   $wpdb->get_row("select description from $leave_table where class_id='".esc_sql($class_id)."'");
+									$wd = explode(',', $check->description);
+									for ($j = 1; $j <= 7; $j++) {
+										/* Sat-sun Off */
+										if (!empty($check)) {
+											if ($wd[0] == $dayname[$j-1]) {
+												continue;
+											}
+											if (isset($wd[1])) {
+												if ($wd[1] == $dayname[$j-1]) {
+													continue;
+												}
+											}
+										}/* Sat-sun Off */
+									?>
+                <tr id="<?php echo esc_html($j); ?>">
+                  <td>
+                    <!-- <span class="dayval">Day <?php echo esc_html($j); ?></span> --><span class="daynam"><?php echo esc_html($dayname[$j - 1]); ?></span>
+                  </td>
+                  <?php
 											$subida = array();
 											 $subida1 = array();
 											  $subtimesloat = array();
@@ -125,11 +146,11 @@ if ( !defined( 'ABSPATH' ) ) exit;
 												$hour_det	=	$wpdb->get_row("Select * from $wpsp_hours_table where id='$ses'");
 								                $td_class	=	$hour_det->type == "1" ? "drop" : "Break";
                                             ?>
-                                            <!-- <td class = "<//?php echo esc_attr($ses); ?> " tid="<//?php echo esc_attr($subida[$pa]); ?>" data-sessionid="<//?php echo esc_attr($key); ?>"> - </td> -->
-											<td class = "<?php echo $td_class; ?>" tid="<?php if(!empty($subida[$pa])) { echo esc_attr($subida[$pa]);}else{ echo esc_attr($ses);} ?>" data-sessionid="<?php echo esc_attr($key); ?>">
-											  <?php if($td_class=='Break'){ echo $td_class;}else{ '-';} ?>
-										    </td>
-											<?php
+                  <!-- <td class = "<//?php echo esc_attr($ses); ?> " tid="<//?php echo esc_attr($subida[$pa]); ?>" data-sessionid="<//?php echo esc_attr($key); ?>"> - </td> -->
+                  <td class="<?php echo esc_attr($td_class); ?>" tid="<?php if(!empty($subida[$pa])) { echo esc_attr($subida[$pa]);}else{ echo esc_attr($ses);} ?>" data-sessionid="<?php echo esc_attr($key); ?>">
+                    <?php if($td_class=='Break'){ echo esc_html($td_class,'wpschoolpress');}else{ '-';} ?>
+                  </td>
+                  <?php
                                                 continue;
                                             }
 								$hour_det	=	$wpdb->get_row("Select * from $wpsp_hours_table where id='$ses'");
@@ -157,27 +178,27 @@ if ( !defined( 'ABSPATH' ) ) exit;
 												}
 
 												?>
-												<td class="<?php echo esc_attr($td_class); ?>" tid="<?php echo esc_attr($ses); ?>" data-sessionid="<?php echo esc_attr($key); ?>"><?php echo wp_kses_post($sub_name); ?> </td>
-												<?php
+                  <td class="<?php echo esc_attr($td_class); ?>" tid="<?php echo esc_attr($ses); ?>" data-sessionid="<?php echo esc_attr($key); ?>"><?php echo wp_kses_post($sub_name); ?> </td>
+                  <?php
 												$pa++;
 											} ?>
-										</tr>
-										<?php
+                </tr>
+                <?php
 									}
 									?>
-								</tbody>
-							</table>
-							<div class="wpsp-form-group">
-								<div class="wpsp-col-md-offset-10">
-									<input type="hidden" name="class_id" id="class_id" value="<?php echo esc_attr(intval($class_id)); ?>">
-									<div id="ajax_response"></div>
-								</div>
-							</div>
-						</div>
-					<?php  } ?>
-				</div>
-			</div>
-		</div>
-	</div>
+              </tbody>
+            </table>
+            <div class="wpsp-form-group">
+              <div class="wpsp-col-md-offset-10">
+                <input type="hidden" name="class_id" id="class_id" value="<?php echo esc_attr(intval($class_id)); ?>">
+                <div id="ajax_response"></div>
+              </div>
+            </div>
+          </div>
+          <?php  } ?>
+        </div>
+      </div>
+    </div>
+  </div>
 </section>
 <!-- End of Edit Timetable Form -->

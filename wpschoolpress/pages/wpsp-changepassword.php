@@ -20,7 +20,7 @@ if( is_user_logged_in() ) {
 				<div class="wpsp-row">
 					<div class="wpsp-col-md-3">
 						<div class="wpsp-form-group">
-							<label class="wpsp-label"><?php _e( 'Current Password', 'wpschoolpress' ); ?></label>
+							<label class="wpsp-label"><?php esc_html_e( 'Current Password', 'wpschoolpress' ); ?></label>
 							<input class="wpsp-form-control" name="oldpw" id="oldpw" type="password" required>
 						</div>
 					</div>
@@ -29,7 +29,7 @@ if( is_user_logged_in() ) {
 				<div class="wpsp-row">
 					<div class="wpsp-col-md-3">
 						<div class="wpsp-form-group">
-							<label class="wpsp-label"><?php _e( 'New Password', 'wpschoolpress' ); ?></label>
+							<label class="wpsp-label"><?php esc_html_e( 'New Password', 'wpschoolpress' ); ?></label>
 							<input class="wpsp-form-control" name="newpw" id="newpw" type="password" required>
 						</div>
 					</div>
@@ -38,7 +38,7 @@ if( is_user_logged_in() ) {
 				<div class="wpsp-row">
 					<div class="wpsp-col-md-3">
 						<div class="wpsp-form-group">
-							<label class="wpsp-label"><?php _e( 'Confirm  New Password', 'wpschoolpress' ); ?></label>
+							<label class="wpsp-label"><?php esc_html_e( 'Confirm  New Password', 'wpschoolpress' ); ?></label>
 							<input class="wpsp-form-control" name="newrpw" id="newrpw" type="password" required>
 						</div>
 					</div>

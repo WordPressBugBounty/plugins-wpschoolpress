@@ -11,7 +11,7 @@ wpsp_header(); ?> <?php
 		{
 		?> <div class="wpsp-card">
     <div class="wpsp-card-head">
-        <h3 class="wpsp-card-title"><?php echo apply_filters( 'wpsp_event_heading_item',esc_html("Event calendar","wpschoolpress")); ?></h3>
+        <h3 class="wpsp-card-title"><?php echo esc_html(apply_filters( 'wpsp_event_heading_item',"Event calendar"),"wpschoolpress"); ?></h3>
     </div>
     <div class="wpsp-card-body">
         <div id="calendar"></div>
@@ -22,7 +22,7 @@ wpsp_header(); ?> <?php
                     <a href="javascript:;" class="wpsp-closePopup"></a>
                     <div class="wpsp-popup-body">
                         <div class="wpsp-panel-heading">
-                            <h3 class="wpsp-panel-title"><?php echo apply_filters( 'wpsp_add_event_popup_heading_item',esc_html("Add Event","wpschoolpress")); ?></h3>
+                            <h3 class="wpsp-panel-title"><?php echo esc_html(apply_filters( 'wpsp_add_event_popup_heading_item',"Add Event"),"wpschoolpress"); ?></h3>
                         </div>
                         <div class="wpsp-popup-cont">
                             <div id="response"></div>
@@ -30,7 +30,7 @@ wpsp_header(); ?> <?php
                                     <?php wp_nonce_field( 'WPSAddEvents', 'wps_addevents_nonce', '', true ); ?>
                                     <div class="wpsp-form-group">
                                         <label class="wpsp-label"><?php esc_html_e("Start Date","wpschoolpress");?><span class="wpsp-required">*</span></label>
-                                        <input type="hidden" id="wpsp_locationginal" value="<?php echo admin_url();?>" />
+                                        <input type="hidden" id="wpsp_locationginal" value="<?php echo esc_url(admin_url());?>" />
                                         <input type="text" name="sdate" class="wpsp-form-control sdate" id="sdate">
                                     </div>
                                 </div>
@@ -104,21 +104,21 @@ wpsp_header(); ?> <?php
                         <div class="wpsp-popup-cont">
                             <div class="wpsp-col-md-6">
                                 <div class="wpsp-form-group">
-                                    <label class="wpsp-labelMain"><?php echo apply_filters('wpsp_add_event_popup_start_label',esc_html("Start :","wpschoolpress"));; ?></label> <span id="eventStart"> </span>
+                                    <label class="wpsp-labelMain"><?php echo esc_html(apply_filters('wpsp_add_event_popup_start_label',"Start :"),"wpschoolpress"); ?></label> <span id="eventStart"> </span>
                                 </div>
                             </div>
                             <div class="wpsp-col-md-6">
                                 <div class="wpsp-form-group">
-                                    <label class="wpsp-labelMain"><?php echo apply_filters('wpsp_add_event_popup_end_label',esc_html("End :","wpschoolpress"));; ?></label> <span id="eventEnd"> </span>
+                                    <label class="wpsp-labelMain"><?php echo esc_html(apply_filters('wpsp_add_event_popup_end_label',"End :"),"wpschoolpress"); ?></label> <span id="eventEnd"> </span>
                                 </div>
                             </div>
                             <div class="wpsp-col-md-12">
                                 <div class="wpsp-form-group">
-                                    <label><?php echo apply_filters('wpsp_add_event_popup_description_label',esc_html("Description :","wpschoolpress")); ?> </label> <span id="eventDesc"> </span>
+                                    <label><?php echo esc_html(tapply_filters('wpsp_add_event_popup_description_label',"Description :"),"wpschoolpress"); ?> </label> <span id="eventDesc"> </span>
                                 </div>
                             </div> <?php if($current_user_role=='administrator'){?> <div class="wpsp-col-md-12">
-                                <button class="wpsp-btn wpsp-btn-success" id="editEvent"><?php echo apply_filters('wpsp_add_event_popup_button_edit_text',esc_html("Edit Event","wpschoolpress")); ?></button>
-                                <button class="wpsp-btn wpsp-btn-danger" id="deleteEvent"><?php echo apply_filters('wpsp_add_event_popup_button_delete_text',esc_html("Delete","wpschoolpress")); ?></button>
+                                <button class="wpsp-btn wpsp-btn-success" id="editEvent"><?php echo esc_html(apply_filters('wpsp_add_event_popup_button_edit_text',"Edit Event"),"wpschoolpress"); ?></button>
+                                <button class="wpsp-btn wpsp-btn-danger" id="deleteEvent"><?php echo esc_html(apply_filters('wpsp_add_event_popup_button_delete_text',"Delete"),"wpschoolpress"); ?></button>
                             </div> <?php }?>
                         </div>
                     </div>
@@ -129,7 +129,7 @@ wpsp_header(); ?> <?php
     </div>
 </div> <?php  }else if($current_user_role=='parent' || $current_user_role='student'){ ?> <div class="wpsp-card">
     <div class="wpsp-card-head">
-        <h3 class="wpsp-card-title"><?php echo apply_filters( 'wpsp_event_heading_item',esc_html("Event calendar","wpschoolpress")); ?></h3>
+        <h3 class="wpsp-card-title"><?php echo esc_html(apply_filters( 'wpsp_event_heading_item',"Event calendar"),"wpschoolpress"); ?></h3>
     </div>
     <div class="wpsp-card-body">
         <div id="calendar"></div>
@@ -145,17 +145,17 @@ wpsp_header(); ?> <?php
                         <div class="wpsp-popup-cont">
                             <div class="col-md-6">
                                 <div class="wpsp-form-group">
-                                    <label class="wpsp-labelMain"><?php echo apply_filters('wpsp_add_event_popup_start_label',esc_html("Start :","wpschoolpress"));; ?></label> <span id="eventStart"> </span>
+                                    <label class="wpsp-labelMain"><?php echo esc_html(apply_filters('wpsp_add_event_popup_start_label',"Start :"),"wpschoolpress"); ?></label> <span id="eventStart"> </span>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="wpsp-form-group">
-                                    <label class="wpsp-labelMain"><?php echo apply_filters('wpsp_add_event_popup_end_label',esc_html("End :","wpschoolpress"));; ?></label> <span id="eventEnd"> </span>
+                                    <label class="wpsp-labelMain"><?php echo esc_html(apply_filters('wpsp_add_event_popup_end_label',"End :"),"wpschoolpress"); ?></label> <span id="eventEnd"> </span>
                                 </div>
                             </div>
                             <div class="col-md-12">
                                 <div class="wpsp-form-group">
-                                    <label> <label><?php echo apply_filters('wpsp_add_event_popup_description_label',esc_html_e("Description :","wpschoolpress")); ?> </label> <span id="eventDesc"> </span></label> <span id="eventDesc"> </span>
+                                    <label> <label><?php echo esc_html(apply_filters('wpsp_add_event_popup_description_label',"Description :"),"wpschoolpress"); ?> </label> <span id="eventDesc"> </span></label> <span id="eventDesc"> </span>
                                 </div>
                             </div>
                         </div>

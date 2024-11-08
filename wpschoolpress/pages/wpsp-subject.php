@@ -51,7 +51,7 @@ wpsp_header();
 							<label class="wpsp-labelMain"><?php esc_html_e( 'Select Class Name', 'wpschoolpress' ); ?> *</label>
 							<select name="ClassID" id="ClassID" class="wpsp-form-control">
 								<?php if($sel_classid == ''){$sel_classid = 'all';} ?>
-								<option value="all" <?php if($sel_classid == 'all') echo esc_html("selected","wpschoolpress"); ?>><?php _e( 'All', 'wpschoolpress' ); ?></option>
+								<option value="all" <?php if($sel_classid == 'all') echo esc_html("selected","wpschoolpress"); ?>><?php esc_html_e( 'All', 'wpschoolpress' ); ?></option>
 								<?php
 								foreach($sel_class as $classes) { ?>
 									<option value="<?php echo esc_attr(intval($classes->cid));?>" <?php if($sel_classid == $classes->cid) echo esc_html("selected","wpschoolpress"); ?>><?php echo esc_html($classes->c_name);?></option>
@@ -211,9 +211,9 @@ wpsp_header();
 										foreach($child as $ch) {
 											$ch_class=$ch['class_id'];
 											?>
-											<div class="tab-pane wpsp-tabMain <?php echo ($i==0)?'active':''?>" id="<?php echo str_replace(" ", "",$ch['fname'].$i);?>">
+											<div class="tab-pane wpsp-tabMain <?php echo ($i==0)?'active':''?>" id="<?php echo esc_attr(str_replace(" ", "",$ch['fname'].$i));?>">
 												<caption><label class="wpsp-labelMain"> <?php esc_html_e( 'Class Name', 'wpschoolpress' ); ?> : </label> <?php echo esc_html($ch['class_name']);?></caption>					<div class="wpsp-table-responsive">
-												<table id="subject_table<?php echo $i++; ?>" class="wpsp-table subjectdataTable"  cellspacing="0" width="100%" style="width:100%">
+												<table id="subject_table<?php echo esc_attr($i++); ?>" class="wpsp-table subjectdataTable"  cellspacing="0" width="100%" style="width:100%">
 													<thead>
 													<tr>
 														<th>#</th>

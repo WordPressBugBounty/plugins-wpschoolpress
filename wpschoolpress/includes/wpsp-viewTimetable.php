@@ -45,7 +45,21 @@ function wpsp_ViewTimetable($class_id){
                         <tbody>
                             <?php
                             $week_days=array('1'=>'Monday','2'=>'Tuesday','3'=>'Wednesday','4'=>'Thursday','5'=>'Friday','6'=>'Saturday','7'=>'Sunday');
+                            $leave_table = $wpdb->prefix . "wpsp_leavedays";
+                            $check      =   $wpdb->get_row("select description from $leave_table where class_id='" . esc_sql($class_id) . "'");
+                            $wd = explode(',', $check->description);
                             for ($j = 1; $j <= 7; $j++) {
+                                 /* Sat-sun Off */
+                                if (!empty($check)) {
+                                    if ($wd[0] == $week_days[$j]) {
+                                        continue;
+                                    }
+                                    if (isset($wd[1])) {
+                                        if ($wd[1] == $week_days[$j]) {
+                                            continue;
+                                        }
+                                    }
+                                } /* Sat-sun Off */
                                 if(empty($timetable[$j])){
                                     continue;
                                 }

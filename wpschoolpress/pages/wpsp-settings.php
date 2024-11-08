@@ -60,14 +60,14 @@ if (!defined( 'ABSPATH' ) )exit('No Such File');
                                         <div class="wpsp-form-group">
                                         <div class="wpsp-row">
                                         <div class="wpsp-col-md-3">
-                                            <label class="wpsp-labelMain"><?php _e( 'Class:', 'wpschoolpress'); ?></label> <?php echo esc_html($fields[0]->c_name);?>
+                                            <label class="wpsp-labelMain"><?php esc_html_e( 'Class:', 'wpschoolpress'); ?></label> <?php echo esc_html($fields[0]->c_name);?>
                                         </div>
                                         <div class="wpsp-col-md-3">
-                                            <label class="wpsp-labelMain"><?php _e( 'Subject:', 'wpschoolpress'); ?></label> <?php echo esc_html($fields[0]->sub_name);?>
+                                            <label class="wpsp-labelMain"><?php esc_html_e( 'Subject:', 'wpschoolpress'); ?></label> <?php echo esc_html($fields[0]->sub_name);?>
                                         </div>
                                         </div>
                                         <?php wp_nonce_field( 'SubjectFields', 'subfields_nonce', '', true ) ?>
-                                        <input type="hidden"  id="wpsp_locationginal" value="<?php echo admin_url();?>"/>
+                                        <input type="hidden"  id="wpsp_locationginal" value="<?php echo esc_url(admin_url());?>"/>
                                         </div>
                                         <div class="wpsp-row">
                                         <?php
@@ -83,11 +83,11 @@ if (!defined( 'ABSPATH' ) )exit('No Such File');
                                                         </div>
                                                 <?php $sno++; }
                                             }else{
-                                                echo "<div class='wpsp-col-md-8 wpsp-col-md-offset-4'>".__( 'No data retrived!', 'wpschoolpress')."</div>";
+                                                echo "<div class='wpsp-col-md-8 wpsp-col-md-offset-4'>".esc_html( 'No data retrived!', 'wpschoolpress')."</div>";
                                             }
                                         ?>
                                         </div>
-                                        <a href="<?php echo esc_url(wpsp_admin_url().'sch-settings&sc=subField');?>" class="wpsp-btn wpsp-dark-btn"><?php _e( 'Back', 'wpschoolpress'); ?></a>
+                                        <a href="<?php echo esc_url(wpsp_admin_url().'sch-settings&sc=subField');?>" class="wpsp-btn wpsp-dark-btn"><?php esc_html_e( 'Back', 'wpschoolpress'); ?></a>
                                     </div>
                                     </div>
                                     </div>
@@ -106,10 +106,10 @@ if (!defined( 'ABSPATH' ) )exit('No Such File');
                                 <thead>
                                     <tr>
                                         <th class="nosort">#</th>
-                                        <th><?php _e( 'Class', 'wpschoolpress'); ?></th>
-                                        <th><?php _e( 'Subject', 'wpschoolpress'); ?></th>
-                                        <th><?php _e( 'Fields', 'wpschoolpress'); ?></th>
-                                        <th><?php _e( 'Action', 'wpschoolpress'); ?></th>
+                                        <th><?php esc_html_e( 'Class', 'wpschoolpress'); ?></th>
+                                        <th><?php esc_html_e( 'Subject', 'wpschoolpress'); ?></th>
+                                        <th><?php esc_html_e( 'Fields', 'wpschoolpress'); ?></th>
+                                        <th><?php esc_html_e( 'Action', 'wpschoolpress'); ?></th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -128,10 +128,10 @@ if (!defined( 'ABSPATH' ) )exit('No Such File');
                                 <tfoot>
                                   <tr>
                                     <th>#</th>
-                                    <th><?php _e( 'Class', 'wpschoolpress'); ?></th>
-                                    <th><?php _e( 'Subject', 'wpschoolpress'); ?></th>
-                                    <th><?php _e( 'Fields', 'wpschoolpress'); ?></th>
-                                    <th><?php _e( 'Action', 'wpschoolpress'); ?></th>
+                                    <th><?php esc_html_e( 'Class', 'wpschoolpress'); ?></th>
+                                    <th><?php esc_html_e( 'Subject', 'wpschoolpress'); ?></th>
+                                    <th><?php esc_html_e( 'Fields', 'wpschoolpress'); ?></th>
+                                    <th><?php esc_html_e( 'Action', 'wpschoolpress'); ?></th>
                                   </tr>
                                 </tfoot>
                               </table></div>
@@ -143,7 +143,7 @@ if (!defined( 'ABSPATH' ) )exit('No Such File');
                                     <div class="wpsp-popInner">
                                         <a href="javascript:;" class="wpsp-closePopup"></a>
                                         <div class="wpsp-panel-heading">
-                                            <h3 class="wpsp-panel-title"><?php echo apply_filters( 'wpsp_subject_mark_field_heading_item',esc_html("Add Subject Mark Fields","wpschoolpress")); ?></h3>
+                                            <h3 class="wpsp-panel-title"><?php echo esc_html(apply_filters( 'wpsp_subject_mark_field_heading_item',"Add Subject Mark Fields"),"wpschoolpress"); ?></h3>
                                             </div>
                                             <div class="wpsp-panel-body">
                                                         <div class="wpsp-row">
@@ -152,8 +152,8 @@ if (!defined( 'ABSPATH' ) )exit('No Such File');
                                                 <div class="wpsp-col-md-12 line_box">
                                                                     <div class="wpsp-row">
                                                                       <?php
-                                                                        $item =  apply_filters( 'wpsp_subject_mark_field_title_item',esc_html("Class Name","wpschoolpress"));
-                                                                        $is_required_item = apply_filters('wpsp_subject_mark_field_is_required',array());
+                                                                        $item =  esc_html(apply_filters( 'wpsp_subject_mark_field_title_item',"Class Name"),"wpschoolpress");
+                                                                        $is_required_item = array();
                                                                       ?>
                                                                         <div class="wpsp-col-lg-12 wpsp-col-md-12 wpsp-col-sm-12 wpsp-col-xs-12">
                                                                             <div class="wpsp-form-group">
@@ -212,8 +212,8 @@ if (!defined( 'ABSPATH' ) )exit('No Such File');
                                                                             </div>
                                                                         </div>
                                                                         <div class="wpsp-col-md-12">
-                                                                            <button type="submit" class="wpsp-btn wpsp-btn-success"><?php echo apply_filters( 'wpsp_subject_mark_field_button_submit_text',esc_html("Submit","wpschoolpress")); ?></button>
-                                                                            <button type="button" class="wpsp-btn wpsp-dark-btn" data-dismiss="modal"><?php echo apply_filters( 'wpsp_subject_mark_field_button_cancel_text',esc_html("Cancel","wpschoolpress")); ?></button>
+                                                                            <button type="submit" class="wpsp-btn wpsp-btn-success"><?php echo esc_html(apply_filters( 'wpsp_subject_mark_field_button_submit_text',"Submit"),"wpschoolpress"); ?></button>
+                                                                            <button type="button" class="wpsp-btn wpsp-dark-btn" data-dismiss="modal"><?php echo esc_html(apply_filters( 'wpsp_subject_mark_field_button_cancel_text',"Cancel"),"wpschoolpress"); ?></button>
                                                                         </div>
                                                                     </div>
                                                                 </div>
@@ -232,19 +232,19 @@ if (!defined( 'ABSPATH' ) )exit('No Such File');
                                 if(isset($_POST['AddHours'])){
                                     if (!isset($_POST['wps_wrkhrs_nonce']) || !wp_verify_nonce(sanitize_text_field($_POST['wps_wrkhrs_nonce']) , 'WPSwrkhours'))
                                     {
-                                        echo "<div class='col-md-12'><div class='alert alert-danger'>".__( 'Unauthorizrd submmison or unknown nonce')."</div></div>";
+                                        echo "<div class='col-md-12'><div class='alert alert-danger'>".esc_html( 'Unauthorizrd submmison or unknown nonce','wpschoolpress')."</div></div>";
                                       
                                     }
                                     wpsp_Authenticate();
                                     $workinghour_table  =   $wpdb->prefix."wpsp_workinghours";
                                     if( empty( $_POST['hname'] ) || empty( $_POST['hstart'] ) || empty( $_POST['hend'])  || sanitize_text_field($_POST['htype'])=='' ) {
-                                        echo "<div class='col-md-12'><div class='alert alert-danger'>".__( 'Please fill all values.', 'wpschoolpress')."</div></div>";
+                                        echo "<div class='col-md-12'><div class='alert alert-danger'>".esc_html( 'Please fill all values.', 'wpschoolpress')."</div></div>";
                                     } elseif( strtotime( $_POST['hend'] ) <= strtotime( $_POST['hstart'] ) ) {
-                                        echo "<div class='col-md-12'><div class='alert alert-danger'>".__( 'Invalid Class Time.', 'wpschoolpress')."</div></div>";
+                                        echo "<div class='col-md-12'><div class='alert alert-danger'>".esc_html( 'Invalid Class Time.', 'wpschoolpress')."</div></div>";
                                     } else {
                                         $workinghour_namelist = $wpdb->get_var( $wpdb->prepare( "SELECT count( * ) AS total_hour FROM $workinghour_table WHERE HOUR = %s", $_POST['hname'] ) );
                                         if( $workinghour_namelist > 0 ) {
-                                            echo "<div class='col-md-12'><div class='alert alert-danger'>".__( 'Class Hour Name Already exists.', 'wpschoolpress')."</div></div>";
+                                            echo "<div class='col-md-12'><div class='alert alert-danger'>".esc_html( 'Class Hour Name Already exists.', 'wpschoolpress')."</div></div>";
                                         } else {
                                                     $workinghour_table_data = array('hour' =>  sanitize_text_field($_POST['hname']),
                                                     'begintime' =>  sanitize_text_field( $_POST['hstart'] ),
@@ -266,12 +266,12 @@ if (!defined( 'ABSPATH' ) )exit('No Such File');
                             <form name="working_hour" method="post" action="">
                                 <?php wp_nonce_field( 'WPSwrkhours', 'wps_wrkhrs_nonce', '', true ); ?>
                                 <div class="wpsp-form-group">
-                                            <h3 class="wpsp-card-title"><?php echo apply_filters('wpsp_workinghours_heading_item',esc_html__( 'Class hours', 'wpschoolpress'));?></h3>
+                                            <h3 class="wpsp-card-title"><?php echo esc_html(apply_filters('wpsp_workinghours_heading_item', 'Class hours'), 'wpschoolpress');?></h3>
                                         </div>
                                             <div class="wpsp-row">
                                               <?php
                                                   do_action("wpsp_workinghours_before");
-                                                  $item =  apply_filters( 'wpsp_setting_workinghours_title_item',array());
+                                                  $item =  array();
                                               ?>
                                                 <div class="wpsp-col-md-4">
                                                     <div class="wpsp-form-group">
@@ -368,9 +368,9 @@ if (!defined( 'ABSPATH' ) )exit('No Such File');
                             <div class="tabSec wpsp-nav-tabs-custom" id="verticalTab">
                             <div class="tabList">
                                 <ul class="wpsp-resp-tabs-list">
-                                    <li class="wpsp-tabing" title="Info"><?php echo apply_filters( 'wpsp_settings_tab_info_heading', esc_html__( 'Info', 'wpschoolpress' )); ?></li>
-                                    <li class="wpsp-tabing <?php echo esc_attr($proclass); ?>" title="<?php echo esc_attr($protitle);?>" <?php echo esc_html($prodisable); ?> title="An overdose in each drop"><?php echo apply_filters( 'wpsp_settings_tab_sms_heading', esc_html__( 'SMS', 'wpschoolpress' )); ?></li>
-                                    <li class="wpsp-tabing"  title="Licensing"><?php echo apply_filters( 'wpsp_settings_tab_info_heading', esc_html__( 'Licensing', 'wpschoolpress' )); ?></li>
+                                    <li class="wpsp-tabing" title="Info"><?php echo esc_html(apply_filters( 'wpsp_settings_tab_info_heading',  'Info'), 'wpschoolpress' ); ?></li>
+                                    <li class="wpsp-tabing <?php echo esc_attr($proclass); ?>" title="<?php echo esc_attr($protitle);?>" <?php echo esc_html($prodisable); ?> title="An overdose in each drop"><?php echo esc_html(apply_filters( 'wpsp_settings_tab_sms_', 'SMS'), 'wpschoolpress' ); ?></li>
+                                    <li class="wpsp-tabing"  title="Licensing"><?php echo esc_html(apply_filters( 'wpsp_settings_tab_info_heading', 'Licensing'), 'wpschoolpress' ); ?></li>
                                 </ul>
                             </div>
                                 <div class="wpsp-tabBody wpsp-resp-tabs-container">
@@ -378,7 +378,7 @@ if (!defined( 'ABSPATH' ) )exit('No Such File');
                                         <form name="schinfo_form" id="SettingsInfoForm" class="wpsp-form-horizontal" method="post">
                                           <?php wp_nonce_field( 'SettingsFields', 'setingssub_nonce', '', true ) ?>
                                           <?php do_action('wpsp_before_setting_info');
-                                            $item =  apply_filters( 'wpsp_setting_info_title_item',array());
+                                            $item =  array();
                                           ?>
                                             <div  class="wpsp-row">
                                             <div  class="wpsp-form-group">
@@ -408,7 +408,7 @@ if (!defined( 'ABSPATH' ) )exit('No Such File');
                                                         <label class="wpsp-label"><?php
                                                               esc_html_e("School Name","wpschoolpress");
                                                       ?></label>
-                                                        <input type="text" name="sch_name" class="wpsp-form-control" value="<?php echo stripslashes(isset( $settings_data['sch_name'] ) ? esc_attr($settings_data['sch_name']) : '');?>">
+                                                        <input type="text" name="sch_name" class="wpsp-form-control" value="<?php echo (isset( $settings_data['sch_name'] ) ? esc_attr($settings_data['sch_name']) : '');?>">
                                                     </div>
                                                 </div>
                                                 <div class="wpsp-col-lg-3 wpsp-col-md-4 wpsp-col-sm-6 wpsp-col-xs-12">
@@ -512,11 +512,11 @@ if (!defined( 'ABSPATH' ) )exit('No Such File');
                                             </div>
                                             <div class="wpsp-col-lg-12 wpsp-col-md-12 wpsp-col-sm-12 wpsp-col-xs-12">
                                             <div class="wpsp-form-group <?php echo esc_attr($proclass); ?>" title="<?php echo esc_attr($protitle);?>" <?php echo esc_attr($prodisable); ?>>
-                                                    <label class="wpsp-label"><?php _e( 'SMS Setting' ,'wpschoolpress'); ?></label>
+                                                    <label class="wpsp-label"><?php esc_html_e( 'SMS Setting' ,'wpschoolpress'); ?></label>
                                                     <input id="absent_sms_alert" type="checkbox" class="wpsp-checkbox ccheckbox <?php echo esc_attr($proclass); ?> " title="<?php echo esc_attr($protitle);?>" <?php echo esc_html($prodisable); ?> <?php if(isset($settings_data['absent_sms_alert']) && $settings_data['absent_sms_alert']==1) echo "checked"; ?> name="absent_sms_alert" value="1" >
-                                                    <label for="absent_sms_alert" class="wpsp-checkbox-label"> <?php _e( 'Send SMS to parent when student absent','wpschoolpress');?></label>
+                                                    <label for="absent_sms_alert" class="wpsp-checkbox-label"> <?php esc_html_e( 'Send SMS to parent when student absent','wpschoolpress');?></label>
                                                     <input id="notification_sms_alert" type="checkbox" class="wpsp-checkbox ccheckbox <?php echo esc_attr($proclass); ?>" title="<?php echo esc_attr($protitle);?>" <?php echo esc_html($prodisable); ?> <?php if(isset($settings_data['notification_sms_alert']) && $settings_data['notification_sms_alert']==1) echo "checked"; ?> name="notification_sms_alert" value="1" >
-                                                    <label for="notification_sms_alert" class="wpsp-checkbox-label"> <?php _e( 'Enable SMS Notification','wpschoolpress');?></label>
+                                                    <label for="notification_sms_alert" class="wpsp-checkbox-label"> <?php esc_html_e( 'Enable SMS Notification','wpschoolpress');?></label>
                                                 </div>
                                             </div>
                                             <div class="wpsp-col-md-12 wpsp-col-sm-12 wpsp-col-xs-12">
@@ -537,7 +537,7 @@ if (!defined( 'ABSPATH' ) )exit('No Such File');
                                         if( isset( $proversion['status'] ) && $proversion['status'] ) {
                                             do_action( 'wpsp_sms_setting_html', $settings_data );
                                         } else {
-                                            _e( 'Please Purchase This <a href="https://wpschoolpress.com/downloads/sms-add-on-wpschoolpress/" target="_blank">Add-on</a>', 'wpschoolpress' );
+                                            esc_html_e( 'Please Purchase This <a href="https://wpschoolpress.com/downloads/sms-add-on-wpschoolpress/" target="_blank">Add-on</a>', 'wpschoolpress' );
                                         }
                                         ?>
                                     </div>
@@ -615,7 +615,7 @@ if (!defined( 'ABSPATH' ) )exit('No Such File');
                                             <?php  do_action('wpsp_after_license'); ?>
                                             <div class="wpsp-col-lg-12 wpsp-col-md-12 wpsp-col-sm-12">
                                                 <div class="wpsp-form-group">
-                                                    <button type="submit" id="s_save" class="wpsp-btn wpsp-btn-success" name="submit"><?php echo apply_filters( 'wpsp_setting_licensig_button_submit_text',esc_html__('Save','wpschoolpress'));?></button>
+                                                    <button type="submit" id="s_save" class="wpsp-btn wpsp-btn-success" name="submit"><?php echo esc_html(apply_filters( 'wpsp_setting_licensig_button_submit_text','Save'),'wpschoolpress');?></button>
                                                 </div>
                                             </div>
                                         </div>

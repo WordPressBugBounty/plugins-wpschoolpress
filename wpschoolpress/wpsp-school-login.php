@@ -57,7 +57,7 @@ function wpsp_login_header( $title = 'Log In', $message = '', $wp_error = '' ) {
     <!--<![endif]-->
     <head>
     <meta http-equiv="Content-Type" content="<?php bloginfo('html_type'); ?>; charset=<?php bloginfo('charset'); ?>" />
-    <title><?php echo get_bloginfo( 'name', 'display' ) . $separator . $title; ?></title>
+    <title><?php echo esc_html(get_bloginfo( 'name', 'display' ) . $separator . $title.'wpschoolpress'); ?></title>
     <?php
     wp_enqueue_style( 'login' );
     /*
@@ -150,7 +150,7 @@ function wpsp_login_header( $title = 'Log In', $message = '', $wp_error = '' ) {
      */
     $message = apply_filters( 'login_message', $message );
     if ( !empty( $message ) )
-        echo $message . "\n";
+        echo esc_html($message . "\n",'wpschoolpress');
     // In case a plugin uses $error rather than the $wp_errors object
     if ( !empty( $error ) ) {
         $wp_error->add('error', $error);
@@ -176,7 +176,7 @@ function wpsp_login_header( $title = 'Log In', $message = '', $wp_error = '' ) {
              *
              * @param string $errors Login error message.
              */
-            echo '<div id="login_error">' . apply_filters( 'login_errors', $errors ) . "</div>\n";
+            echo '<div id="login_error">' . esc_html(apply_filters( 'login_errors', $errors ),'wpschoolpress') . "</div>\n";
         }
         if ( ! empty( $messages ) ) {
             /**
@@ -186,7 +186,7 @@ function wpsp_login_header( $title = 'Log In', $message = '', $wp_error = '' ) {
              *
              * @param string $messages Login messages.
              */
-            echo '<p class="message">' . apply_filters( 'login_messages', $messages ) . "</p>\n";
+            echo '<p class="message">' . esc_html(apply_filters( 'login_messages', $messages ),'wpschoolpress') . "</p>\n";
         }
     }
 } // End of login_header()
@@ -201,13 +201,13 @@ function wpsp_login_footer($input_id = '') {
     if ( ! $interim_login ): ?>
     <p id="backtoblog"><a href="<?php echo esc_url( home_url( '/' ) ); ?>"><?php
         /* translators: %s: site title */
-        printf( _x( '&larr; Back to %s', 'site' ), get_bloginfo( 'title', 'display' ) );
+        printf( esc_html( '&larr; Back to %s', 'site' ), esc_html(get_bloginfo( 'title', 'display' ),'wpschoolpress') );
     ?></a></p>
     <?php endif; ?>
     </div>
     <?php if ( !empty($input_id) ) : ?>
     <script type="text/javascript">
-    try{document.getElementById('<?php echo $input_id; ?>').focus();}catch(e){}
+    try{document.getElementById('<?php echo esc_html($input_id); ?>').focus();}catch(e){}
     if(typeof wpOnload=='function')wpOnload();
     </script>
     <?php endif; ?>
@@ -328,7 +328,7 @@ function retrieve_password() {
      */
     $message = apply_filters( 'retrieve_password_message', $message, $key, $user_login, $user_data );
     if ( $message && !wp_mail( $user_email, wp_specialchars_decode( $title ), $message ) )
-        wp_die( __('The email could not be sent.') . "<br />\n" . __('Possible reason: your host may have disabled the mail() function.') );
+        wp_die( esc_html_e('The email could not be sent.','wpschoolpress') . "<br />\n" . esc_html_e('Possible reason: your host may have disabled the mail() function.','wpschoolpress') );
     return true;
 }
 //
@@ -468,7 +468,7 @@ case 'retrievepassword' :
 ?>
 <form name="lostpasswordform" id="lostpasswordform" action="<?php echo esc_url( network_site_url( 'wp-login.php?action=lostpassword', 'login_post' ) ); ?>" method="post">
     <p>
-        <label for="user_login" ><?php _e( 'Username or Email Address' ); ?><br />
+        <label for="user_login" ><?php esc_html_e( 'Username or Email Address','wpschoolpress' ); ?><br />
         <input type="text" name="user_login" id="user_login" class="input" value="<?php echo esc_attr($user_login); ?>" size="20" /></label>
     </p>
     <?php
@@ -482,12 +482,12 @@ case 'retrievepassword' :
     <p class="submit"><input type="submit" name="wp-submit" id="wp-submit" class="button button-primary button-large" value="<?php esc_attr_e('Get New Password'); ?>" /></p>
 </form>
 <p id="nav">
-<a href="<?php echo esc_url( wp_login_url() ); ?>"><?php _e('Log in') ?></a>
+<a href="<?php echo esc_url( wp_login_url() ); ?>"><?php esc_html_e('Log in','wpschoolpress') ?></a>
 <?php
 if ( get_option( 'users_can_register' ) ) :
     $registration_url = sprintf( '<a href="%s">%s</a>', esc_url( wp_registration_url() ), __( 'Register' ) );
     /** This filter is documented in wp-includes/general-template.php */
-    echo ' | ' . apply_filters( 'register', $registration_url );
+    echo ' | ' . esc_html(apply_filters( 'register', $registration_url ),'wpschoolpress');
 endif;
 ?>
 </p>
@@ -548,20 +548,20 @@ case 'rp' :
     <input type="hidden" id="user_login" value="<?php echo esc_attr( $rp_login ); ?>" autocomplete="off" />
     <div class="user-pass1-wrap">
         <p>
-            <label for="pass1"><?php _e( 'New password' ) ?></label>
+            <label for="pass1"><?php esc_html_e( 'New password' ,'wpschoolpress') ?></label>
         </p>
         <div class="wp-pwd">
             <span class="password-input-wrapper">
                 <input type="password" data-reveal="1" data-pw="<?php echo esc_attr( wp_generate_password( 16 ) ); ?>" name="pass1" id="pass1" class="input" size="20" value="" autocomplete="off" aria-describedby="pass-strength-result" />
             </span>
-            <div id="pass-strength-result" class="hide-if-no-js" aria-live="polite"><?php _e( 'Strength indicator' ); ?></div>
+            <div id="pass-strength-result" class="hide-if-no-js" aria-live="polite"><?php esc_html_e( 'Strength indicator','wpschoolpress' ); ?></div>
         </div>
     </div>
     <p class="user-pass2-wrap">
-        <label for="pass2"><?php _e( 'Confirm new password' ) ?></label><br />
+        <label for="pass2"><?php esc_html_e( 'Confirm new password','wpschoolpress' ) ?></label><br />
         <input type="password" name="pass2" id="pass2" class="input" size="20" value="" autocomplete="off" />
     </p>
-    <p class="description indicator-hint"><?php echo wp_get_password_hint(); ?></p>
+    <p class="description indicator-hint"><?php echo esc_html(wp_get_password_hint(),'wpschoolpress'); ?></p>
     <br class="clear" />
     <?php
     /**
@@ -577,12 +577,12 @@ case 'rp' :
     <p class="submit"><input type="submit" name="wp-submit" id="wp-submit" class="button button-primary button-large" value="<?php esc_attr_e('Reset Password'); ?>" /></p>
 </form>
 <p id="nav">
-<a href="<?php echo esc_url( wp_login_url() ); ?>"><?php _e( 'Log in' ); ?></a>
+<a href="<?php echo esc_url( wp_login_url() ); ?>"><?php esc_html_e( 'Log in','wpschoolpress' ); ?></a>
 <?php
 if ( get_option( 'users_can_register' ) ) :
     $registration_url = sprintf( '<a href="%s">%s</a>', esc_url( wp_registration_url() ), __( 'Register' ) );
     /** This filter is documented in wp-includes/general-template.php */
-    echo ' | ' . apply_filters( 'register', $registration_url );
+    echo ' | ' . esc_html(apply_filters( 'register', $registration_url ),'wpschoolpress');
 endif;
 ?>
 </p>
@@ -630,11 +630,11 @@ case 'register' :
 ?>
 <form name="registerform" id="registerform" action="<?php echo esc_url( site_url( 'wp-login.php?action=register', 'login_post' ) ); ?>" method="post" novalidate="novalidate">
     <p>
-        <label for="user_login"><?php _e('Username') ?><br />
+        <label for="user_login"><?php esc_html_e('Username','wpschoolpress') ?><br />
         <input type="text" name="user_login" id="user_login" class="input" value="<?php echo esc_attr(wp_unslash($user_login)); ?>" size="20" /></label>
     </p>
     <p>
-        <label for="user_email"><?php _e('Email') ?><br />
+        <label for="user_email"><?php esc_html_e('Email','wpschoolpress') ?><br />
         <input type="email" name="user_email" id="user_email" class="input" value="<?php echo esc_attr( wp_unslash( $user_email ) ); ?>" size="25" /></label>
     </p>
     <?php
@@ -645,14 +645,14 @@ case 'register' :
      */
     do_action( 'register_form' );
     ?>
-    <p id="reg_passmail"><?php _e( 'Registration confirmation will be emailed to you.' ); ?></p>
+    <p id="reg_passmail"><?php esc_html_e( 'Registration confirmation will be emailed to you.','wpschoolpress' ); ?></p>
     <br class="clear" />
     <input type="hidden" name="redirect_to" value="<?php echo esc_url( $redirect_to ); ?>" />
     <p class="submit"><input type="submit" name="wp-submit" id="wp-submit" class="button button-primary button-large" value="<?php esc_attr_e('Register'); ?>" /></p>
 </form>
 <p id="nav">
-<a href="<?php echo esc_url( wp_login_url() ); ?>"><?php _e( 'Log in' ); ?></a> |
-<a href="<?php echo esc_url( wp_lostpassword_url() ); ?>"><?php _e( 'Lost your password?' ); ?></a>
+<a href="<?php echo esc_url( wp_login_url() ); ?>"><?php esc_html_e( 'Log in','wpschoolpress' ); ?></a> |
+<a href="<?php echo esc_url( wp_lostpassword_url() ); ?>"><?php esc_html_e( 'Lost your password?','wpschoolpress' ); ?></a>
 </p>
 <?php
 wpsp_login_footer('user_login');
@@ -720,7 +720,7 @@ default:
             /** This action is documented in wp-login.php */
             do_action( 'wpsp_login_footer' ); ?>
             <?php if ( $customize_login ) : ?>
-                <script type="text/javascript">setTimeout( function(){ new wp.customize.Messenger({ url: '<?php echo wp_customize_url(); ?>', channel: 'login' }).send('login') }, 1000 );</script>
+                <script type="text/javascript">setTimeout( function(){ new wp.customize.Messenger({ url: '<?php echo esc_attr(wp_customize_url(),'wpschoolpress'); ?>', channel: 'login' }).send('login') }, 1000 );</script>
             <?php endif; ?>
             </body></html>
 <?php       exit;
@@ -785,11 +785,11 @@ default:
 ?>
 <form name="loginform" id="loginform" action="<?php echo esc_url( site_url( 'wp-login.php', 'login_post' ) ); ?>" method="post">
     <p>
-        <label for="user_login"><?php _e( 'Username or Email Address' ); ?><br />
+        <label for="user_login"><?php esc_html_e( 'Username or Email Address','wpschoolpress' ); ?><br />
         <input type="text" name="log" id="user_login"<?php echo esc_attr($aria_describedby_error); ?> class="input" value="<?php echo esc_attr( $user_login ); ?>" size="20" /></label>
     </p>
     <p>
-        <label for="user_pass"><?php _e( 'Password' ); ?><br />
+        <label for="user_pass"><?php esc_html_e( 'Password','wpschoolpress' ); ?><br />
         <input type="password" name="pwd" id="user_pass"<?php echo esc_attr($aria_describedby_error); ?> class="input" value="" size="20" /></label>
     </p>
     <?php
@@ -820,10 +820,10 @@ default:
     if ( get_option( 'users_can_register' ) ) :
         $registration_url = sprintf( '<a href="%s">%s</a>', esc_url( wp_registration_url() ), __( 'Register' ) );
         /** This filter is documented in wp-includes/general-template.php */
-        echo apply_filters( 'register', $registration_url ) . ' | ';
+        echo esc_html(apply_filters( 'register', $registration_url ),'wpschoolpress') . ' | ';
     endif;
     ?>
-    <a href="<?php echo esc_url( wp_lostpassword_url() ); ?>"><?php _e( 'Lost your password?' ); ?></a>
+    <a href="<?php echo esc_url( wp_lostpassword_url() ); ?>"><?php esc_html_e( 'Lost your password?','wpschoolpress' ); ?></a>
 <?php endif; ?>
 </p>
 <?php } ?>

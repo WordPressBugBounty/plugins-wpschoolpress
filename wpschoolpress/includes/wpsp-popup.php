@@ -73,7 +73,7 @@
 
 					<h4><?php echo esc_html("Success","wpschoolpress");?></h4>
 
-					<p><?php echo esc_html("Data Saved Successfully.","wpschoolpress");?></p>
+					<p class="wpsp-success-text"><?php echo esc_html("Data Saved Successfully.","wpschoolpress");?></p>
 
 				</div>
 

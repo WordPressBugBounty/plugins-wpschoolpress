@@ -16,7 +16,7 @@ wpsp_header();
             <div class="subject-inner wpsp-left wpsp-class-filter">
 
                 <form name="StudentClass" id="StudentClass" method="post" action="">
-                <label class="wpsp-labelMain"><?php _e( 'Select Role:', 'wpschoolpress' ); ?></label>
+                <label class="wpsp-labelMain"><?php esc_html_e( 'Select Role:', 'wpschoolpress' ); ?></label>
                 <select name="ClassID" id="ClassID" class="wpsp-form-control">
                     <?php
                     $sel_classid    =   isset( $_POST['ClassID'] ) ? intval($_POST['ClassID']) : '';
@@ -25,10 +25,10 @@ wpsp_header();
                     $usertype = array();
                     ?>
                     <?php if($current_user_role=='administrator' ) { ?>
-                    <option value="all" <?php if($sel_classid=='all') echo esc_html("selected","wpschoolpress"); ?>><?php _e( 'All', 'wpschoolpress' ); ?></option>
+                    <option value="all" <?php if($sel_classid=='all') echo esc_html("selected","wpschoolpress"); ?>><?php esc_html_e( 'All', 'wpschoolpress' ); ?></option>
                     <?php } foreach( $sel_class as $classes ) {
                         if (in_array($classes->t_type, $usertype)) {} else { ?>
-                        <option value="<?php echo esc_attr($classes->t_type);?>" <?php if($sel_classid==$classes->t_type) echo esc_html("selected","wpschoolpress"); ?>><?php echo ucfirst($classes->t_type);?></option>
+                        <option value="<?php echo esc_attr($classes->t_type);?>" <?php if($sel_classid==$classes->t_type) echo esc_html("selected","wpschoolpress"); ?>><?php echo esc_html(ucfirst($classes->t_type));?></option>
                     <?php } array_push($usertype, $classes->t_type); }  ?>
                 </select>
                 </form>
@@ -85,8 +85,8 @@ wpsp_header();
                             <td align="center">
                                 <div class="wpsp-action-col">
                                     <?php $nonce =  wp_create_nonce( 'WPSRegRequest'); ?>
-                                    <a href="javascript:;" data-nonce="<?php echo $nonce;?>"  id="approved_is" data-pop="ViewModal" data-id="<?php echo esc_attr($stinfo->t_id);?>" title="Approve"><?php esc_html_e( 'Approve', 'wpschoolpress' ); ?> |</a>
-                                    <a href="javascript:;" data-nonce="<?php echo $nonce;?>" id="d_teacher" class="wpsp-popclick" data-pop="DisapproveModal" title="Disapprove" data-id="<?php echo esc_attr($stinfo->t_id);?>" ><?php esc_html_e( 'Disapprove', 'wpschoolpress' ); ?></a>
+                                    <a href="javascript:;" data-nonce="<?php echo esc_attr($nonce);?>"  id="approved_is" data-pop="ViewModal" data-id="<?php echo esc_attr($stinfo->t_id);?>" title="Approve"><?php esc_html_e( 'Approve', 'wpschoolpress' ); ?> |</a>
+                                    <a href="javascript:;" data-nonce="<?php echo esc_attr($nonce);?>" id="d_teacher" class="wpsp-popclick" data-pop="DisapproveModal" title="Disapprove" data-id="<?php echo esc_attr($stinfo->t_id);?>" ><?php esc_html_e( 'Disapprove', 'wpschoolpress' ); ?></a>
                                 </div>
                             </td>
                         </tr>

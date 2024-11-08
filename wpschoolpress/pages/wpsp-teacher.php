@@ -59,10 +59,10 @@ wpsp_header();
 						<thead>
 						<tr>
 							<th class="nosort">#</th>
-							<th><?php _e( 'Full Name', 'wpschoolpress' ); ?></th>
-							<th><?php _e( 'Incharge of Class', 'wpschoolpress' ); ?></th>
-							<th><?php _e( 'Subjects Handling', 'wpschoolpress' ); ?></th>
-							<th><?php _e( 'Phone', 'wpschoolpress' ); ?></th>
+							<th><?php esc_html_e( 'Full Name', 'wpschoolpress' ); ?></th>
+							<th><?php esc_html_e( 'Incharge of Class', 'wpschoolpress' ); ?></th>
+							<th><?php esc_html_e( 'Subjects Handling', 'wpschoolpress' ); ?></th>
+							<th><?php esc_html_e( 'Phone', 'wpschoolpress' ); ?></th>
 						</tr>
 						</thead>
 						<tbody>
@@ -111,10 +111,10 @@ wpsp_header();
 						<tfoot>
 						<tr>
 							<th>#</th>
-							<th><?php _e( 'Full Name', 'wpschoolpress' ); ?></th>
-							<th><?php _e( 'Incharge of Class', 'wpschoolpress' ); ?></th>
-							<th><?php _e( 'Subjects Handling', 'wpschoolpress' ); ?></th>
-							<th><?php _e( 'Phone', 'wpschoolpress' ); ?></th>
+							<th><?php esc_html_e( 'Full Name', 'wpschoolpress' ); ?></th>
+							<th><?php esc_html_e( 'Incharge of Class', 'wpschoolpress' ); ?></th>
+							<th><?php esc_html_e( 'Subjects Handling', 'wpschoolpress' ); ?></th>
+							<th><?php esc_html_e( 'Phone', 'wpschoolpress' ); ?></th>
 						</tr>
 						</tfoot>
 					</table>

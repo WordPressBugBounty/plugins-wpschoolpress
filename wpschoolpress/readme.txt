@@ -1,10 +1,10 @@
 ﻿==== School Management System – WPSchoolPress ====
 Contributors: jdsofttech,narendraigex
 Donate link: https://www.wpschoolpress.com/contactus
-Tags: student information management, staff information management, attendance management, time table management, exam schedule management, events management
+Tags: student information management, staff information management, attendance management, time table management, exam schedule management
 Requires at least: 6.5
 Tested up to: 6.6
-Stable tag: 2.2.10
+Stable tag: 2.2.12
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -13,7 +13,6 @@ An extensive plugin for school management with features like attendance, class m
 == Description ==
 WPSchoolPress is currently a highly demanding WordPress plugin for the school management system in 2024. WPSchoolPress is a No.#1 School Management WordPress Plugin allows you to manage entities such as classes, students, sections, exams, timetables, results, ID Cards, teachers, staff, fee management, parent control, invoices, noticeboards, and more.
 
-WPSchoolPress School Management System plugin offers an exclusive system to efficiently manage your institution's unique needs, from class organization to personalized student interactions. Experience streamlined operations with advanced features like custom ID card generation, tailored fee management, and real-time communication through the noticeboard.
 
 = Features =
 
@@ -334,3 +333,6 @@ No, the Plugin does not work with WordPress Multisite (WPMS).
 
 = 2.2.9 =   
 * Fixed - newer wordpress version errors with this plugin resolve.
+
+= 2.2.11 =   
+* Fixed - Fixed Security Basesd issues.

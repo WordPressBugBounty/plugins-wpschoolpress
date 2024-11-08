@@ -42,7 +42,8 @@ $propayment = !$propayment['status'] ? 'notinstalled'    : 'installed';
 	<div class="wpsp-col-xs-12">
 		<div class="wpsp-card">
 			<div class="wpsp-card-head">
-				<h3 class="wpsp-card-title"><?php echo isset( $_GET['id'] ) ? apply_filters( 'wpsp_class_main_heading_update', esc_html__( 'Update Class Information', 'wpschoolpress' )) : apply_filters( 'wpsp_class_main_heading_add', esc_html__( 'Add Class Information', 'wpschoolpress' ));; ?></h3>
+			h3 class="wpsp-card-title"><?php echo isset( $_GET['id'] ) ?  esc_html__( 'Update Class Information', 'wpschoolpress' ): esc_html__( 'Add Class Information', 'wpschoolpress' ); ?></h3>
+				<!-- <h3 class="wpsp-card-title"><?php //echo isset( $_GET['id'] ) ? apply_filters( 'wpsp_class_main_heading_update', esc_html__( 'Update Class Information', 'wpschoolpress' )) : apply_filters( 'wpsp_class_main_heading_add', esc_html__( 'Add Class Information', 'wpschoolpress' ));; ?></h3> -->
 			</div>
 			<div class="wpsp-card-body">
 				 <?php wp_nonce_field( 'ClassAction', 'caction_nonce', '', true ) ?>

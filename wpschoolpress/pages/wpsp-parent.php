@@ -121,7 +121,8 @@ if( is_user_logged_in() ) {
       } else {
         $profile = esc_html("No data retrived!..","wpschoolpress");
       }
-      echo apply_filters('wpsp_parent_profile', wp_kses_post($profile), intval($pid));
+      // echo apply_filters('wpsp_parent_profile', wp_kses_post($profile), intval($pid));
+      echo wp_kses_post($profile);
     }else{
       echo "<p>Parent profile not linked with this account, Kindly contact to School!</p>";
     }
