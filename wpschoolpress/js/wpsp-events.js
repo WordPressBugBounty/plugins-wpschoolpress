@@ -93,7 +93,7 @@ $(document).ready(function() {
     var e = $("#sdate").val(),
       a = $("#edate").val(),
       t = $("#evtitle").val();
-    if ("" == t || "" == e || "" == a) $(".wpsp-popup-return-data").html("Title and dates are mandatory.."), $("#SavingModal").css("display", "none"), $("#WarningModal").css("display", "block"), $("#WarningModal").addClass("wpsp-popVisible");
+    if ("" == t || "" == e) $(".wpsp-popup-return-data").html("Title and dates are mandatory.."), $("#SavingModal").css("display", "none"), $("#WarningModal").css("display", "block"), $("#WarningModal").addClass("wpsp-popVisible");
     else {
       $("#calevent_save").prop("disabled", "disabled");
       var l = $("#calevent_entry").serializeArray();

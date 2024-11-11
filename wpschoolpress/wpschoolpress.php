@@ -3,7 +3,7 @@
 Plugin Name: 	WPSchoolPress
 Plugin URI: 	http://wpschoolpress.com
 Description:    WPSchoolpress is a school management system plugin that makes school activities transparent to parents. For more information please visit our website.
-Version: 		2.2.12
+Version: 		2.2.13
 Author: 		WPSchoolPress Team
 Author URI: 	wpschoolpress.com
 Text Domain:	wpschoolpress
@@ -16,7 +16,7 @@ if (!defined('ABSPATH')) exit;
  * Basic plugin definitions
  *
  * @package WPSchoolPress
- * @since 2.2.12
+ * @since 2.2.13
  */
 if (!defined('WPSP_PLUGIN_URL'))
 {
@@ -28,7 +28,7 @@ if (!defined('WPSP_PLUGIN_PATH'))
 }
 if (!defined('WPSP_PLUGIN_VERSION'))
 {
-	define('WPSP_PLUGIN_VERSION', '2.2.12'); //Plugin version number
+	define('WPSP_PLUGIN_VERSION', '2.2.13'); //Plugin version number
 }
 define('WPSP_PERMISSION_MSG', 'You don\'t have enough permission to access this page');
 // Call the  required files when plugin activate

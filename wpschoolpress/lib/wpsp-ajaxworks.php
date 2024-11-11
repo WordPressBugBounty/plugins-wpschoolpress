@@ -4213,7 +4213,7 @@ function wpsp_TeacherAttendanceView(){
 				echo esc_html($teacherInfo['first_name'] . ' ' . $teacherInfo['middle_name'] . ' ' . $teacherInfo['last_name']); ?></td>
             <td><?php
 				if (isset($reasonList[$teacherInfo['wp_usr_id']])) esc_html_e( 'Absent', 'wpschoolpress' );
-				else echo esc_html_e( 'Present', 'wpschoolpress' ); ?></td>
+				else echo esc_html( 'Present', 'wpschoolpress' ); ?></td>
             <td><?php
 				if ($allPresent == 1) echo '-';
 				else
@@ -4621,10 +4621,11 @@ function wpsp_getStudentsAttendanceList()
 			if (count($studentData) > 0 && empty($msg))
 			{
 				ob_start();
-				echo '<table class="wpsp-table" id="attendanceOverview" cellspacing="0" width="100%" style="width:100%"><tr><th>' . esc_html_e('Roll Number', 'wpschoolpress') . '</th>
-							<th>' . esc_html_e('Student Name', 'wpschoolpress') . '</th>
-							<th>' . esc_html_e('Attendance', 'wpschoolpress') . '</th>
-							<th>' . esc_html_e('Commment', 'wpschoolpress') . '</th>
+				echo '<table class="wpsp-table" id="attendanceOverview" cellspacing="0" width="100%" style="width:100%"><tr>
+				            <th>' . esc_html('Roll Number', 'wpschoolpress') . '</th>
+							<th>' . esc_html('Student Name', 'wpschoolpress') . '</th>
+							<th>' . esc_html('Attendance', 'wpschoolpress') . '</th>
+							<th>' . esc_html('Commment', 'wpschoolpress') . '</th>
 							</tr>';
 
 							foreach($studentData as $student){

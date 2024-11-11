@@ -227,7 +227,7 @@ if (is_user_logged_in()) {
                         <?php
 
                         if (isset($_GET['mid']) && !empty(sanitize_text_field($_GET['mid']))){
-                          //echo '<div id="viewMessageContainer">'.wpsp_ViewMessage(sanitize_text_field($_GET['mid']), true);
+                          echo '<div id="viewMessageContainer">'.wpsp_ViewMessage(sanitize_text_field($_GET['mid']), true);
                           if (isset($_REQUEST['tab']) && sanitize_text_field($_REQUEST['tab']) == 'inbox'){
 
                             if($delete_msg_count == 0){

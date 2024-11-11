@@ -114,7 +114,7 @@ wpsp_header(); ?> <?php
                             </div>
                             <div class="wpsp-col-md-12">
                                 <div class="wpsp-form-group">
-                                    <label><?php echo esc_html(tapply_filters('wpsp_add_event_popup_description_label',"Description :"),"wpschoolpress"); ?> </label> <span id="eventDesc"> </span>
+                                    <label><?php echo esc_html(apply_filters('wpsp_add_event_popup_description_label',"Description :"),"wpschoolpress"); ?> </label> <span id="eventDesc"> </span>
                                 </div>
                             </div> <?php if($current_user_role=='administrator'){?> <div class="wpsp-col-md-12">
                                 <button class="wpsp-btn wpsp-btn-success" id="editEvent"><?php echo esc_html(apply_filters('wpsp_add_event_popup_button_edit_text',"Edit Event"),"wpschoolpress"); ?></button>

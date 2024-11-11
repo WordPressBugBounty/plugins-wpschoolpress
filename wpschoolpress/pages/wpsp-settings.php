@@ -537,7 +537,7 @@ if (!defined( 'ABSPATH' ) )exit('No Such File');
                                         if( isset( $proversion['status'] ) && $proversion['status'] ) {
                                             do_action( 'wpsp_sms_setting_html', $settings_data );
                                         } else {
-                                            esc_html_e( 'Please Purchase This <a href="https://wpschoolpress.com/downloads/sms-add-on-wpschoolpress/" target="_blank">Add-on</a>', 'wpschoolpress' );
+                                            echo esc_html( 'Please Purchase This').  '<a href="https://wpschoolpress.com/downloads/sms-add-on-wpschoolpress/" target="_blank">Add-on</a>';
                                         }
                                         ?>
                                     </div>
