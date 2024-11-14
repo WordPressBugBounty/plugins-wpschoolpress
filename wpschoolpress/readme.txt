@@ -4,7 +4,7 @@ Donate link: https://www.wpschoolpress.com/contactus
 Tags: student information management, staff information management, attendance management, time table management, exam schedule management
 Requires at least: 6.5
 Tested up to: 6.6
-Stable tag: 2.2.13
+Stable tag: 2.2.14
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -336,3 +336,6 @@ No, the Plugin does not work with WordPress Multisite (WPMS).
 
 = 2.2.11 =   
 * Fixed - Fixed Security Basesd issues.
+
+= 2.2.14 =   
+* Fixed - Fixed Security and performance issues.

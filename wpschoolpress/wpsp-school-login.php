@@ -86,8 +86,8 @@ function wpsp_login_header( $title = 'Log In', $message = '', $wp_error = '' ) {
         $wpsp_login_header_url   = network_home_url();
         $wpsp_login_header_title = get_network()->site_name;
     } else {
-        $wpsp_login_header_url   = __( 'https://wordpress.org/' );
-        $wpsp_login_header_title = __( 'Powered by WordPress' );
+        $wpsp_login_header_url   = __( 'https://wordpress.org/','wpschoolpress' );
+        $wpsp_login_header_title = __( 'Powered by WordPress','wpschoolpress' );
     }
     /**
      * Filters link URL of the header logo above login form.
@@ -253,11 +253,11 @@ function wp_login_viewport_meta() {
 function retrieve_password() {
     $errors = new WP_Error();
     if ( empty( $_POST['user_login'] ) ) {
-        $errors->add('empty_username', __('<strong>ERROR</strong>: Enter a username or email address.'));
+        $errors->add('empty_username', __('<strong>ERROR</strong>: Enter a username or email address.','wpschoolpress'));
     } elseif ( strpos( $_POST['user_login'], '@' ) ) {
         $user_data = get_user_by( 'email', trim( wp_unslash( sanitize_text_field($_POST['user_login'] )) ) );
         if ( empty( $user_data ) )
-            $errors->add('invalid_email', __('<strong>ERROR</strong>: There is no user registered with that email address.'));
+            $errors->add('invalid_email', __('<strong>ERROR</strong>: There is no user registered with that email address.','wpschoolpress'));
     } else {
         $login = trim(sanitize_user($_POST['user_login']));
         $user_data = get_user_by('login', $login);
@@ -275,7 +275,7 @@ function retrieve_password() {
     if ( $errors->get_error_code() )
         return $errors;
     if ( !$user_data ) {
-        $errors->add('invalidcombo', __('<strong>ERROR</strong>: Invalid username or email.'));
+        $errors->add('invalidcombo', __('<strong>ERROR</strong>: Invalid username or email.','wpschoolpress'));
         return $errors;
     }
     // Redefining user_login ensures we return the right case in the email.
@@ -285,11 +285,11 @@ function retrieve_password() {
     if ( is_wp_error( $key ) ) {
         return $key;
     }
-    $message = __('Someone has requested a password reset for the following account:') . "\r\n\r\n";
+    $message = __('Someone has requested a password reset for the following account:','wpschoolpress') . "\r\n\r\n";
     $message .= network_home_url( '/' ) . "\r\n\r\n";
     $message .= sprintf(__('Username: %s'), $user_login) . "\r\n\r\n";
-    $message .= __('If this was a mistake, just ignore this email and nothing will happen.') . "\r\n\r\n";
-    $message .= __('To reset your password, visit the following address:') . "\r\n\r\n";
+    $message .= __('If this was a mistake, just ignore this email and nothing will happen.','wpschoolpress') . "\r\n\r\n";
+    $message .= __('To reset your password, visit the following address:','wpschoolpress') . "\r\n\r\n";
     $message .= '<' . network_site_url("wp-login.php?action=rp&key=$key&login=" . rawurlencode($user_login), 'login') . ">\r\n";
     if ( is_multisite() ) {
         $blogname = get_network()->site_name;
@@ -301,7 +301,7 @@ function retrieve_password() {
         $blogname = wp_specialchars_decode(get_option('blogname'), ENT_QUOTES);
     }
     /* translators: Password reset email subject. 1: Site name */
-    $title = sprintf( __('[%s] Password Reset'), $blogname );
+    $title = sprintf( __('[%s] Password Reset','wpschoolpress'), $blogname );
     /**
      * Filters the subject of the password reset email.
      *
@@ -443,9 +443,9 @@ case 'retrievepassword' :
     }
     if ( isset( $_GET['error'] ) ) {
         if ( 'invalidkey' == $_GET['error'] ) {
-            $errors->add( 'invalidkey', __( 'Your password reset link appears to be invalid. Please request a new link below.' ) );
+            $errors->add( 'invalidkey', __( 'Your password reset link appears to be invalid. Please request a new link below.' ,'wpschoolpress') );
         } elseif ( 'expiredkey' == $_GET['error'] ) {
-            $errors->add( 'expiredkey', __( 'Your password reset link has expired. Please request a new link below.' ) );
+            $errors->add( 'expiredkey', __( 'Your password reset link has expired. Please request a new link below.' ,'wpschoolpress') );
         }
     }
     $lostpassword_redirect = ! empty( $_REQUEST['redirect_to'] ) ? $_REQUEST['redirect_to'] : '';
@@ -463,7 +463,7 @@ case 'retrievepassword' :
      * @since 1.5.1
      */
     do_action( 'lost_password' );
-    wpsp_login_header(__('Lost Password'), '<p class="message">' . __('Please enter your username or email address. You will receive a link to create a new password via email.') . '</p>', $errors);
+    wpsp_login_header(__('Lost Password','wpschoolpress'), '<p class="message">' . __('Please enter your username or email address. You will receive a link to create a new password via email.','wpschoolpress') . '</p>', $errors);
     $user_login = isset($_POST['user_login']) ? wp_unslash(sanitize_user($_POST['user_login'])) : '';
 ?>
 <form name="lostpasswordform" id="lostpasswordform" action="<?php echo esc_url( network_site_url( 'wp-login.php?action=lostpassword', 'login_post' ) ); ?>" method="post">
@@ -485,7 +485,7 @@ case 'retrievepassword' :
 <a href="<?php echo esc_url( wp_login_url() ); ?>"><?php esc_html_e('Log in','wpschoolpress') ?></a>
 <?php
 if ( get_option( 'users_can_register' ) ) :
-    $registration_url = sprintf( '<a href="%s">%s</a>', esc_url( wp_registration_url() ), __( 'Register' ) );
+    $registration_url = sprintf( '<a href="%s">%s</a>', esc_url( wp_registration_url() ), __( 'Register' ,'wpschoolpress') );
     /** This filter is documented in wp-includes/general-template.php */
     echo ' | ' . esc_html(apply_filters( 'register', $registration_url ),'wpschoolpress');
 endif;
@@ -523,7 +523,7 @@ case 'rp' :
     }
     $errors = new WP_Error();
     if ( isset($_POST['pass1']) && sanitize_text_field($_POST['pass1']) != sanitize_text_field($_POST['pass2']) )
-        $errors->add( 'password_reset_mismatch', __( 'The passwords do not match.' ) );
+        $errors->add( 'password_reset_mismatch', __( 'The passwords do not match.','wpschoolpress' ) );
     /**
      * Fires before the password reset procedure is validated.
      *
@@ -536,13 +536,13 @@ case 'rp' :
     if ( ( ! $errors->get_error_code() ) && isset( $_POST['pass1'] ) && !empty( $_POST['pass1'] ) ) {
         reset_password($user, sanitize_text_field($_POST['pass1']));
         setcookie( $rp_cookie, ' ', time() - YEAR_IN_SECONDS, $rp_path, COOKIE_DOMAIN, is_ssl(), true );
-        wpsp_login_header( __( 'Password Reset' ), '<p class="message reset-pass">' . __( 'Your password has been reset.' ) . ' <a href="' . esc_url( wp_login_url() ) . '">' . __( 'Log in' ) . '</a></p>' );
+        wpsp_login_header( __( 'Password Reset','wpschoolpress' ), '<p class="message reset-pass">' . __( 'Your password has been reset.' ,'wpschoolpress') . ' <a href="' . esc_url( wp_login_url() ) . '">' . __( 'Log in' ) . '</a></p>' );
         wpsp_login_footer();
         exit;
     }
     wp_enqueue_script('utils');
     wp_enqueue_script('user-profile');
-    wpsp_login_header(__('Reset Password'), '<p class="message reset-pass">' . __('Enter your new password below.') . '</p>', $errors );
+    wpsp_login_header(__('Reset Password','wpschoolpress'), '<p class="message reset-pass">' . __('Enter your new password below.','wpschoolpress') . '</p>', $errors );
 ?>
 <form name="resetpassform" id="resetpassform" action="<?php echo esc_url( network_site_url( 'wp-login.php?action=resetpass', 'login_post' ) ); ?>" method="post" autocomplete="off">
     <input type="hidden" id="user_login" value="<?php echo esc_attr( $rp_login ); ?>" autocomplete="off" />
@@ -580,7 +580,7 @@ case 'rp' :
 <a href="<?php echo esc_url( wp_login_url() ); ?>"><?php esc_html_e( 'Log in','wpschoolpress' ); ?></a>
 <?php
 if ( get_option( 'users_can_register' ) ) :
-    $registration_url = sprintf( '<a href="%s">%s</a>', esc_url( wp_registration_url() ), __( 'Register' ) );
+    $registration_url = sprintf( '<a href="%s">%s</a>', esc_url( wp_registration_url() ), __( 'Register','wpschoolpress' ) );
     /** This filter is documented in wp-includes/general-template.php */
     echo ' | ' . esc_html(apply_filters( 'register', $registration_url ),'wpschoolpress');
 endif;
@@ -626,7 +626,7 @@ case 'register' :
      * @param string $registration_redirect The redirect destination URL.
      */
     $redirect_to = apply_filters( 'registration_redirect', $registration_redirect );
-    wpsp_login_header(__('Registration Form'), '<p class="message register">' . __('Register For This Site') . '</p>', $errors);
+    wpsp_login_header(__('Registration Form'), '<p class="message register">' . __('Register For This Site','wpschoolpress') . '</p>', $errors);
 ?>
 <form name="registerform" id="registerform" action="<?php echo esc_url( site_url( 'wp-login.php?action=register', 'login_post' ) ); ?>" method="post" novalidate="novalidate">
     <p>
@@ -690,13 +690,13 @@ default:
     if ( empty( $_COOKIE[ LOGGED_IN_COOKIE ] ) ) {
         if ( headers_sent() ) {
             /* translators: 1: Browser cookie documentation URL, 2: Support forums URL */
-            $user = new WP_Error( 'test_cookie', sprintf( __( '<strong>ERROR</strong>: Cookies are blocked due to unexpected output. For help, please see <a href="%1$s">this documentation</a> or try the <a href="%2$s">support forums</a>.' ),
-                __( 'https://codex.wordpress.org/Cookies' ), __( 'https://wordpress.org/support/' ) ) );
+            $user = new WP_Error( 'test_cookie', sprintf( __( '<strong>ERROR</strong>: Cookies are blocked due to unexpected output. For help, please see <a href="%1$s">this documentation</a> or try the <a href="%2$s">support forums</a>.' ,'wpschoolpress'),
+                __( 'https://codex.wordpress.org/Cookies','wpschoolpress' ), __( 'https://wordpress.org/support/','wpschoolpress' ) ) );
         } elseif ( isset( $_POST['testcookie'] ) && empty( $_COOKIE[ TEST_COOKIE ] ) ) {
             // If cookies are disabled we can't log in even with a valid user+pass
             /* translators: 1: Browser cookie documentation URL */
-            $user = new WP_Error( 'test_cookie', sprintf( __( '<strong>ERROR</strong>: Cookies are blocked or not supported by your browser. You must <a href="%s">enable cookies</a> to use WordPress.' ),
-                __( 'https://codex.wordpress.org/Cookies' ) ) );
+            $user = new WP_Error( 'test_cookie', sprintf( __( '<strong>ERROR</strong>: Cookies are blocked or not supported by your browser. You must <a href="%s">enable cookies</a> to use WordPress.','wpschoolpress' ),
+                __( 'https://codex.wordpress.org/Cookies','wpschoolpress' ) ) );
         }
     }
     $requested_redirect_to = isset( $_REQUEST['redirect_to'] ) ? sanitize_text_field($_REQUEST['redirect_to']) : '';
@@ -712,7 +712,7 @@ default:
     $redirect_to = apply_filters( 'login_redirect', $redirect_to, $requested_redirect_to, $user );
     if ( !is_wp_error($user) && !$reauth ) {
         if ( $interim_login ) {
-            $message = '<p class="message">' . __('You have logged in successfully.') . '</p>';
+            $message = '<p class="message">' . __('You have logged in successfully.','wpschoolpress') . '</p>';
             $interim_login = 'success';
             wpsp_login_header( '', $message ); ?>
             </div>
@@ -745,21 +745,21 @@ default:
         $errors = new WP_Error();
     if ( $interim_login ) {
         if ( ! $errors->get_error_code() )
-            $errors->add( 'expired', __( 'Your session has expired. Please log in to continue where you left off.' ), 'message' );
+            $errors->add( 'expired', __( 'Your session has expired. Please log in to continue where you left off.' ,'wpschoolpress'), 'message' );
     } else {
         // Some parts of this script use the main login form to display a message
         if      ( isset($_GET['loggedout']) && true == sanitize_text_field($_GET['loggedout']) )
-            $errors->add('loggedout', __('You are now logged out.'), 'message');
+            $errors->add('loggedout', __('You are now logged out.','wpschoolpress'), 'message');
         elseif  ( isset($_GET['registration']) && 'disabled' == sanitize_text_field($_GET['registration']) )
-            $errors->add('registerdisabled', __('User registration is currently not allowed.'));
+            $errors->add('registerdisabled', __('User registration is currently not allowed.','wpschoolpress'));
         elseif  ( isset($_GET['checkemail']) && 'confirm' == sanitize_text_field($_GET['checkemail']) )
-            $errors->add('confirm', __('Check your email for the confirmation link.'), 'message');
+            $errors->add('confirm', __('Check your email for the confirmation link.','wpschoolpress'), 'message');
         elseif  ( isset($_GET['checkemail']) && 'newpass' == sanitize_text_field($_GET['checkemail']) )
-            $errors->add('newpass', __('Check your email for your new password.'), 'message');
+            $errors->add('newpass', __('Check your email for your new password.','wpschoolpress'), 'message');
         elseif  ( isset($_GET['checkemail']) && 'registered' == sanitize_text_field($_GET['checkemail']) )
-            $errors->add('registered', __('Registration complete. Please check your email.'), 'message');
+            $errors->add('registered', __('Registration complete. Please check your email.','wpschoolpress'), 'message');
         elseif ( strpos( $redirect_to, 'about.php?updated' ) )
-            $errors->add('updated', __( '<strong>You have successfully updated WordPress!</strong> Please log back in to see what&#8217;s new.' ), 'message' );
+            $errors->add('updated', __( '<strong>You have successfully updated WordPress!</strong> Please log back in to see what&#8217;s new.' ,'wpschoolpress'), 'message' );
     }
     /**
      * Filters the login page errors.
@@ -773,7 +773,7 @@ default:
     // Clear any stale cookies.
     if ( $reauth )
         wp_clear_auth_cookie();
-    wpsp_login_header(__('Log In'), '', $errors);
+    wpsp_login_header(__('Log In','wpschoolpress'), '', $errors);
     if ( isset($_POST['log']) )
         $user_login = ( 'incorrect_password' == $errors->get_error_code() || 'empty_password' == $errors->get_error_code() ) ? esc_attr(wp_unslash($_POST['log'])) : '';
     $rememberme = ! empty( $_POST['rememberme'] );
@@ -818,7 +818,7 @@ default:
 <p id="nav">
 <?php if ( ! isset( $_GET['checkemail'] ) || ! in_array( $_GET['checkemail'], array( 'confirm', 'newpass' ) ) ) :
     if ( get_option( 'users_can_register' ) ) :
-        $registration_url = sprintf( '<a href="%s">%s</a>', esc_url( wp_registration_url() ), __( 'Register' ) );
+        $registration_url = sprintf( '<a href="%s">%s</a>', esc_url( wp_registration_url() ), __( 'Register' ,'wpschoolpress') );
         /** This filter is documented in wp-includes/general-template.php */
         echo esc_html(apply_filters( 'register', $registration_url ),'wpschoolpress') . ' | ';
     endif;

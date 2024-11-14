@@ -576,9 +576,9 @@ function wpsp_admin_menu()
 		}
 		if ($hook == 'wpschoolpress_page_sch-notify')
 		{
-			wp_enqueue_script('wpsp_wp_admin_jquery37', WPSP_PLUGIN_URL . 'js/wpsp-leavecalendar.js', array(
-				'jquery'
-			) , '1.0.0', true);
+			// wp_enqueue_script('wpsp_wp_admin_jquery37', WPSP_PLUGIN_URL . 'js/wpsp-leavecalendar.js', array(
+			// 	'jquery'
+			// ) , '1.0.0', true);
 
 		}
 		if ($hook == 'wpschoolpress_page_sch-messages' || $hook == 'wpschoolpress_page_sch-parent')
