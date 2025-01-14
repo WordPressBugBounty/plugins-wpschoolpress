@@ -56,7 +56,7 @@ if (count($uids) > 0)
 				// $wpdb->delete( $user_tbl, array( 'ID' => $parentresult->parent_wp_usr_id ) );
 				$pid = $parentresult->parent_wp_usr_id;
 			    if($pid!=''){
-					$pcount = $wpdb->get_row("SELECT * FROM $student_tbl WHERE parent_wp_usr_id='$pid' and wp_usr_id!='$uid'");
+					$pcount = $wpdb->get_row("SELECT * FROM $student_tbl WHERE parent_wp_usr_id='".esc_sql($pid)."' and wp_usr_id!='".esc_sql($uid)."'");
 					if(empty($pcount)){
 							$wpdb->delete( $user_tbl, array( 'ID' => $pid ) );
 					}
@@ -337,7 +337,7 @@ function wpsp_GetMarks($classid, $subjectid, $examid)
 	wpsp_AllAuthenticate();
 	global $wpdb;
 	$mtable = $wpdb->prefix . "wpsp_mark";
-	$marks = $wpdb->get_results("select * from $mtable WHERE subject_id=$subjectid and class_id='".esc_sql($classid)."' and exam_id='".esc_sql($examid)."' order by mid ASC");
+	$marks = $wpdb->get_results("select * from $mtable WHERE subject_id=".esc_sql($subjectid)."' and class_id='".esc_sql($classid)."' and exam_id='".esc_sql($examid)."' order by mid ASC");
 	return $marks;
 }
 function wpsp_GetExMarks($subjectid, $examid)
@@ -480,7 +480,7 @@ function wpsp_DeleteStudent()
 		'sid' => $sid
 	));
 
-    $checkParentExists = $wpdb->get_var("SELECT sid,parent_wp_usr_id FROM $student_tbl WHERE parent_wp_usr_id = '$parent_id' AND wp_usr_id!='".esc_sql($std_id)."'");
+    $checkParentExists = $wpdb->get_var("SELECT sid,parent_wp_usr_id FROM $student_tbl WHERE parent_wp_usr_id = '".esc_sql($parent_id)."' AND wp_usr_id!='".esc_sql($std_id)."'");
     //echo "<pre>";print_r($sid);exit;
 
     if ($checkParentExists > 0) {
@@ -536,8 +536,6 @@ function wpsp_UndoImport()
 	 $type = $result['type'];
 	if ($type == '1')
 	{
-
-
 		$studenttable = $wpdb->prefix . "wpsp_student";
 		foreach($imported_array as $value)
 		{
@@ -1920,13 +1918,16 @@ function wpsp_UpdateSubject()
 
 	global $wpdb;
 	$sub_table = $wpdb->prefix . "wpsp_subject";
-	$class_id = intval($_POST['ClassID']);
-	$srid = sanitize_text_field($_POST['SRowID']);
+	$class_id = esc_sql($_POST['ClassID']);
+	$srid = esc_sql($_POST['SRowID']);
 	$subject_code = sanitize_text_field($_POST['EditSCode']);
-	$subject_name = trim(sanitize_text_field($_POST['EditSName']));
+	// $subject_name = trim(sanitize_text_field($_POST['EditSName']));
 	$subject_teacher_id = sanitize_text_field($_POST['EditSTeacherID']);
 	$book_name = sanitize_text_field($_POST['EditBName']);
-	$check_sub = $wpdb->get_results("select sub_name from $sub_table where UPPER(sub_name)=UPPER('$subject_name') and class_id='".esc_sql($class_id)."' and id!='".esc_sql($srid)."'");
+	$subject_name = esc_sql( $wpdb->esc_like( $_POST['EditSName'] ) );
+    $sub_name = '%' . $subject_name . '%';
+	$check_sub = $wpdb->get_results($wpdb->prepare("select sub_name from $sub_table where 
+	sub_name=%s and class_id=%d and id!=%d",$sub_name,$class_id,$srid));
 	if (count($check_sub) > 0)
 	{
 		echo esc_html( 'Subject name exists!' ,'wpschoolpress');

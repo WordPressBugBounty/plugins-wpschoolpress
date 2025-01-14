@@ -224,13 +224,15 @@ wpsp_header();
 					global $wpdb;
 					$id = sanitize_text_field($_GET['cid']);
 					$class_id = sanitize_text_field(base64_decode($id));
-					$st_id = base64_decode(sanitize_text_field($_GET['sid']));
+					$stu_id = base64_decode(sanitize_text_field($_GET['sid']));
+					$st_id = esc_sql($stu_id);
 					$stl =[];
 					$att_table = $wpdb->prefix . "wpsp_attendance";
 					$st_table = $wpdb->prefix . "wpsp_student";
 					$class_table = $wpdb->prefix . "wpsp_class";
-					$st_wp_id = $wpdb->get_row("select wp_usr_id from $st_table where sid = $st_id");
-					$wp_usr_id = $st_wp_id->wp_usr_id; 
+					$st_wp_id = $wpdb->get_row($wpdb->prepare("select wp_usr_id from $st_table 
+					where sid = '%d'",$st_id));
+					$wp_usr_id = $st_wp_id->wp_usr_id;
 					$ser = '%' . $wp_usr_id . '%';
 					//$ser = '%' . $st_id . '%';
 					$stinfo = $wpdb->get_row("select st.class_id, st.s_rollno, st.wp_usr_id, CONCAT_WS(' ', st.s_fname, st.s_mname, st.s_lname ) AS full_name, c.c_name, c.c_sdate, c.c_edate from $st_table st LEFT JOIN $class_table c ON c.cid='".esc_sql($class_id)."' where st.sid='".esc_sql($st_id)."'");
