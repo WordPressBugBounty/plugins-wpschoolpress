@@ -109,7 +109,7 @@ if( !empty( $stinfo ) ) {
                         <div class="wpsp-col-lg-3 wpsp-col-md-4 wpsp-col-sm-4 wpsp-col-xs-12">
                             <div class="wpsp-form-group">
                                 <label class="wpsp-label" for="dateofbirth"><?php esc_html_e( 'Date of Birth', 'wpschoolpress' );?></label>
-                                <input type="text" class="wpsp-form-control select_date" value="<?php echo !empty( $stinfo->s_dob ) ? esc_attr(wpsp_ViewDate($stinfo->s_dob)) : ''; ?>" id="Dob" name="s_dob" placeholder="mm/dd/yyyy">
+                                <input type="text" class="wpsp-form-control" value="<?php echo !empty( $stinfo->s_dob ) ? esc_attr(wpsp_ViewDate($stinfo->s_dob)) : ''; ?>" id="Dob" name="s_dob" placeholder="mm/dd/yyyy">
                             </div>
                         </div>
                         <div class="wpsp-col-lg-3 wpsp-col-md-4 wpsp-col-sm-4 wpsp-col-xs-12">
@@ -271,7 +271,7 @@ if( !empty( $stinfo ) ) {
                             <div class="wpsp-form-group">
                                 <label class="wpsp-label" for="dateofbirth"><?php esc_html_e( 'Date of Birth', 'wpschoolpress' )?></label>
 
-                                     <input type="text" class="wpsp-form-control select_date datepicker" value="<?php if($tinfo->dob == "0000-00-00"){ } else { echo esc_attr(wpsp_viewDate($tinfo->dob));} ?>" id="Dob" name="Dob" placeholder="Date of Birth">
+                                     <input type="text" class="wpsp-form-control" value="<?php if($tinfo->dob == "0000-00-00"){ } else { echo esc_attr(wpsp_viewDate($tinfo->dob));} ?>" id="Dob" name="Dob" placeholder="Date of Birth">
 
                             </div>
                         </div>

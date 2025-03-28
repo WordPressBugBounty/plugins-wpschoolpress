@@ -55,7 +55,7 @@
         </div>
         <div class="wpsp-form-group">
           <label class="wpsp-label" for="dateofbirth"><?php echo esc_html_e("Date of Birth","wpschoolpress");?></label>
-          <input type="text" class="wpsp-form-control select_date" id="Dob" name="Dob" placeholder="Date of Birth">
+          <input type="text" class="wpsp-form-control " id="Dob" name="Dob" placeholder="Date of Birth">
         </div>
         <div class="wpsp-form-group">
           <label class="wpsp-label" for="displaypicture"><?php echo esc_html_e("Profile Image","wpschoolpress");?></label>

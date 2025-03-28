@@ -5,6 +5,7 @@ wpsp_header();
 		global $current_user, $wpdb,$wpsp_settings_data;
 		$notify_table	=	$wpdb->prefix . "wpsp_notification";
 		$status = $ins = 0;
+		$notify_type_name='SMS';
 		$current_user_role=$current_user->roles[0];
 	if($current_user_role=='teacher') {
 		$receiverTypeList = array( 'all'  => __( 'All Users', 'wpschoolpress' ),
@@ -20,7 +21,8 @@ wpsp_header();
 }
 		$notifyTypeList	=	array( 0 	=>	__( 'All', 'wpschoolpress') ,
 							   1 	=>	__( 'Email', 'wpschoolpress'),
-							   2	=>	__( 'SMS', 'wpschoolpress'),
+							   //    2	=>	__( 'SMS', 'wpschoolpress'),
+							   2	=>	(apply_filters("notify_type_name", $notify_type_name)),
 							   3	=> 	__( 'Web Notification', 'wpschoolpress'),
 							   4	=>	__( 'Push Notification (Android & IOS)', 'wpschoolpress') );
 		//to send notifications
@@ -228,8 +230,8 @@ $usersList1	=	array_merge( $student_ids1,$teacher_ids1);
 													<option value=""><?php esc_html_e( 'How to notify?', 'wpschoolpress'); ?></option>
 													<option value="1"><?php esc_html_e( 'Email', 'wpschoolpress'); ?></option>
 													<option value="2" title="<?php echo esc_attr($protitle); ?>" class="<?php echo esc_attr($proclass); ?>"
-														<?php if( !empty( $prodisable ) ) { ?> disabled <?php  } ?>>
-														<?php esc_html_e( 'SMS', 'wpschoolpress'); ?>
+													<?php $notify_type_name = "SMS"; if( !empty( $prodisable ) ) {?> disabled <?php  } ?>>
+													<?php esc_html_e(apply_filters("notify_type_name", $notify_type_name)); ?>
 													</option>
 													<option value="0"><?php esc_html_e( 'All', 'wpschoolpress'); ?></option>
 												</select>

@@ -114,7 +114,7 @@ wpsp_header();
 								<td >
 									<div class="wpsp-action-col">
 									    <?php if($wpsp_subject->id!=1){?>
-										 <a href="<?php echo esc_url(wpsp_admin_url().'sch-subject&id='.esc_attr(intval ($wpsp_subject->id)).'&edit=true');?>"><i class="icon wpsp-edit wpsp-edit-icon"></i></a>
+										 <a href="<?php echo esc_url(wpsp_admin_url().'sch-subject&id='.esc_attr(intval ($wpsp_subject->id)).'&edit=true');?>" title="Edit"><i class="icon wpsp-edit wpsp-edit-icon"></i></a>
 										<?php } ?>
 										<!-- <a href="<//?php echo esc_url(wpsp_admin_url().'sch-subject&id='.esc_attr(intval ($wpsp_subject->id)).'&edit=true');?>"><i class="icon wpsp-edit wpsp-edit-icon"></i></a> -->
 										<a href="javascript:;" id="d_teacher" class="wpsp-popclick" data-pop="DeleteModal" title="Delete" data-id="<?php echo esc_attr(intval($wpsp_subject->id));?>" >

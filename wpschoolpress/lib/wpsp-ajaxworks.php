@@ -15,71 +15,76 @@ function wpsp_DeleteUser($type, $uids = array())
 	$mark_tbl = $wpdb->prefix . "wpsp_mark";
 	$user_tbl = $wpdb->prefix . "users";
 	$delid = array();
-if (count($uids) > 0)
-	{
-		foreach($uids as $uid)
+	$user = wp_get_current_user();
+	$allowed_roles = array('administrator');
+	if ( array_intersect( $allowed_roles, $user->roles ) ) {
+		if (count($uids) > 0)
 		{
-			$del = wp_delete_user($uid); //delete from user table
-			if ($del)
+			foreach($uids as $uid)
 			{
-				array_push($delid, $uid);
-			}
-		}
-	}
-
-	if (!empty($delid))
-	{
-		foreach($delid as $uid)
-		{
-			if ($type == 'student')
-			{
-				// do_action('wpsp_student_delete', intval($uid));
-				// $parentresult = $wpdb->get_row("SELECT parent_wp_usr_id FROM $student_tbl WHERE wp_usr_id='".esc_sql($uid)."'");
-
-				// $wpdb->delete($student_tbl, array(
-				// 	'wp_usr_id' => $uid
-				// )); //delete from student table
-				// $wpdb->delete($mark_tbl, array(
-				// 	'student_id' => $uid
-				// )); //delete from mark table
-				// $wpdb->delete( $user_tbl, array( 'ID' => $parentresult->parent_wp_usr_id ) );
-
-				// $wpdb->delete($user_tbl, array(
-				// 	'ID' => $uid
-				// ));//delete from User table
-
-                do_action('wpsp_student_delete', intval($uid));
-				$parentresult = $wpdb->get_row("SELECT parent_wp_usr_id FROM $student_tbl WHERE wp_usr_id='".esc_sql($uid)."'");
-
-				$wpdb->delete($student_tbl, array(	'wp_usr_id' => $uid	)); //delete from student table
-				$wpdb->delete($mark_tbl, array(	'student_id' => $uid)); //delete from mark table
-				// $wpdb->delete( $user_tbl, array( 'ID' => $parentresult->parent_wp_usr_id ) );
-				$pid = $parentresult->parent_wp_usr_id;
-			    if($pid!=''){
-					$pcount = $wpdb->get_row("SELECT * FROM $student_tbl WHERE parent_wp_usr_id='".esc_sql($pid)."' and wp_usr_id!='".esc_sql($uid)."'");
-					if(empty($pcount)){
-							$wpdb->delete( $user_tbl, array( 'ID' => $pid ) );
-					}
+				$del = wp_delete_user($uid); //delete from user table
+				if ($del)
+				{
+					array_push($delid, $uid);
 				}
-
-				$wpdb->delete($user_tbl, array('ID' => $uid	));//delete from User table
-			}
-			else
-			if ($type == 'teacher')
-			{
-				do_action('wpsp_teacher_delete', intval($uid));
-				$wpdb->delete($teacher_tbl, array(
-					'wp_usr_id' => $uid
-				));
-				$wpdb->delete($user_tbl, array(
-					'ID' => $uid
-				));//delete from User table
 			}
 		}
-		return TRUE;
-	}
-	else
-	{
+		if (!empty($delid))
+		{
+			foreach($delid as $uid)
+			{
+				if ($type == 'student')
+				{
+					// do_action('wpsp_student_delete', intval($uid));
+					// $parentresult = $wpdb->get_row("SELECT parent_wp_usr_id FROM $student_tbl WHERE wp_usr_id='".esc_sql($uid)."'");
+
+					// $wpdb->delete($student_tbl, array(
+					// 	'wp_usr_id' => $uid
+					// )); //delete from student table
+					// $wpdb->delete($mark_tbl, array(
+					// 	'student_id' => $uid
+					// )); //delete from mark table
+					// $wpdb->delete( $user_tbl, array( 'ID' => $parentresult->parent_wp_usr_id ) );
+
+					// $wpdb->delete($user_tbl, array(
+					// 	'ID' => $uid
+					// ));//delete from User table
+
+					do_action('wpsp_student_delete', intval($uid));
+					$parentresult = $wpdb->get_row("SELECT parent_wp_usr_id FROM $student_tbl WHERE wp_usr_id='".esc_sql($uid)."'");
+
+					$wpdb->delete($student_tbl, array(	'wp_usr_id' => $uid	)); //delete from student table
+					$wpdb->delete($mark_tbl, array(	'student_id' => $uid)); //delete from mark table
+					// $wpdb->delete( $user_tbl, array( 'ID' => $parentresult->parent_wp_usr_id ) );
+					$pid = $parentresult->parent_wp_usr_id;
+					if($pid!=''){
+						$pcount = $wpdb->get_row("SELECT * FROM $student_tbl WHERE parent_wp_usr_id='".esc_sql($pid)."' and wp_usr_id!='".esc_sql($uid)."'");
+						if(empty($pcount)){
+								$wpdb->delete( $user_tbl, array( 'ID' => $pid ) );
+						}
+					}
+
+					$wpdb->delete($user_tbl, array('ID' => $uid	));//delete from User table
+				}
+				else
+				if ($type == 'teacher')
+				{
+					do_action('wpsp_teacher_delete', intval($uid));
+					$wpdb->delete($teacher_tbl, array(
+						'wp_usr_id' => $uid
+					));
+					$wpdb->delete($user_tbl, array(
+						'ID' => $uid
+					));//delete from User table
+				}
+			}
+			return TRUE;
+		}
+		else
+		{
+			return FALSE;
+		}
+	}else{
 		return FALSE;
 	}
 }
@@ -443,7 +448,7 @@ function wpsp_validation($input = array())
 // }
 function wpsp_BulkDelete()
 {
-	wpsp_Authenticate();
+	wpsp_AdminAuthenticate();
 	$uids = explode(',', sanitize_text_field($_POST['UID']));
 	$type = sanitize_text_field($_POST['type']);
 	if (wpsp_DeleteUser($type,$uids))
@@ -502,7 +507,8 @@ function wpsp_DeleteTeacher()
 		echo esc_html("Unauthorized Submission or unknown nonce11!!", "wpschoolpress");
 		exit();
 	}
-	wpsp_Authenticate();
+
+	wpsp_AdminAuthenticate();
 	
 	global $wpdb;
 	$teacher_tbl = $wpdb->prefix . "wpsp_teacher";
@@ -517,7 +523,7 @@ function wpsp_DeleteTeacher()
 	if ($deltec) { 
 		echo esc_html("success", "wpschoolpress");
 	}else{ 
-		echo esc_html("Something went wrong111!", "wpschoolpress");
+		echo esc_html("Something went wrong!", "wpschoolpress");
 	}
 	wp_die();
 }
@@ -647,7 +653,7 @@ function wpsp_AddClass()
 		echo esc_html( 'Unauthorized Submission' ,'wpschoolpress');
 		exit;
 	}
-	wpsp_Authenticate();
+	wpsp_AdminAuthenticate();
 	global $wpdb;
 	$wpsp_class_table = $wpdb->prefix . "wpsp_class";
 	$class_name = sanitize_text_field($_POST['Name']);
@@ -716,7 +722,7 @@ function wpsp_UpdateClass()
 		echo esc_html( 'Unauthorized Submission' ,'wpschoolpress');
 		exit;
 	}
-	wpsp_Authenticate();
+	wpsp_AdminAuthenticate();
 	global $wpdb;
 	$wpsp_class_table = $wpdb->prefix . "wpsp_class";
 	$class_name = sanitize_text_field($_POST['Name']);
@@ -1164,7 +1170,7 @@ function wpsp_DeleteClass()
 		echo esc_html( 'Unauthorized Submission' ,'wpschoolpress');
 		wp_die();
 	}
-	wpsp_Authenticate();
+	wpsp_AdminAuthenticate();
 	global $wpdb;
 	$class_tbl = $wpdb->prefix . "wpsp_class";
 	$cid = intval($_POST['cid']);
@@ -1214,7 +1220,7 @@ function wpsp_AddExam()
 		exit;
 
 	}
-	wpsp_Authenticate();
+	wpsp_AdminAuthenticate();
 	global $wpdb;
 	$wpsp_exam_table = $wpdb->prefix . "wpsp_exam";
 	$exam_name = sanitize_text_field(trim($_POST['ExName']));
@@ -1253,7 +1259,7 @@ function wpsp_UpdateExam()
 		exit;
 
 	}
-	wpsp_Authenticate();
+	wpsp_AdminAuthenticate();
 	global $wpdb;
 	$wpsp_exam_table = $wpdb->prefix . "wpsp_exam";
 	$exam_name = sanitize_text_field($_POST['ExName']);
@@ -1292,7 +1298,7 @@ function wpsp_DeleteExam()
 		echo esc_html("Unauthorized Submissioneee!!", "wpschoolpress");
 		wp_die();
 	}
-	wpsp_Authenticate();
+	wpsp_AdminAuthenticate();
 	global $wpdb;
 	$eid = intval($_POST['eid']);
 	$exam_tbl = $wpdb->prefix . "wpsp_exam";
@@ -1558,10 +1564,14 @@ function wpsp_AttendanceEntry()
 				{
 					$absentreason = 'Your Child ' . $studInfo->s_fname . ' of class ' . esc_html($classname) . ' is absent on ' . esc_html($entry_date) . ' for reason ' . esc_html($reason[$stid]);
 					if($wpsp_settings_data['sch_sms_slaneuser']!= ""){
-					$status = apply_filters('wpsp_send_notification_msg', false, $studInfo->s_phone, $absentreason);
+						$status = apply_filters('wpsp_send_notification_msg', false, $studInfo->s_phone, $absentreason);
 					} else {
-					$status = apply_filters('wpsp_send_notification_msg_twilio', false, $studInfo->s_phone, wp_kses_post($absentreason));
-				}
+						if($wpsp_settings_data['twilio_api_sid']!= "" && $wpsp_settings_data['twilio_api_auth_token']){
+						 $status = apply_filters('wpsp_send_notification_msg_twilio', false, $studInfo->s_phone, wp_kses_post($absentreason));
+						}
+						$description = 'studentAttendance';
+						$status = apply_filters('wpsp_whatsapp_msg_send', $studInfo->s_phone, $description, $studInfo->s_fname, $entry_date);
+					}
 				}
 			}
 		}
@@ -1840,7 +1850,7 @@ function wpsp_AddSubject()
 		echo esc_html("Unauthorized Submission!!", "wpschoolpress");
 		exit;
 	}
-	wpsp_Authenticate();
+	wpsp_AdminAuthenticate();
 	global $wpdb;
 	$subject_tbl = $wpdb->prefix . "wpsp_subject";
 	$code = sanitize_price_array($_POST['SCodes']);
@@ -1914,7 +1924,7 @@ function wpsp_UpdateSubject()
 		echo esc_html("Unauthorized Submission!!", "wpschoolpress");
 		exit;
 	}
-	wpsp_Authenticate();
+	wpsp_AdminAuthenticate();
 
 	global $wpdb;
 	$sub_table = $wpdb->prefix . "wpsp_subject";
@@ -1959,7 +1969,7 @@ function wpsp_DeleteSubject()
 		echo esc_html("Unauthorized Submission!!", "wpschoolpress");
 		wp_die();
 	}
-	wpsp_Authenticate();
+	wpsp_AdminAuthenticate();
 	global $wpdb;
 	$sub_table = $wpdb->prefix . "wpsp_subject";
 	$subid = intval($_POST['sid']);
@@ -2086,7 +2096,7 @@ function wpsp_SaveTimetable()
 	// 	echo esc_html("Unauthorized Submission!!", "wpschoolpress");
 	// 	exit;
 	// }
-	wpsp_Authenticate();
+	wpsp_AdminAuthenticate();
 	$cid = intval($_POST['cid']);
 	$tid = intval($_POST['tid']);
 	$sid = intval($_POST['sid']);
@@ -2150,7 +2160,7 @@ function wpsp_SaveTimetable()
 }
 function wpsp_DeleteTimetable()
 {
-	wpsp_Authenticate();
+	wpsp_AdminAuthenticate();
 	global $wpdb;
 	$ttable = $wpdb->prefix . "wpsp_timetable";
 	$cid = intval($_POST['cid']);
@@ -2170,7 +2180,7 @@ function wpsp_DeleteTimetable()
 /*********** Remove class ************/
 function wpsp_DeleteTimetablesloat()
 {
-	wpsp_Authenticate();
+	wpsp_AdminAuthenticate();
 	global $wpdb;
 	$ttable = $wpdb->prefix . "wpsp_timetable";
 	$cid = intval($_POST['cid']);
@@ -2380,7 +2390,7 @@ function wpsp_GenSetting()
 		echo esc_html("Unauthorized Submission!!", "wpschoolpress");
 		exit;
 	}
-	wpsp_Authenticate();
+	wpsp_AdminAuthenticate();
 	global $wpdb;
 	$wpsp_settings_table = $wpdb->prefix . "wpsp_settings";
     //$logo = isset($_POST['sch_logo']) ? sanitize_text_field($_POST['sch_logo']) : '';
@@ -2459,7 +2469,7 @@ $optionvalues = array_filter($option_value);
 }
 function wpsp_GenSettingsocial()
 {
-	wpsp_Authenticate();
+	wpsp_AdminAuthenticate();
 	global $wpdb;
 	$wpsp_settings_table = $wpdb->prefix . "wpsp_settings";
 	$_POST['type']= esc_html( 'social', 'wpschoolpress' );
@@ -2511,7 +2521,7 @@ function wpsp_GenSettinglicensing()
 		echo esc_html("Unauthorized Submission!!", "wpschoolpress");
 		exit;
 	}
-	wpsp_Authenticate();
+	wpsp_AdminAuthenticate();
 	global $wpdb;
 	$wpsp_settings_table = $wpdb->prefix . "wpsp_settings";
 
@@ -2560,7 +2570,7 @@ wp_die();
 }
 function wpsp_GenSettingsms()
 {
-	wpsp_Authenticate();
+	wpsp_AdminAuthenticate();
 	global $wpdb;
 	$wpsp_settings_table = $wpdb->prefix . "wpsp_settings";
 	 $_POST['type']= esc_html( 'sms', 'wpschoolpress' );
@@ -2655,7 +2665,7 @@ function wpsp_AddSubField()
 		echo esc_html( 'Unauthorized Submission!', 'wpschoolpress' );
 		exit;
 	}
-	wpsp_Authenticate();
+	wpsp_AdminAuthenticate();
 	global $wpdb;
 	$fields_tbl = $wpdb->prefix . "wpsp_mark_fields";
 	$subject_id = intval($_POST['SubjectID']);
@@ -2689,7 +2699,7 @@ function wpsp_DeleteSubField()
 		echo esc_html("Unauthorized Submission!!", "wpschoolpress");
 		wp_die();
 	}
-	wpsp_Authenticate();
+	wpsp_AdminAuthenticate();
 	global $wpdb;
 	$fields_tbl = $wpdb->prefix . "wpsp_mark_fields";
 	$sfid = intval($_POST['sfid']);
@@ -2702,7 +2712,7 @@ function wpsp_DeleteSubField()
 }
 function wpsp_UpdateSubField()
 {
-	wpsp_Authenticate();
+	wpsp_AdminAuthenticate();
 	global $wpdb;
 	$fields_tbl = $wpdb->prefix . "wpsp_mark_fields";
 	$sfid = intval($_POST['sfid']);
@@ -2846,7 +2856,7 @@ function wpsp_AddLeaveDay()
 		echo esc_html("Unauthorized Submission888!!", "wpschoolpress");
 		wp_die();
 	}
-	wpsp_Authenticate();
+	wpsp_AdminAuthenticate();
 	global $wpdb;
 	$leave_table = $wpdb->prefix . "wpsp_leavedays";
 	$sdate = wpsp_StoreDate(sanitize_text_field($_POST['spls']));
@@ -3003,7 +3013,7 @@ function wpsp_AddTransport()
 			echo esc_html("Unauthorized Submission!!", "wpschoolpress");
 			wp_die();
 		}
-		wpsp_Authenticate();
+		wpsp_AdminAuthenticate();
 		global $wpdb;
 		$trans_table = $wpdb->prefix . "wpsp_transport";
 		$validation = wpsp_FormValidation($_POST, ['VhName', 'VhNumb']);
@@ -3134,7 +3144,7 @@ function wpsp_AddTransport()
 }
 function wpsp_UpdateTransport()
 {
-	wpsp_Authenticate();
+	wpsp_AdminAuthenticate();
 	global $wpdb;
 	$trans_table = $wpdb->prefix . "wpsp_transport";
 	if ($_SERVER['REQUEST_METHOD'] === 'POST')
@@ -3326,7 +3336,7 @@ function wpsp_DeleteTransport()
 		echo esc_html("Unauthorized Submission!!", "wpschoolpress");
 		wp_die();
 	}
-	wpsp_Authenticate();
+	wpsp_AdminAuthenticate();
 	global $wpdb;
 	$trans_table = $wpdb->prefix . "wpsp_transport";
 	$id = intval($_POST['id']);
@@ -4301,8 +4311,15 @@ function wpsp_addNotify()
             } else if ($receivers == 'allt' || $receivers == 'all') {
                 $teacher_ids = $wpdb->get_results("select * from $teacher_table st, $users_table ut $whereQuery", ARRAY_A);
             } else {
-                $sqlvar = 'select * from ' . $users_table . ' where ID = ' . esc_sql($receivers) . ' AND user_email!=""';
-                $student_ids = $wpdb->get_results($sqlvar, ARRAY_A);
+                // $sqlvar = 'select * from ' . $users_table . ' where ID = ' . esc_sql($receivers) . ' AND user_email!=""';
+                // $student_ids = $wpdb->get_results($sqlvar, ARRAY_A);
+
+				$sqlvar = $wpdb->prepare(
+					"SELECT * FROM {$users_table} WHERE ID = %d AND user_email != ''",
+					$receivers
+				);
+				$student_ids = $wpdb->get_results($sqlvar, ARRAY_A);
+				
             }
         }
         $usersList = array_merge($student_ids, $parent_ids, $teacher_ids);
@@ -4343,6 +4360,7 @@ function wpsp_addNotify()
                             $notify_msg_response = apply_filters('wpsp_send_notification_msg', false, $to, $description);
                         } else {
                             $notify_msg_response = apply_filters('wpsp_send_notification_msg_twilio', false, $to, $description);
+							$notify_msg_response = apply_filters('wpsp_whatsapp_msg_send', $to, $description, false, false);
                         }
                         if ($notify_msg_response)
                             $status = 1;
@@ -4396,6 +4414,7 @@ function wpsp_getNotifyInfo()
 {
 	wpsp_Authenticate();
 	global $wpdb;
+	$notify_type_name = "SMS"; 
 	if (isset($_POST['notifyid']) && !empty($_POST['notifyid']))
 	{
 		$notify_table = $wpdb->prefix . "wpsp_notification";
@@ -4414,7 +4433,8 @@ function wpsp_getNotifyInfo()
 		$notifyTypeList = array(
 			0 => __('All', 'wpschoolpress') ,
 			1 => __('Email', 'wpschoolpress') ,
-			2 => __('SMS', 'wpschoolpress') ,
+			// 2 => __('SMS', 'wpschoolpress') ,
+			2	=>	(apply_filters("notify_type_name", $notify_type_name)),
 			3 => __('Web Notification', 'wpschoolpress') ,
 			4 => __('Push Notification (Android & IOS)', 'wpschoolpress')
 		);
@@ -4626,7 +4646,7 @@ function wpsp_getStudentsAttendanceList()
 				            <th>' . esc_html('Roll Number', 'wpschoolpress') . '</th>
 							<th>' . esc_html('Student Name', 'wpschoolpress') . '</th>
 							<th>' . esc_html('Attendance', 'wpschoolpress') . '</th>
-							<th>' . esc_html('Commment', 'wpschoolpress') . '</th>
+							<th>' . esc_html('Comment', 'wpschoolpress') . '</th>
 							</tr>';
 
 							foreach($studentData as $student){

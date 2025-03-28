@@ -101,7 +101,7 @@ wpsp_header();
 									<?php	if($current_user_role=='administrator'){?>
 								<td align="center">
 									<div class="wpsp-action-col">
-										<a href="<?php echo esc_url(wpsp_admin_url().'sch-exams&id='.intval($wpsp_exam->eid).'&edit=true');?>"><i class="icon dashicons dashicons-edit wpsp-edit-icon"></i></a>
+										<a href="<?php echo esc_url(wpsp_admin_url().'sch-exams&id='.intval($wpsp_exam->eid).'&edit=true');?>" title="Edit"><i class="icon dashicons dashicons-edit wpsp-edit-icon"></i></a>
 										<a href="javascript:;" id="d_teacher" class="wpsp-popclick" data-pop="DeleteModal" title="Delete" data-id="<?php echo esc_attr($wpsp_exam->eid);?>" >
                       <i class="icon dashicons dashicons-trash wpsp-delete-icon" data-id="<?php echo esc_attr($wpsp_exam->eid);?>"></i>
                     </a>
@@ -183,7 +183,21 @@ else if( $current_user_role=='parent' || $current_user_role='student'){
 					$classtable	=	$wpdb->prefix."wpsp_class";
           $wpsp_exams = [];
 					if( $current_user_role=='parent' ) {
-			  $wpsp_exams =$wpdb->get_results( "SELECT DISTINCT e.*,c.c_name FROM $studtable st, $extable e, $classtable c where st.parent_wp_usr_id='".esc_sql($current_user_Id)."' AND e.classid='".esc_sql($class_id)."' AND c.cid=".esc_sql($class_id)."");
+			//   $wpsp_exams =$wpdb->get_results( "SELECT DISTINCT e.*,c.c_name FROM $studtable st, $extable e, $classtable c where st.parent_wp_usr_id='".esc_sql($current_user_Id)."' AND e.classid='".esc_sql($class_id)."' AND c.cid=".esc_sql($class_id)."");
+
+			  $wpsp_exams = $wpdb->get_results(
+				$wpdb->prepare(
+					"SELECT DISTINCT e.*, c.c_name 
+					FROM $studtable st, $extable e, $classtable c 
+					WHERE st.parent_wp_usr_id = %d 
+					AND e.classid = %d 
+					AND c.cid = %d",
+					$current_user_Id,
+					$class_id,
+					$class_id
+				)
+			);
+			
 				} else {
               $wpsp_exams =$wpdb->get_results( "SELECT DISTINCT e.*,c.c_name FROM $studtable st, $extable e, $classtable c where st.wp_usr_id='".esc_sql($current_user_Id)."' AND e.classid='".esc_sql($class_id)."' AND c.cid='".esc_sql($class_id)."'");
 					}

@@ -22,7 +22,11 @@ if(empty( $error ) && (wpsp_IsMarkEntered( $class_id, $subject_id, $exam_id ) ) 
 	if( isset($_POST['ClassID'] )) {
 		$class_id=sanitize_text_field($_POST['ClassID']);
 		$stl = [];
-		$studentlists	=	$wpdb->get_results("select class_id, sid from $student_table");
+		// $studentlists	=	$wpdb->get_results("select class_id, sid from $student_table");
+		$studentlists = $wpdb->get_results(
+			$wpdb->prepare("SELECT class_id, sid FROM $student_table")
+		);
+		
 		foreach ($studentlists as $stu) {
 			if(is_numeric($stu->class_id) ){
 

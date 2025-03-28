@@ -142,6 +142,14 @@ function wpsp_TeacherAuthenticate() {
 
 }
 
+function wpsp_AdminAuthenticate() {
+	global $current_user;
+	if($current_user->roles[0]!='administrator' ) {
+		echo esc_html("Unauthorized Access!","wpschoolpress");
+		exit;
+	}
+}
+
 function wpsp_AllAuthenticate() {
 
 	global $current_user;

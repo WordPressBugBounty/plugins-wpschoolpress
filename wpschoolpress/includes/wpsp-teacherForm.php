@@ -96,7 +96,7 @@
                                       $is_required = false;
                                   }
                                   ?> <span class="wpsp-required"><?php echo esc_html(($is_required))?"*":""; ?></span></label>
-                                <input type="text" class="wpsp-form-control select_date" data-is_required="<?php echo esc_attr($is_required); ?>" id="Dob" name="Dob" placeholder="mm/dd/yyyy" readonly>
+                                <input type="text" class="wpsp-form-control" data-is_required="<?php echo esc_attr($is_required); ?>" id="Dob" name="Dob" placeholder="mm/dd/yyyy" readonly>
                             </div>
                         </div>
                         <div class="wpsp-col-lg-3 wpsp-col-md-4 wpsp-col-sm-4 wpsp-col-xs-12">

@@ -8,30 +8,24 @@ function wpsp_AddTeacher()
 {
 
 	global $wpdb;
-	if (!isset($_POST['tregister_nonce']) || !wp_verify_nonce(sanitize_text_field($_POST['tregister_nonce']) , 'TeacherRegister'))
-	{
+	if (!isset($_POST['tregister_nonce']) || !wp_verify_nonce(sanitize_text_field($_POST['tregister_nonce']), 'TeacherRegister')) {
 
 		echo esc_html("Unauthorized Submission!!", "wpschoolpress");
 		exit;
-
 	}
 
 	wpsp_Authenticate();
 
-	if (wpsp_CheckUsername(sanitize_user($_POST['Username']) , true) === true)
-	{
+	if (wpsp_CheckUsername(sanitize_user($_POST['Username']), true) === true) {
 
 		echo esc_html("Given User Name Already Exists!!", "wpschoolpress");
 		exit;
-
 	}
 
-	if (email_exists(sanitize_email($_POST['Email'])))
-	{
+	if (email_exists(sanitize_email($_POST['Email']))) {
 
 		echo esc_html("Given Email ID Already registered!", "wpschoolpress");
 		exit;
-
 	}
 
 	$wpsp_teacher_table = $wpdb->prefix . "wpsp_teacher";
@@ -66,30 +60,42 @@ function wpsp_AddTeacher()
 
 	$zipcode = intval($_POST['zipcode']);
 
-	if (!empty($empcode))
+	if (!empty($empcode)) {
 
-	{
+		// $result = $wpdb->get_results("SELECT *FROM $wpsp_teacher_table WHERE empcode='$empcode'", ARRAY_A);
+		$result = $wpdb->get_results(
+			$wpdb->prepare("SELECT * FROM $wpsp_teacher_table WHERE empcode = %s", $empcode),
+			ARRAY_A
+		);
 
-		$result = $wpdb->get_results("SELECT *FROM $wpsp_teacher_table WHERE empcode='$empcode'", ARRAY_A);
-		if(!empty($result)){
-			if (count($result) > 0)
-			{
+		if (!empty($result)) {
+			if (count($result) > 0) {
 				echo esc_html("You have already assign same Employee Code to another Employee", "wpschoolpress");
 				exit;
 			}
 		}
+	}
+	if (!empty($phone)) {
+		$phone_result = $wpdb->get_results(
+			$wpdb->prepare("SELECT * FROM $wpsp_teacher_table WHERE phone = %s", $phone),
+			ARRAY_A
+		);
 
+		if (!empty($phone_result)) {
+			echo esc_html("This Phone Number is already registered with another Teacher", "wpschoolpress");
+			exit;
+		}
 	}
 
 	$userInfo = array(
 
-		'user_login' => sanitize_user($_POST['Username']) ,
+		'user_login' => sanitize_user($_POST['Username']),
 
-		'user_pass' => sanitize_text_field($_POST['Password']) ,
+		'user_pass' => sanitize_text_field($_POST['Password']),
 
-		'first_name' => sanitize_text_field($firstname) ,
+		'first_name' => sanitize_text_field($firstname),
 
-		'user_email' => sanitize_email($_POST['Email']) ,
+		'user_email' => sanitize_email($_POST['Email']),
 
 		'role' => 'teacher'
 
@@ -97,26 +103,25 @@ function wpsp_AddTeacher()
 
 	$user_id = wp_insert_user($userInfo);
 
-	if (!is_wp_error($user_id))
-	{
+	if (!is_wp_error($user_id)) {
 
 		// send registration mail
 
 		$msg = 'Hello ' . esc_html($firstname);
 
-		$msg.= '<br />Your are registered as teacher at <a href="' . esc_url(site_url()) . '">School</a><br /><br />';
+		$msg .= '<br />Your are registered as teacher at <a href="' . esc_url(site_url()) . '">School</a><br /><br />';
 
-		$msg.= 'Your Login details are below.<br />';
+		$msg .= 'Your Login details are below.<br />';
 
-		$msg.= 'Your User Name is : ' . sanitize_user($_POST['Username']) . '<br />';
+		$msg .= 'Your User Name is : ' . sanitize_user($_POST['Username']) . '<br />';
 
-		$msg.= 'Your Password is : ' . sanitize_text_field($_POST['Password']) . '<br /><br />';
+		$msg .= 'Your Password is : ' . sanitize_text_field($_POST['Password']) . '<br /><br />';
 
-		$msg.= 'Please Login by clicking <a href="' . esc_url(site_url() . '/sch-dashboard').'">Here </a><br /><br />';
+		$msg .= 'Please Login by clicking <a href="' . esc_url(site_url() . '/sch-dashboard') . '">Here </a><br /><br />';
 
-		$msg.= 'Thanks,<br />' . get_bloginfo('name');
+		$msg .= 'Thanks,<br />' . get_bloginfo('name');
 
-		wpsp_send_mail(sanitize_email($_POST['Email']) , 'User Registered', $msg);
+		wpsp_send_mail(sanitize_email($_POST['Email']), 'User Registered', $msg);
 
 		$teacher_data = array(
 
@@ -144,7 +149,7 @@ function wpsp_AddTeacher()
 
 			'dol' => !empty($_POST['dol']) ? date('Y-m-d', strtotime(sanitize_text_field($_POST['dol']))) : '',
 
-			'whours' => sanitize_text_field($_POST['whours']) ,
+			'whours' => sanitize_text_field($_POST['whours']),
 
 			'phone' => $phone,
 
@@ -162,19 +167,14 @@ function wpsp_AddTeacher()
 
 
 
-		if ($tch_ins)
-
-		{
+		if ($tch_ins) {
 
 			do_action('wpsp_teacher_created', $user_id, $teacher_data);
-
 		}
 
-		if (!empty($_FILES['displaypicture']['name']))
+		if (!empty($_FILES['displaypicture']['name'])) {
 
-		{
-
-			if (!function_exists('wp_handle_upload')) require_once (ABSPATH . 'wp-admin/includes/file.php');
+			if (!function_exists('wp_handle_upload')) require_once(ABSPATH . 'wp-admin/includes/file.php');
 
 			$mimes = array(
 
@@ -192,45 +192,32 @@ function wpsp_AddTeacher()
 
 			));
 
-			if (isset($avatar['error']))
-
-			{
+			if (isset($avatar['error'])) {
 
 				$msg = "<div class='col-md-12 col-lg-12'><div class='alert alert-danger'>Please upload a valid image file for the avatar.</div></div>";
+			} else
 
-			}
+			if (empty($avatar['file'])) {
 
-			else
+				switch ($avatar['error']) {
 
-			if (empty($avatar['file']))
+					case 'File type does not meet security guidelines. Try another.':
 
-			{
+						add_action('user_profile_update_errors', create_function('$a', '$a->add("avatar_error",__("Please upload a valid image file for the avatar.","wpsp_teacher_photo_edit"));'));
 
-				switch ($avatar['error'])
+						$msg = "<div class='col-md-12 col-lg-12'><div class='alert alert-danger'>Please upload a valid image file for the avatar.</div></div>";
 
-				{
+						break;
 
-				case 'File type does not meet security guidelines. Try another.':
+					default:
 
-					add_action('user_profile_update_errors', create_function('$a', '$a->add("avatar_error",__("Please upload a valid image file for the avatar.","wpsp_teacher_photo_edit"));'));
+						add_action('user_profile_update_errors', create_function('$a', '$a->add("avatar_error","<strong>".__("There was an error uploading the avatar:","wpsp_teacher_photo_edit")."</strong> ' . esc_attr($avatar['error']) . '");'));
 
-					$msg = "<div class='col-md-12 col-lg-12'><div class='alert alert-danger'>Please upload a valid image file for the avatar.</div></div>";
-
-					break;
-
-				default:
-
-					add_action('user_profile_update_errors', create_function('$a', '$a->add("avatar_error","<strong>".__("There was an error uploading the avatar:","wpsp_teacher_photo_edit")."</strong> ' . esc_attr($avatar['error']) . '");'));
-
-					$msg = "<div class='col-md-12 col-lg-12'><div class='alert alert-danger'>There was an error uploading the avatar</div></div>";
-
+						$msg = "<div class='col-md-12 col-lg-12'><div class='alert alert-danger'>There was an error uploading the avatar</div></div>";
 				}
 
 				return;
-
-			}
-
-			else{
+			} else {
 
 				update_user_meta($user_id, 'displaypicture', array(
 
@@ -243,47 +230,27 @@ function wpsp_AddTeacher()
 					'full' => $avatar['url']
 
 				));
-
 			}
-
 		}
 
-		if ($tch_ins)
-
-		{
+		if ($tch_ins) {
 
 			$msg = esc_html("success", "wpschoolpress");
-
-		}
-
-		else
-
-		{
+		} else {
 
 			$msg = esc_html("Oops! Something went wrong try again.", "wpschoolpress");
-
 		}
+	} else {
 
-	}
-
-	else
-
-	{
-
-		if (is_wp_error($user_id))
-
-		{
+		if (is_wp_error($user_id)) {
 
 			$msg = $user_id->get_error_message();
-
 		}
-
 	}
 
 	echo wp_kses_post($msg);
 
 	wp_die();
-
 }
 
 /* This function is used for View Teacher Profile Information */
@@ -292,7 +259,7 @@ function wpsp_TeacherPublicProfile()
 {
 
 	wpsp_Authenticate();
-	
+
 	global $wpdb;
 
 	$tid = sanitize_text_field($_POST['id']);
@@ -301,21 +268,19 @@ function wpsp_TeacherPublicProfile()
 
 	$users_table = $wpdb->prefix . "users";
 
-	$tinfo = $wpdb->get_row("select teacher.*,user.user_email from $teacher_table teacher LEFT JOIN $users_table user ON user.ID=teacher.wp_usr_id where teacher.wp_usr_id='".esc_sql($tid)."'");
+	$tinfo = $wpdb->get_row("select teacher.*,user.user_email from $teacher_table teacher LEFT JOIN $users_table user ON user.ID=teacher.wp_usr_id where teacher.wp_usr_id='" . esc_sql($tid) . "'");
 
 	$loc_avatar = get_user_meta($tid, 'simple_local_avatar', true);
 
 	$img_url = $loc_avatar ? sanitize_text_field($loc_avatar['full']) : WPSP_PLUGIN_URL . 'img/avatar.png';
 
-	if (!empty($tinfo))
-
-	{
+	if (!empty($tinfo)) {
 
 		$profile = "<div class='wpsp-panel-body'>
 
 					<div class='wpsp-userpic'>
 
-						<img src='".esc_url($img_url)."' height='150px' width='150px' class='wpsp-img-round'/>
+						<img src='" . esc_url($img_url) . "' height='150px' width='150px' class='wpsp-img-round'/>
 
 					</div>
 
@@ -325,9 +290,9 @@ function wpsp_TeacherPublicProfile()
 
 							<tr>
 
-								<td><strong>Full Name:</strong> ".esc_html($tinfo->first_name)." ".esc_html($tinfo->middle_name)." ".esc_html( $tinfo->last_name)."</td>
+								<td><strong>Full Name:</strong> " . esc_html($tinfo->first_name) . " " . esc_html($tinfo->middle_name) . " " . esc_html($tinfo->last_name) . "</td>
 
-								<td><strong>Gender: </strong>".esc_html($tinfo->gender)."</td>
+								<td><strong>Gender: </strong>" . esc_html($tinfo->gender) . "</td>
 
 							</tr>
 
@@ -335,29 +300,29 @@ function wpsp_TeacherPublicProfile()
 
 								<td><strong>Date of Birth: </strong>" . wpsp_ViewDate(esc_html($tinfo->dob)) . "</td>
 
-								<td><strong>Email: </strong> ".esc_html($tinfo->user_email)."</td>
+								<td><strong>Email: </strong> " . esc_html($tinfo->user_email) . "</td>
 
 							</tr>
 
 							<tr>
 
-								<td><strong>Phone Number: </strong> ".esc_html($tinfo->phone)."</td>
+								<td><strong>Phone Number: </strong> " . esc_html($tinfo->phone) . "</td>
 
-								<td><strong>Blood Group: </strong> ".esc_html($tinfo->bloodgrp)."</td>
-
-							</tr>
-
-							<tr>
-
-								<td><strong>Position: </strong> ".esc_html($tinfo->position)."</td>
-
-								<td><strong>Qualification: </strong> ".esc_html($tinfo->qualification)."</td>
+								<td><strong>Blood Group: </strong> " . esc_html($tinfo->bloodgrp) . "</td>
 
 							</tr>
 
 							<tr>
 
-								<td colspan='2'><strong>Address: </strong> ".esc_html($tinfo->address, $tinfo->city, $tinfo->country, $tinfo->zipcode)."</td>
+								<td><strong>Position: </strong> " . esc_html($tinfo->position) . "</td>
+
+								<td><strong>Qualification: </strong> " . esc_html($tinfo->qualification) . "</td>
+
+							</tr>
+
+							<tr>
+
+								<td colspan='2'><strong>Address: </strong> " . esc_html($tinfo->address, $tinfo->city, $tinfo->country, $tinfo->zipcode) . "</td>
 
 							</tr>
 
@@ -373,9 +338,9 @@ function wpsp_TeacherPublicProfile()
 
 							<tr>
 
-								<td><strong>Working Hours: </strong> ".esc_html($tinfo->whours)."</td>
+								<td><strong>Working Hours: </strong> " . esc_html($tinfo->whours) . "</td>
 
-								<td><strong>Employee Code : </strong> ".esc_html($tinfo->empcode)."</td>
+								<td><strong>Employee Code : </strong> " . esc_html($tinfo->empcode) . "</td>
 
 							</tr>
 
@@ -390,21 +355,14 @@ function wpsp_TeacherPublicProfile()
 			</div>
 
 		</div>";
-
-	}
-
-	else
-
-	{
+	} else {
 
 		$profile = esc_html("No data retrived!..", "wpschoolpress");
-
 	}
 
 	echo wp_kses_post($profile), intval($tid);
 
 	wp_die();
-
 }
 
 /* This function is used for Update Teacher Information */
@@ -412,12 +370,22 @@ function wpsp_TeacherPublicProfile()
 function wpsp_UpdateTeacher()
 {
 
-	if (!isset($_POST['tregister_nonce']) || !wp_verify_nonce(sanitize_text_field($_POST['tregister_nonce']) , 'TeacherRegister'))
-	{
+	if (!isset($_POST['tregister_nonce']) || !wp_verify_nonce(sanitize_text_field($_POST['tregister_nonce']), 'TeacherRegister')) {
 		echo esc_html("Unauthorized Submission!!", "wpschoolpress");
 		exit;
 	}
 	wpsp_Authenticate();
+
+	// echo "<pre>";print_r(current_user_can('teacher'));
+	// 	$user = wp_get_current_user();
+	// 	$allowed_roles = array( 'administrator');
+	// 	if ( array_intersect( $allowed_roles, $user->roles ) ) {
+	// 	// Stuff here for allowed roles
+	// 	   echo 'admin';
+	// 	}else{
+	// 		echo "not";
+	// 	}
+	// 	exit;
 
 	global $wpdb;
 
@@ -432,28 +400,22 @@ function wpsp_UpdateTeacher()
 
 		sanitize_text_field($_POST['lastname']) => 'required',
 
-		sanitize_email($_POST['Email']) => 'required|email'
+		sanitize_email($_POST['Email']) => 'required|email',
 
 	));
 
-	if (is_array($errors))
-
-	{
+	if (is_array($errors)) {
 
 		echo "<div class='col-md-12'><div class='alert alert-danger'>";
 
-		foreach($errors as $error)
-
-		{
+		foreach ($errors as $error) {
 
 			echo "<li>" . esc_html($error) . "</li>";
-
 		}
 
 		echo "</div></div>";
 
 		return false;
-
 	}
 
 	$firstname = sanitize_text_field($_POST['firstname']);
@@ -491,134 +453,174 @@ function wpsp_UpdateTeacher()
 	$doj = !empty($_POST['Doj']) ? wpsp_StoreDate(sanitize_text_field($_POST['Doj'])) : '';
 
 
-
 	$teachereditprofile = sanitize_text_field($_POST['teachereditprofile']);
 
 
+	if ($teachereditprofile == 'teachereditprofile') {
+		if (current_user_can('teacher')) {
+			wpsp_TeacherAuthenticate();
 
-    if ($teachereditprofile == 'teachereditprofile')
-	{
-		wpsp_TeacherAuthenticate();
+			$user_id =  get_current_user_id();
 
-		$user_id =  get_current_user_id();
+			$teacher_data = array(
 
-		$teacher_data = array(
+				'first_name' => $firstname,
 
-			'first_name' => $firstname,
+				'middle_name' => $middlename,
 
-			'middle_name' => $middlename,
+				'last_name' => $lastname,
 
-			'last_name' => $lastname,
+				'address' => $address,
 
-			'address' => $address,
+				'country' => $country,
 
-			'country' => $country,
+				'city' => $city,
 
-			'city' => $city,
+				'zipcode' => $zipcode,
 
-			'zipcode' => $zipcode,
+				'dob' => $dob,
 
-			'dob' => $dob,
+				'phone' => $phone,
 
-			'phone' => $phone,
+				'qualification' => $qual,
 
-			'qualification' => $qual,
+				'gender' => $gender,
 
-			'gender' => $gender,
+				'bloodgrp' => $bloodgroup
 
-			'bloodgrp' => $bloodgroup
+			);
+
+			$existing_phone = $wpdb->get_var(
+				$wpdb->prepare(
+					"SELECT wp_usr_id FROM $wpsp_teacher_table WHERE phone = %s AND wp_usr_id != %d",
+					$phone,
+					$user_id
+				)
+			);
+
+			if ($existing_phone) {
+				echo "<div class='col-md-12'><div class='alert alert-danger'>Phone number already exists.</div></div>";
+				return false;
+			}
+
+			$existing_empcode = $wpdb->get_var(
+				$wpdb->prepare(
+					"SELECT wp_usr_id FROM $wpsp_teacher_table WHERE empcode = %s AND wp_usr_id != %d",
+					$empcode,
+					$user_id
+				)
+			);
+
+			if ($existing_empcode) {
+				echo "<div class='col-md-12'><div class='alert alert-danger'>Employee code already exists.</div></div>";
+				return false;
+			}
 
 
+			$wpsp_tch_upd = $wpdb->update($wpsp_teacher_table, $teacher_data, array(
 
-		);
+				'wp_usr_id' => $user_id
 
-		$wpsp_tch_upd = $wpdb->update($wpsp_teacher_table, $teacher_data, array(
+			));
+			if ($email != '') {
+				$tch_upd_email = wp_update_user(array(
+					'ID' => $user_id,
+					'user_email' => $email
+				));
+			}
+		}
+	} else {
+		if (current_user_can('administrator')) {
 
-			'wp_usr_id' => $user_id
+			$user_id = intval($_POST['UserID']);
+			$empcode = sanitize_text_field($_POST['Empcode']);
+			$teacher_data = array(
 
-		));
+				'first_name' => $firstname,
 
+				'middle_name' => $middlename,
+
+				'last_name' => $lastname,
+
+				'address' => $address,
+
+				'country' => $country,
+
+				'city' => $city,
+
+				'zipcode' => $zipcode,
+
+				'empcode' => $empcode,
+
+				'dob' => $dob,
+
+				'doj' => $doj,
+
+				'phone' => $phone,
+
+				'qualification' => $qual,
+
+				'gender' => $gender,
+
+				'bloodgrp' => $bloodgroup,
+
+				'position' => $position,
+
+				'dol' => !empty($_POST['dol']) ? date('Y-m-d', strtotime(sanitize_text_field($_POST['dol']))) : '',
+
+				'whours' => sanitize_text_field($_POST['whours'])
+
+			);
+
+			$existing_phone = $wpdb->get_var(
+				$wpdb->prepare(
+					"SELECT wp_usr_id FROM $wpsp_teacher_table WHERE phone = %s AND wp_usr_id != %d",
+					$phone,
+					$user_id
+				)
+			);
+
+			if ($existing_phone) {
+				echo "<div class='col-md-12'><div class='alert alert-danger'>Phone number already exists.</div></div>";
+				return false;
+			}
+
+			$existing_empcode = $wpdb->get_var(
+				$wpdb->prepare(
+					"SELECT wp_usr_id FROM $wpsp_teacher_table WHERE empcode = %s AND wp_usr_id != %d",
+					$empcode,
+					$user_id
+				)
+			);
+
+			if ($existing_empcode) {
+				echo "<div class='col-md-12'><div class='alert alert-danger'>Employee code already exists.</div></div>";
+				return false;
+			}
+
+			$wpsp_tch_upd = $wpdb->update($wpsp_teacher_table, $teacher_data, array(
+				'wp_usr_id' => $user_id
+			));
+
+			if ($email != '') {
+				$tch_upd_email = wp_update_user(array(
+					'ID' => $user_id,
+					'user_email' => $email
+				));
+			}
+		}
 	}
-	else
-	{
-		$user_id = intval($_POST['UserID']);
-		
-		$empcode = sanitize_text_field($_POST['Empcode']);
 
-		$teacher_data = array(
+	if ($wpsp_tch_upd) {
 
-			'first_name' => $firstname,
+		do_action('wpsp_teacher_updated', intval($user_id), $teacher_data);
+	}
+	if (!function_exists('wp_handle_upload')) {
 
-			'middle_name' => $middlename,
-
-			'last_name' => $lastname,
-
-			'address' => $address,
-
-			'country' => $country,
-
-			'city' => $city,
-
-			'zipcode' => $zipcode,
-
-			'empcode' => $empcode,
-
-			'dob' => $dob,
-
-			'doj' => $doj,
-
-			'phone' => $phone,
-
-			'qualification' => $qual,
-
-			'gender' => $gender,
-
-			'bloodgrp' => $bloodgroup,
-
-			'position' => $position,
-
-			'dol' => !empty($_POST['dol']) ? date('Y-m-d', strtotime(sanitize_text_field($_POST['dol']))) : '',
-
-			'whours' => sanitize_text_field($_POST['whours'])
-
-		);
-
-		$wpsp_tch_upd = $wpdb->update($wpsp_teacher_table, $teacher_data, array(
-
-			'wp_usr_id' => $user_id
-
-		));
-
+		require_once(ABSPATH . 'wp-admin/includes/file.php');
 	}
 
-	if ($email != '')
-	{
-
-		$tch_upd_email = wp_update_user(array(
-
-			'ID' => $user_id,
-
-			'user_email' => $email
-
-		));
-
-	}
-
-	if ($wpsp_tch_upd)
-	{
-
-		do_action('wpsp_teacher_updated', intval($user_id) , $teacher_data);
-
-	}
-	if (!function_exists('wp_handle_upload'))
-	{
-
-		require_once (ABSPATH . 'wp-admin/includes/file.php');
-
-	}
-
-	if (!empty($_FILES['displaypicture']['name']))
-	{
+	if (!empty($_FILES['displaypicture']['name'])) {
 
 		$mimes = array(
 
@@ -636,37 +638,29 @@ function wpsp_UpdateTeacher()
 
 		));
 
-		if (isset($avatar['error']))
-		{
+		if (isset($avatar['error'])) {
 
 			$msg = "<div class='col-md-12 col-lg-12'><div class='alert alert-danger'>Please upload a valid image file for the avatar.</div></div>";
-		}
+		} else if (empty($avatar['file'])) {
 
-		else if (empty($avatar['file']))
-		{
+			switch ($avatar['error']) {
 
-			switch ($avatar['error'])
-			{
+				case 'File type does not meet security guidelines. Try another.':
 
-			case 'File type does not meet security guidelines. Try another.':
+					add_action('user_profile_update_errors', create_function('$a', '$a->add("avatar_error",__("Please upload a valid image file for the avatar.","wpsp_teacher_photo_edit"));'));
 
-				add_action('user_profile_update_errors', create_function('$a', '$a->add("avatar_error",__("Please upload a valid image file for the avatar.","wpsp_teacher_photo_edit"));'));
+					$msg = "<div class='col-md-12 col-lg-12'><div class='alert alert-danger'>Please upload a valid image file for the avatar.</div></div>";
 
-				$msg = "<div class='col-md-12 col-lg-12'><div class='alert alert-danger'>Please upload a valid image file for the avatar.</div></div>";
+					break;
 
-				break;
+				default:
 
-			default:
+					add_action('user_profile_update_errors', create_function('$a', '$a->add("avatar_error","<strong>".__("There was an error uploading the avatar:","wpsp_teacher_photo_edit")."</strong> ' . esc_attr($avatar['error']) . '");'));
 
-				add_action('user_profile_update_errors', create_function('$a', '$a->add("avatar_error","<strong>".__("There was an error uploading the avatar:","wpsp_teacher_photo_edit")."</strong> ' . esc_attr($avatar['error']) . '");'));
-
-				$msg = "<div class='col-md-12 col-lg-12'><div class='alert alert-danger'>There was an error uploading the avatar</div></div>";
-
+					$msg = "<div class='col-md-12 col-lg-12'><div class='alert alert-danger'>There was an error uploading the avatar</div></div>";
 			}
 			return;
-		}
-		else
-		{
+		} else {
 
 			update_user_meta($user_id, 'displaypicture', array(
 
@@ -679,39 +673,24 @@ function wpsp_UpdateTeacher()
 				'full' => $avatar['url']
 
 			));
-
 		}
-
 	}
 
-	if (!$wpsp_tch_upd && is_wp_error($tch_upd_email))
-	{
+	if (!$wpsp_tch_upd && is_wp_error($tch_upd_email)) {
 
 		$msg = "<div class='col-md-12 col-lg-12'><div class='alert alert-danger'>Oops! Something went wrong try again.</div></div>";
-
-	}
-
-	elseif (is_wp_error($tch_upd_email))
-	{
+	} elseif (is_wp_error($tch_upd_email)) {
 
 		$msg = "<div class='col-md-12 col-lg-12'><div class='alert alert-warning'>" . $tch_upd_email->get_error_message() . "</div></div>";
 	}
 
-	if (is_wp_error($wpsp_tch_upd))
-	{
+	if (is_wp_error($wpsp_tch_upd)) {
 
-		$msg =  $stu_upd->get_error_message() ;
+		$msg =  $stu_upd->get_error_message();
+	} else {
 
-	}
-	else
-	{
-
-		$msg = esc_html("success","wpschoolpress");
-
+		$msg = esc_html("success", "wpschoolpress");
 	}
 
 	echo wp_kses_post($msg);
-
 }
-
-?>

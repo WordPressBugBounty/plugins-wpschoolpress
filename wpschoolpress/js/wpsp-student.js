@@ -51,7 +51,7 @@ $(document).ready(function() {
     changeMonth: true,
     changeYear: true,
     yearRange: "-50:+0",
-    maxDate: 0,
+    endDate: 0,
   });
   $("#Dob").datepicker({
     autoclose: true,
@@ -59,7 +59,7 @@ $(document).ready(function() {
     todayHighlight: true,
     changeMonth: true,
     changeYear: true,
-    maxDate: 0,
+    endDate: "-1d",
     yearRange: "-50:+0",
     beforeShow: function(input, inst) {
       $(document).off('focusin.bs.modal');
@@ -92,7 +92,7 @@ $(document).ready(function() {
     },
     responsive: true
   });
-  $("#displaypicture,#p_displaypicture").change(function() {
+  $("#displaypicture,#p_displaypicture,.s_p_displaypicture").change(function() {
     var id = $(this).attr('id');
     imagePreview(this); // Use Image Preview
     $('.validation-error-' + id).html('');
@@ -745,17 +745,25 @@ $(document).ready(function() {
       if (input.id == 'displaypicture') {
         reader.onload = function(e) {
           $('#img_preview')
-            .attr('src', e.target.result)
-            .width(112)
-            .height(112);
+          .attr('src', e.target.result)
+          .width(112)
+          .height(112);
         }
       }
+      if (input.classList.contains('s_p_displaypicture') && input.id == 'p_displaypicture') { 
+        reader.onload = function(e) {
+            $('#img_preview')
+              .attr('src', e.target.result)
+              .width(112)
+              .height(112);
+        };
+    }
       if (input.id == 'p_displaypicture') {
         reader.onload = function(e) {
           $('#img_preview1')
-            .attr('src', e.target.result)
-            .width(112)
-            .height(112);
+          .attr('src', e.target.result)
+          .width(112)
+          .height(112);
         }
       }
       reader.readAsDataURL(input.files[0]);

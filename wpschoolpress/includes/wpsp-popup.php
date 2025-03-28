@@ -200,6 +200,49 @@
   </div>
 
 </div>
-
-
 <!-- End Data Delete Popup -->
+ <div class="wpsp-popupMain wpsp-popVisible" id="DeleteModal" data-pop="DeleteModal" style="display:none;">
+
+  <div class="wpsp-overlayer"></div>
+
+  <div class="wpsp-popBody wpsp-alert-body">
+
+	<div class="wpsp-popInner">
+
+		<a href="javascript:;" class="wpsp-closePopup"></a>
+
+		<div class="wpsp-popup-cont wpsp-alertbox wpsp-alert-danger">
+
+			<div class="wpsp-alert-icon-box">
+
+				<i class="icon wpsp-icon-question-mark"></i>
+
+			</div>
+
+			<div class="wpsp-alert-data">
+
+				<h4><?php echo esc_html("Confirmation Needed","wpschoolpress");?></h4>
+
+				<p><?php echo esc_html("Are you sure want to delete?","wpschoolpress");?></p>
+
+			</div>
+
+			<div class="wpsp-alert-btn">
+
+				<input type="hidden" name="teacherid" id="teacherid">
+
+				<?php wp_nonce_field( 'wps_action', 'wps_generate_nonce', '', true ) ?>
+
+				<a class="wpsp-btn wpsp-btn-danger ClassDeleteBt"><?php echo esc_html("Ok","wpschoolpress");?></a>
+
+				<a href="javascript:;" class="wpsp-btn wpsp-dark-btn wpsp-popup-cancel"><?php echo esc_html("Cancel","wpschoolpress");?></a>
+
+			</div>
+
+		</div>
+
+	</div>
+
+  </div>
+
+</div>

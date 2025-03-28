@@ -40,10 +40,10 @@ if( !empty( $stinfo ) ) {
 
         <div class="wpsp-row">
           <?php
-                          do_action('wpsp_before_student_personal_detail_fields');
-                          /*Required field Hook*/
-                          $is_required_item = apply_filters('wpsp_student_personal_is_required',array());
-                        ?>
+                              do_action('wpsp_before_student_personal_detail_fields');
+                              /*Required field Hook*/
+                              $is_required_item = apply_filters('wpsp_student_personal_is_required',array());
+                            ?>
           <div class="wpsp-col-lg-3 wpsp-col-md-4 wpsp-col-sm-4 wpsp-col-xs-12">
             <div class="wpsp-form-group">
               <label class="wpsp-label displaypicture">
@@ -85,13 +85,13 @@ if( !empty( $stinfo ) ) {
           <div class="wpsp-col-lg-3 wpsp-col-md-4 wpsp-col-sm-4 wpsp-col-xs-12">
             <div class="wpsp-form-group">
               <?php
-                            /*Check Required Field*/
-                            if(isset($is_required_item['s_fname'])){
-                                $is_required =  esc_html($is_required_item['s_fname']);
-                            }else{
-                                $is_required = true;
-                            }
-                            ?>
+              /*Check Required Field*/
+              if(isset($is_required_item['s_fname'])){
+                  $is_required =  esc_html($is_required_item['s_fname']);
+              }else{
+                  $is_required = true;
+              }
+              ?>
               <label class="wpsp-label" for="firstname">
                 <?php esc_html_e("First Name","wpschoolpress"); ?>
                 <span class="wpsp-required"><?php echo esc_html(($is_required))?"*":""; ?></span></label>
@@ -142,7 +142,7 @@ if( !empty( $stinfo ) ) {
 
                                   ?>
               <label class="wpsp-label" for="dateofbirth"><?php esc_html_e("Date of Birth","wpschoolpress"); ?><span class="wpsp-required"><?php echo esc_html(($is_required))?"*":""; ?></span></label>
-              <input type="text" data-is_required="<?php echo esc_attr($is_required); ?>" class="wpsp-form-control select_date" value="<?php echo !empty( $stinfo->s_dob ) ? esc_attr(wpsp_ViewDate($stinfo->s_dob)) : ''; ?>" id="Dob" name="s_dob" placeholder="mm/dd/yyyy">
+              <input type="text" data-is_required="<?php echo esc_attr($is_required); ?>" class="wpsp-form-control" value="<?php echo !empty( $stinfo->s_dob ) ? esc_attr(wpsp_ViewDate($stinfo->s_dob)) : ''; ?>" id="Dob" name="s_dob" placeholder="mm/dd/yyyy">
             </div>
           </div>
           <div class="wpsp-col-lg-3 wpsp-col-md-4 wpsp-col-sm-4 wpsp-col-xs-12">

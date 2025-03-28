@@ -246,12 +246,15 @@ wpsp_header();
 							 $stl[] = $class_id;
 						 }
 					}
-					$att_info = $wpdb->get_row("select count(*) as count from $att_table WHERE absents LIKE ".esc_sql($ser)."");
+					$att_info = $wpdb->get_row("select count(*) as count from $att_table WHERE absents LIKE ".esc_sql($ser)." AND class_id='$class_id'");
 					$stinfo->c_edate = wpsp_ViewDate($stinfo->c_edate);
 					$stinfo->c_sdate = wpsp_ViewDate($stinfo->c_sdate);
 					$loc_avatar = get_user_meta($stinfo->wp_usr_id, 'simple_local_avatar', true);
 					$img_url = $loc_avatar ? $loc_avatar['full'] : WPSP_PLUGIN_URL . 'img/avatar.png';
-					$attendance_days = $wpdb->get_results("select * from $att_table where class_id='".esc_sql($class_id)."'");
+					// $attendance_days = $wpdb->get_results("select * from $att_table where class_id='".esc_sql($class_id)."'");
+					$attendance_days = $wpdb->get_results(
+						$wpdb->prepare("SELECT * FROM $att_table WHERE class_id = %d", $class_id)
+					);
 					$present_days = 0;
 					$classid_array = unserialize($stinfo->class_id);
 					$classname_array = [];
@@ -348,17 +351,25 @@ wpsp_header();
 							 $stl[] = $class_id;
 						 }
 					}
-					$att_info = $wpdb->get_row("select count(*) as count from $att_table WHERE absents LIKE '$ser'");
+					$att_info = $wpdb->get_row("select count(*) as count from $att_table WHERE absents LIKE '$ser' AND class_id='$class_id'");
 					$stinfo->c_edate = wpsp_ViewDate($stinfo->c_edate);
 					$stinfo->c_sdate = wpsp_ViewDate($stinfo->c_sdate);
 					$loc_avatar = get_user_meta($st_id, 'simple_local_avatar', true);
 					$img_url = $loc_avatar ? $loc_avatar['full'] : WPSP_PLUGIN_URL . 'img/avatar.png';
-					$attendance_days = $wpdb->get_results("select * from $att_table where class_id='$class_id'");
+					// $attendance_days = $wpdb->get_results("select * from $att_table where class_id='$class_id'");
+					$attendance_days = $wpdb->get_results(
+						$wpdb->prepare("SELECT * FROM $att_table WHERE class_id = %d", $class_id)
+					);
+					
 					$present_days = 0;
 					$classid_array = unserialize($stinfo->class_id);
 					$classname_array = array();
 					foreach ($classid_array as $id ) {
-						$clasname = $wpdb->get_var("SELECT c_name FROM $class_table where cid='$class_id'");
+						// $clasname = $wpdb->get_var("SELECT c_name FROM $class_table where cid='$class_id'");
+						$clasname = $wpdb->get_var(
+							$wpdb->prepare("SELECT c_name FROM $class_table WHERE cid = %d", $class_id)
+						);
+						
 						$classname_array[] = $clasname;
 					}
 					foreach($attendance_days as $days => $attendance)

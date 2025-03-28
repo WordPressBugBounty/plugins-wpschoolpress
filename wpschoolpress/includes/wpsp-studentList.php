@@ -50,7 +50,7 @@ if (!defined( 'ABSPATH' ) )exit('No Such File');
 					$class_table	=	$wpdb->prefix."wpsp_class";
 					$sel_class		=	$wpdb->get_results("select cid,c_name from $class_table Order By cid ASC");
 					?>
-          <?php if($current_user_role=='administrator' ) { ?>
+          <?php if($current_user_role=='administrator' ||  $current_user_role=='teacher') { ?>
           <option value="all" <?php if($sel_classid=='all') echo esc_html("selected","wpschoolpress"); ?>><?php esc_html_e( 'All', 'wpschoolpress' ); ?></option>
           <?php } foreach( $sel_class as $classes ) {
 					?>
@@ -166,13 +166,13 @@ if (!defined( 'ABSPATH' ) )exit('No Such File');
 										if(is_numeric($stu->class_id) ){
 											if($stu->class_id == $class_id){
 											 $stl[] = $stu->sid;
-										 }
+										  }
 										}
 										else{
 											 $class_id_array = unserialize( $stu->class_id );
-											 if(in_array($class_id, $class_id_array)){
+											  if(in_array($class_id, $class_id_array)){
 												 $stl[] = $stu->sid;
-											 }
+											  }
 										}
 									}
 
@@ -191,23 +191,26 @@ if (!defined( 'ABSPATH' ) )exit('No Such File');
                                     $id = esc_sql($id);
 							$students	=	$wpdb->get_results("select * from $student_table s, $users_table u where u.ID=s.wp_usr_id AND sid = '$id' and user_login != 'student' order by sid desc");
 							$plugins_url=plugins_url();
-							$teacherId = '';
-							if( $currentSelectClass != 'all' )
-								$teacherId	=	$wpdb->get_var("select teacher_id from $class_table WHERE cid=$currentSelectClass");
+							// $teacherId = '';
 
 							$pendingcount =0;
-							$cid = array();
+							// $cid = array();
 							foreach($students as $stinfo)
 							{
-								//echo $stinfo->wp_usr_id;
+								
 
 								if(is_numeric($stinfo->class_id) ){
 									 $cid[] = $stinfo->class_id;
 								}
 								else{
 									 $class_id_array = unserialize( $stinfo->class_id );
-										 $cid[] = $class_id_array;
+									 $cid = $class_id_array;
 								}
+                //echo "<pre>";print_r($cid);
+                $cidds = implode(",",$cid);
+                // if( $currentSelectClass != 'all' )
+								$teacherId	=	$wpdb->get_var("select teacher_id from $class_table WHERE cid IN($cidds)");
+              
 								$courses = get_user_meta( $stinfo->parent_wp_usr_id, '_pay_woocommerce_enrolled_class_access_counter', true );
 								$results = $wpdb->get_results("SELECT s.wp_usr_id,f.student_id,f.order_id FROM wp_wpsp_student AS s INNER JOIN wp_wpsp_fees AS f ON f.student_id =  s.wp_usr_id");
                                 //  echo"<pre>";print_r($results);
@@ -292,15 +295,16 @@ if (!defined( 'ABSPATH' ) )exit('No Such File');
                 <a href="<?php echo "?id=".esc_attr($stinfo->wp_usr_id);?>javascript:;" data-id="<?php echo esc_attr($stinfo->wp_usr_id);?>" data-pop="ViewModal" class="viewAttendance wpsp-popclick" title="Attendance">
                   <i class="icon dashicons dashicons-admin-users wpsp-attendance-icon"></i>
                 </a>
+                <!-- <//?php if ( in_array( 'administrator', $role ) || ( !empty( $teacherId ) && $teacherId==$cuserId ) ) { ?> -->
                 <a href="<?php echo esc_url(wpsp_admin_url().'sch-student&id='. esc_attr($stinfo->wp_usr_id).'&edit=true');?>" title="Edit"><i class="icon dashicons dashicons-edit wpsp-edit-icon"></i>
                 </a>
-                <?php if ( in_array( 'administrator', $role ) || ( !empty( $teacherId ) && $teacherId==$cuserId ) ) { ?>
+                <?php if ( in_array( 'administrator', $role )) { ?>
                 <a href="javascript:;" id="d_teacher" class="wpsp-popclick" data-pop="DeleteModal" title="Delete" data-id="<?php echo esc_attr($stinfo->sid);?>">
                   <i class="icon dashicons dashicons-trash wpsp-delete-icon" data-id="<?php echo esc_attr($stinfo->sid);?>"></i>
                 </a>
                 <?php }
 
-											  if($prodisablehistory == "installed"){?>
+								if($prodisablehistory == "installed"){?>
                 <a href="<?php echo esc_url(wpsp_admin_url().'sch-history&id='.base64_encode($stinfo->wp_usr_id));?>" title="History">
                   <i class="icon dashicons dashicons-image-rotate wpsp-view-icon" data-id="<?php echo esc_attr($stinfo->sid);?>"></i>
                 </a>

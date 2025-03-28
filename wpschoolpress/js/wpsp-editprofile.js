@@ -13,7 +13,7 @@ $(document).ready(function() {
     todayHighlight: !0,
     changeMonth: !0,
     changeYear: !0,
-    maxDate: 0,
+    endDate: "-1d",
     yearRange: "-50:+0",
     beforeShow: function(e, a) {
       $(document).off("focusin.bs.modal")

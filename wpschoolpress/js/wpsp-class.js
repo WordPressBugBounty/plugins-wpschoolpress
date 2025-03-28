@@ -89,7 +89,7 @@ $(document).ready(function() {
               window.location.href = e
             }, 1e3);
             $("#ClassAddForm").trigger("reset"), $("#c_submit").attr("disabled", !0)
-          } else $(".wpsp-popup-return-data").html(a), $("#SavingModal").css("display", "none"), $("#WarningModal").css("display", "block"), $("#WarningModal").addClass("wpsp-popVisible")
+          } else $("#c_submit").attr("disabled", false), $(".wpsp-popup-return-data").html(a), $("#SavingModal").css("display", "none"), $("#WarningModal").css("display", "block"), $("#WarningModal").addClass("wpsp-popVisible")
         },
         complete: function() {}
       })

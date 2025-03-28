@@ -296,19 +296,13 @@ $plugins_url=plugins_url();
 	    <div class="wpsp-card-body">
 
 	    	<?php if($current_user_role=='administrator') { ?>
-
-	    		<div class="wpsp-bulkaction">
-
-					<select name="bulkaction" class="wpsp-form-control" id="bulkaction">
-
-					<option value=""><?php esc_html_e( 'Select Action', 'wpschoolpress' ); ?></option>
-
-					<option value="bulkUsersDelete" id="d_teacher"><?php esc_html_e( 'Delete', 'wpschoolpress' ); ?></option>
-
-					</select>
-
+	    		<div class="wpsp-bulkaction d-none">
+				<button id="bulkDel" class="wpsp-btn wpsp-btn-danger">Delete</button>
+					<!-- <select name="bulkaction" class="wpsp-form-control" id="bulkaction">
+					<option value=""><//?php esc_html_e( 'Select Action', 'wpschoolpress' ); ?></option>
+					<option value="bulkUsersDelete" id="d_teacher"><//?php esc_html_e( 'Delete', 'wpschoolpress' ); ?></option>
+					</select> -->
 				</div>
-
 			<?php } ?>
 
 			<table id="teacher_table" class="wpsp-table" cellspacing="0" width="100%" style="width:100%">
@@ -373,7 +367,7 @@ $plugins_url=plugins_url();
 
 									<div class="wpsp-action-col">
 
-									<a href="<?php echo "?id=".esc_attr($tinfo->wp_usr_id);?>javascript:;" class="wpsp-popclick ViewTeacher"  data-id="<?php echo esc_attr($tinfo->wp_usr_id);?>" data-pop="ViewModal"><i class="icon dashicons dashicons-visibility wpsp-view-icon"></i></a>
+									<a href="<?php echo "?id=".esc_attr($tinfo->wp_usr_id);?>javascript:;" title="View" class="wpsp-popclick ViewTeacher"  data-id="<?php echo esc_attr($tinfo->wp_usr_id);?>" data-pop="ViewModal"><i class="icon dashicons dashicons-visibility wpsp-view-icon"></i></a>
 
 									<?php if($current_user_role=='administrator') { ?>
 

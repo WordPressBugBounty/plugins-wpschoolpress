@@ -101,7 +101,7 @@ if (!empty($tinfo))
             <div class="wpsp-col-lg-3 wpsp-col-md-4 wpsp-col-sm-4 wpsp-col-xs-12">
               <div class="wpsp-form-group">
                 <label class="wpsp-label" for="dateofbirth"><?php esc_html_e( 'Date of Birth', 'wpschoolpress' ); ?></label> <?php if ($edit) { ?>
-                <input type="text" class="wpsp-form-control select_date datepicker" value="<?php if ($tinfo->dob == "0000-00-00"){ }else{ echo esc_attr(wpsp_viewDate($tinfo->dob));} ?>" id="Dob" name="Dob" placeholder="Date of Birth"> <?php } else { echo esc_html(wpsp_viewDate($tinfo->dob),'wpschoolpress'); } ?>
+                <input type="text" class="wpsp-form-control" value="<?php if ($tinfo->dob == "0000-00-00"){ }else{ echo esc_attr(wpsp_viewDate($tinfo->dob));} ?>" id="Dob" name="Dob" placeholder="Date of Birth"> <?php } else { echo esc_html(wpsp_viewDate($tinfo->dob),'wpschoolpress'); } ?>
               </div>
             </div>
             <div class="wpsp-col-lg-3 wpsp-col-md-4 wpsp-col-sm-4 wpsp-col-xs-12">

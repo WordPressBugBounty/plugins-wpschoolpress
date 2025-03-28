@@ -669,7 +669,6 @@ $sql_student = "CREATE TABLE $student_table  (
 	dbDelta($sql_teacher);
 
 
-
 	//Duration after how many times it occurs
 
 	//due time  after that it consider as due date
