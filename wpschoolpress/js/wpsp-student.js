@@ -515,10 +515,17 @@ $(document).ready(function() {
   });
 
 
+  $('.ccheckbox ').change(function(){
+    if($(this).prop("checked")) {
+      $('.wpsp-bulkaction').removeClass("d-none");
+    } else {
+      $('.wpsp-bulkaction').addClass("d-none");
+    }
+  });
+  
   $('#bulkaction').change(function() {
     var op = $(this).val();
     if (op == 'bulkUsersDelete') {
-
       var uids = $('input[name^="UID"]').map(function() {
         if ($(this).prop('checked') == true)
           return this.value;
@@ -532,6 +539,7 @@ $(document).ready(function() {
         return false;
       } else {
         $("#DeleteModal").css("display", "block");
+        $("#DeleteModal").addClass("wpsp-popVisible");
         $(document).on('click', '.ClassDeleteBt', function(e) {
           var data = [];
           var nn = $('#wps_generate_nonce').val();

@@ -611,6 +611,14 @@ if (!defined( 'ABSPATH' ) )exit('No Such File');
                                                     
                                                 </div>
                                             </div>
+
+                                            <!-- Add LMS Lisenece button -->
+                                            <div class="wpsp-col-lg-12 wpsp-col-md-12 wpsp-col-sm-4 wpsp-col-xs-12">
+                                                <div class="wpsp-form-group mes-dedeactivate-block">
+                                                    <label class="wpsp-label"><?php esc_html_e("LMS Addons :","wpschoolpress");?></label>
+                                                    <input type="text" name="wpslms"  class="wpsp-form-control" value="<?php echo isset( $settings_data['wpslms'] ) ? esc_attr($settings_data['wpslms']) : '';?>">
+                                                </div>
+                                            </div>
                                             
                                             <?php  do_action('wpsp_after_license'); ?>
                                             <div class="wpsp-col-lg-12 wpsp-col-md-12 wpsp-col-sm-12">

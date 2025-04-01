@@ -2,9 +2,10 @@
 Contributors: jdsofttech,narendraigex
 Donate link: https://www.wpschoolpress.com/contactus
 Tags: student information management, staff information management, attendance management, time table management, exam schedule management
-Requires at least: 6.5
-Tested up to: 6.6
-Stable tag: 2.2.19
+Requires at least: 6.6
+Tested up to: 6.7
+Requires PHP: 7.4
+Stable tag: 2.2.20
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -77,6 +78,16 @@ Please visit our website wpschoolpress.freshdesk.com for FAQs, Installation guid
 
 = Does your plugin work with WordPress Multisite (WPMS)? =
 No, the Plugin does not work with WordPress Multisite (WPMS).
+
+= How can I purchase a premium / paid / full version of the plugin?
+The plugin is free to download. To add more features, visit our website www.wpschoolpress.com/wpschoolpress-features/ to find the add-ons to purchase.
+
+= What are add-ons?
+Addons can be used to enhance the features and functionalities of the plugin as per your requirements, such as SMS notifications, Bulk Export & Import, Print etc. To read about all the paid add-ons, please visit www.wpschoolpress.com/school-management-add-ons-wpschoolpress/
+
+= I would like to integrate SMS services with the School Management System.
+Please purchase the SMS addon from our website www.wpschoolpress.com/downloads/sms-add-on-wpschoolpress/ and install it as the regular plugin to integrate SMS services with the School Management System.
+
 
 == Screenshots ==
 
@@ -350,3 +361,7 @@ No, the Plugin does not work with WordPress Multisite (WPMS).
 = 2.2.18 =   
 * Fixed   - Resolved SQl injection issues and Security and performance issues.
 * Updated - SMS Add-on Script.
+
+= 2.2.20 =   
+* Fixed   - Resolved SQl injection issues and Security and performance issues.
+* Updated - LMS Add-on Script.

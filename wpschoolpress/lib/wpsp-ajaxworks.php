@@ -2532,6 +2532,7 @@ function wpsp_GenSettinglicensing()
         $option_value['mcaon'] = sanitize_text_field($_POST['mcaon']);
         $option_value['onlinepay'] = sanitize_text_field($_POST['onlinepay']);
 		$option_value['socialmedia'] = sanitize_text_field($_POST['socialmedia']);
+		$option_value['wpslms'] = sanitize_text_field($_POST['wpslms']);
 
 		// $option_value['sgoogle'] = sanitize_text_field($_POST['sgoogle']);
 		// $option_value['spinterest'] = sanitize_text_field($_POST['spinterest']);

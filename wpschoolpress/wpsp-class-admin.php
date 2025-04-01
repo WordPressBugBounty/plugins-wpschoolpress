@@ -624,31 +624,31 @@ function wpsp_admin_menu()
 		$wp_admin_bar->add_menu(array(
 			'parent' => false,
 			'id' => 'dashboard',
-			'title' => _('WPSchoolPress Dashboard') ,
+			'title' => __('WPSchoolPress Dashboard','wpschoolpress') ,
 			'href' => $wpsp_wpschooldashboard_url
 		));
 		$wp_admin_bar->add_menu(array(
 			'parent' => 'dashboard',
 			'id' => 'teacher',
-			'title' => _('Teacher') ,
+			'title' => __('Teacher','wpschoolpress') ,
 			'href' => $wpsp_wpschoolteacher_url
 		));
 		$wp_admin_bar->add_menu(array(
 			'parent' => 'dashboard',
 			'id' => 'student',
-			'title' => _('Student') ,
+			'title' => __('Student','wpschoolpress') ,
 			'href' => $wpsp_wpschoolstudent_url
 		));
 		$wp_admin_bar->add_menu(array(
 			'parent' => 'dashboard',
 			'id' => 'class',
-			'title' => _('Class') ,
+			'title' => __('Class','wpschoolpress') ,
 			'href' => $wpsp_wpschoolclass_url
 		));
 		$wp_admin_bar->add_menu(array(
 			'parent' => 'dashboard',
 			'id' => 'parent',
-			'title' => _('Parent') ,
+			'title' => __('Parent','wpschoolpress') ,
 			'href' => $wpsp_wpschoolparent_url
 		));
 	}

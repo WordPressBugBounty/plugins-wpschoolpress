@@ -117,7 +117,7 @@ function wpsp_sidebar(){
   global $current_user, $wp_roles, $current_user_name;
   $current_user_role=$current_user->roles[0];
   $page = $_GET['page'] ?  sanitize_text_field(ltrim(strstr($_GET['page'],'-'),'-')) : '';
-  $dashboard_page=$message_page=$student_page=$teacher_page=$parent_page=$class_page=$attendance_page=$subject_page=$mark_page=$exam_page=$event_page=$timetable_page=$import_page=$notify_page=$sms_page=$transport_page=$settings_page=$settings_general_page=$settings_wrkhours_page=$settings_subfield_page=$leave_page=$teacher_attendance_page=$settings_chgpw_page      = $viewpayment= $addpayment= $history_page =$payment_page_main='';
+  $dashboard_page=$message_page=$lesson_page=$quiz_page=$question_page=$student_page=$teacher_page=$parent_page=$class_page=$attendance_page=$subject_page=$mark_page=$exam_page=$event_page=$timetable_page=$import_page=$notify_page=$sms_page=$transport_page=$settings_page=$settings_general_page=$settings_wrkhours_page=$settings_subfield_page=$leave_page=$teacher_attendance_page=$settings_chgpw_page      = $viewpayment= $addpayment= $history_page =$payment_page_main='';
   $proversion1       =    wpsp_check_pro_version('wpsp_addon_version');
   $prodisable1       =    !$proversion1['status'] ? 'notinstalled'    : 'installed';
   $prohistory        =    wpsp_check_pro_version('wpsp_mc_version');
@@ -129,6 +129,8 @@ function wpsp_sidebar(){
 
   $prosocial        =    wpsp_check_pro_version('wpsp_sm_version');
   $prosocial        =    !$prosocial['status'] ? 'notinstalled'    : 'installed';
+  $prolms1          =    wpsp_check_pro_version('wpsp_addon_lms');
+  $prolms1          =    !$prolms1['status'] ? 'notinstalled'    : 'installed';
 
   include(WPSP_PLUGIN_PATH . 'includes/filter_menu.php');
 
@@ -221,6 +223,15 @@ function wpsp_sidebar(){
       break;
       case 'history' :
         $history_page='active';
+        break;
+      case 'lessons':
+        $lesson_page = 'active';
+        break;
+      case 'quizzes':
+        $quiz_page = 'active';
+        break;
+      case 'question':
+        $question_page = 'active';
         break;
     }
 
@@ -391,8 +402,27 @@ function wpsp_sidebar(){
                   </a>
                 </li>
               </ul>
-          </li>
-          <li class='has-submenu ".((isset($attendance_page_main)? esc_attr($attendance_page_main) : ''))."'>
+          </li>";
+          if($prolms1 == 'installed'){
+          echo "<li class='has-submenu'>
+            <a href='" . esc_url(site_url('wp-admin/admin.php?page=sch-attendance')) . "'>
+              <i class='dashicons dashicons-clipboard icon'></i>
+              <span>" . $sch_lms . "</span>
+            </a>
+            <ul class='sub-menu'>
+              <li class='" . esc_attr($lesson_page) . "'><a href='" . esc_url(site_url('wp-admin/admin.php?page=sch-lessons')) . "'>
+                <span>" . $sch_lesson . "</span>
+              </a></li>
+              <li class='" . esc_attr($quiz_page) . "'><a href='" . esc_url(site_url('wp-admin/admin.php?page=sch-quizzes')) . "'>
+                <span>" . $sch_quiz . "</span>
+              </a></li>
+              <li class='" . esc_attr($question_page) . "'><a href='" . esc_url(site_url('wp-admin/admin.php?page=sch-questions')) . "'>
+                <span>" . $sch_question . "</span>
+              </a></li>
+              </ul>
+          </li>";
+          }
+          echo "<li class='has-submenu ".((isset($attendance_page_main)? esc_attr($attendance_page_main) : ''))."'>
             <a href='".esc_url(site_url('wp-admin/admin.php?page=sch-attendance'))."'>
               <i class='dashicons dashicons-clipboard icon'></i>
               <span>".$sch_attendance."</span>
@@ -408,7 +438,7 @@ function wpsp_sidebar(){
                 </a>
                </li>";
             }
-          echo"</ul>
+          echo "</ul>
           </li>
           <li class='".esc_attr($event_page)."'>
             <a href='".esc_url(site_url('wp-admin/admin.php?page=sch-events'))."'>
@@ -513,6 +543,15 @@ function wpsp_sidebar(){
         case 'history' :
         $history_page='active';
         break;
+        case 'history':
+          $history_page = 'active';
+          break;
+        case 'lessons':
+          $lesson_page = 'active';
+          break;
+        case 'quizzes':
+          $quiz_page = 'active';
+          break;
       }
        // Outputs: Full URL
 
@@ -730,9 +769,27 @@ foreach($courses as $key => $value) {
                   <a href='".esc_url(site_url('wp-admin/admin.php?page=sch-events'))."'>
                     <i class='dashicons dashicons-calendar-alt icon'></i><span>".$sch_events."</span>
                   </a>
-                </li>
-
-            <li class='".esc_attr($transport_page)."'>
+                </li>";
+                if($prolms1 == 'installed'){
+                  echo "<li class='has-submenu'>
+                    <a href='" . esc_url(site_url('wp-admin/admin.php?page=sch-lessons')) . "'>
+                      <i class='dashicons dashicons-welcome-widgets-menus icon'></i><span>" . $sch_lms . "</span>
+                    </a>
+                    <ul class='sub-menu'>
+                      <li class='" . esc_attr($lesson_page) . "'>
+                        <a href='" . esc_url(site_url('wp-admin/admin.php?page=sch-lessons')) . "'>
+                          <span>" . $sch_lesson . "</span>
+                        </a>
+                      </li>
+                      <li class='" . esc_attr($quiz_page) . "'>
+                        <a href='" . esc_url(site_url('wp-admin/admin.php?page=sch-quizzes')) . "'>
+                          <span>" . $sch_quiz . "</span>
+                        </a>
+                      </li>
+                    </ul>
+                  </li>";
+                }
+            echo "<li class='".esc_attr($transport_page)."'>
             <a href='".esc_url(site_url('wp-admin/admin.php?page=sch-transport'))."'>
               <i class='icon wpsp-school-bus'></i><span>".$sch_transport."</span>
             </a>
@@ -804,6 +861,15 @@ foreach($courses as $key => $value) {
         case 'history' :
         $history_page='active';
         break;
+        case 'history':
+          $history_page = 'active';
+          break;
+        case 'lessons':
+          $lesson_page = 'active';
+          break;
+        case 'quizzes':
+          $quiz_page = 'active';
+          break;
       }
       $query = $_SERVER['QUERY_STRING'];
       $query1 = explode("=",$query);
@@ -1022,9 +1088,15 @@ foreach($courses as $key => $value) {
                   <a href='".esc_url(site_url('wp-admin/admin.php?page=sch-events'))."'>
                     <i class='dashicons dashicons-calendar-alt icon'></i><span>".$sch_events."</span>
                   </a>
-                </li>
-
-            <li class='".esc_attr($transport_page)."'>
+                </li>";
+                if($prolms1 == 'installed'){
+                 echo "<li class='" . esc_attr($quiz_page) . "'>
+                  <a href='" . esc_url(site_url('wp-admin/admin.php?page=sch-quizzes')) . "'>
+                    <i class='dashicons dashicons-calendar-alt icon'></i><span>" . $sch_quiz_result . "</span>
+                  </a>
+                  </li>";
+                }
+            echo "<li class='".esc_attr($transport_page)."'>
             <a href='".esc_url(site_url('wp-admin/admin.php?page=sch-transport'))."'>
               <i class='icon wpsp-school-bus'></i><span>".$sch_transport."</span>
             </a>
@@ -1201,6 +1273,18 @@ function wpsp_body_start()
      case 'history' :
     $pagetitle="History";
     break;
+    case 'lessons':
+      $pagetitle = "Lessons";
+      $addurl = $base_url . 'sch-lessons&tab=addlesson';
+      break;
+    case 'quizzes':
+      $pagetitle = "Quiz";
+      $addurl = $base_url . 'sch-quizzes&tab=addquiz';
+      break;
+    case 'questions':
+      $pagetitle = "Questions";
+      $addurl = $base_url . 'sch-questions&tab=addquestion';
+      break;
   }
   // echo $addurl;
    //echo $result;

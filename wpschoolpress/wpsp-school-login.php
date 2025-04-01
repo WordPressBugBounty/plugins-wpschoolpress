@@ -479,7 +479,7 @@ case 'retrievepassword' :
      */
     do_action( 'lostpassword_form' ); ?>
     <input type="hidden" name="redirect_to" value="<?php echo esc_attr( $redirect_to ); ?>" />
-    <p class="submit"><input type="submit" name="wp-submit" id="wp-submit" class="button button-primary button-large" value="<?php esc_attr_e('Get New Password'); ?>" /></p>
+    <p class="submit"><input type="submit" name="wp-submit" id="wp-submit" class="button button-primary button-large" value="<?php esc_attr_e('Get New Password','wpschoolpress'); ?>" /></p>
 </form>
 <p id="nav">
 <a href="<?php echo esc_url( wp_login_url() ); ?>"><?php esc_html_e('Log in','wpschoolpress') ?></a>
@@ -536,7 +536,7 @@ case 'rp' :
     if ( ( ! $errors->get_error_code() ) && isset( $_POST['pass1'] ) && !empty( $_POST['pass1'] ) ) {
         reset_password($user, sanitize_text_field($_POST['pass1']));
         setcookie( $rp_cookie, ' ', time() - YEAR_IN_SECONDS, $rp_path, COOKIE_DOMAIN, is_ssl(), true );
-        wpsp_login_header( __( 'Password Reset','wpschoolpress' ), '<p class="message reset-pass">' . __( 'Your password has been reset.' ,'wpschoolpress') . ' <a href="' . esc_url( wp_login_url() ) . '">' . __( 'Log in' ) . '</a></p>' );
+        wpsp_login_header( __( 'Password Reset','wpschoolpress' ), '<p class="message reset-pass">' . __( 'Your password has been reset.' ,'wpschoolpress') . ' <a href="' . esc_url( wp_login_url() ) . '">' . __( 'Log in','wpschoolpress' ) . '</a></p>' );
         wpsp_login_footer();
         exit;
     }

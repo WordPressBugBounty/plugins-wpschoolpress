@@ -31,3 +31,9 @@ $sch_posts = apply_filters('wpsp_sidebar_posts_title_menu',esc_html__('Posts','w
 $sch_posts_profile = apply_filters('wpsp_sidebar_posts_title_menu',esc_html__('Social Profile','wpschoolpress'));
 $sch_reported_posts = apply_filters('wpsp_sidebar_reported_posts_menu',esc_html__('Reported Post','wpschoolpress'));
 $sch_posts_notification = apply_filters('wpsp_sidebar_posts_notification_menu',esc_html__('Notification','wpschoolpress'));
+
+$sch_lesson = apply_filters('wpsp_sidebar_lesson_menu', esc_html__('Lessons', 'wpschoolpress'));
+$sch_lms = apply_filters('wpsp_sidebar_lms_menu', esc_html__('LMS', 'wpschoolpress'));
+$sch_quiz = apply_filters('wpsp_sidebar_quiz_menu', esc_html__('Quizzes', 'wpschoolpress'));
+$sch_question = apply_filters('wpsp_sidebar_question_menu', esc_html__('Questions', 'wpschoolpress'));
+$sch_quiz_result = apply_filters('wpsp_sidebar_result_menu', esc_html__('Quiz Result', 'wpschoolpress'));

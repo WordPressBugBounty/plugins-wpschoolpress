@@ -227,11 +227,11 @@ if (($skip_hours === TRUE) || ('POST' == $_SERVER['REQUEST_METHOD'] && sanitize_
 if ('POST' != $_SERVER['REQUEST_METHOD']) {
     $tt_table    = $wpdb->prefix . "wpsp_timetable";
     $class_table = $wpdb->prefix . "wpsp_class";
-    $classQuery  = "select cid,c_name from $class_table Order By cid ASC";
+    $classQuery  = $wpdb->prepare("select cid,c_name from $class_table Order By cid ASC");
     $msg         = esc_html("Please Add Class Before Adding Subjects", "wpschoolpress");
     if ($current_usr_rle == 'teacher') {
         $cuserId    = esc_sql($current_user->ID);
-        $classQuery = "select cid,c_name from $class_table where teacher_id='$cuserId'";
+        $classQuery = $wpdb->prepare("select cid,c_name from $class_table where teacher_id='%d'",$cuserId);
     }
     $classes     = $wpdb->get_results($classQuery);
     $class_names = array();

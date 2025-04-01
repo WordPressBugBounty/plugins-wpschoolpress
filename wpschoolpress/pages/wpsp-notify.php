@@ -231,7 +231,7 @@ $usersList1	=	array_merge( $student_ids1,$teacher_ids1);
 													<option value="1"><?php esc_html_e( 'Email', 'wpschoolpress'); ?></option>
 													<option value="2" title="<?php echo esc_attr($protitle); ?>" class="<?php echo esc_attr($proclass); ?>"
 													<?php $notify_type_name = "SMS"; if( !empty( $prodisable ) ) {?> disabled <?php  } ?>>
-													<?php esc_html_e(apply_filters("notify_type_name", $notify_type_name)); ?>
+													<?php echo esc_html(apply_filters("notify_type_name", $notify_type_name)); ?>
 													</option>
 													<option value="0"><?php esc_html_e( 'All', 'wpschoolpress'); ?></option>
 												</select>
