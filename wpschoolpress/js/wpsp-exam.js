@@ -75,25 +75,40 @@ $(document).ready(function() {
       }
     },
     submitHandler: function(a) {
-      var e = $("#ExamEntryForm").serializeArray();
-      e.push({
-        name: "action",
-        value: "AddExam"
-      }), $.ajax({
-        type: "POST",
-        url: ajax_url,
-        data: e,
-        success: function(a) {
-          if ("success" == a) {
-            $(".wpsp-popup-return-data").html("Exam Created Successfully !"), $("#SuccessModal").css("display", "block"), $("#SavingModal").css("display", "none"), $("#SuccessModal").addClass("wpsp-popVisible");
-            var e = $("#wpsp_locationginal").val() + "/admin.php?page=sch-exams";
-            setTimeout(function() {
-              window.location.href = e
-            }, 1e3);
-            $("#ExamEntryForm").trigger("reset"), $("#e_submit").attr("disabled", "disabled")
-          } else $(".wpsp-popup-return-data").html(a), $("#SavingModal").css("display", "none"), $("#WarningModal").css("display", "block"), $("#WarningModal").addClass("wpsp-popVisible")
-        }
-      })
+      
+      var uids = $('input[name^="subjectid"]').map(function() {
+        if ($(this).prop('checked') == true)
+          return this.value;
+      }).get();
+
+      if (uids.length == 0) {
+        $(".wpsp-popup-return-data").html('Please select any of subject!');
+        $("#SavingModal").css("display", "none");
+        $("#WarningModal").css("display", "block");
+        $("#WarningModal").addClass("wpsp-popVisible");
+        return false;
+      }else{
+    
+        var e = $("#ExamEntryForm").serializeArray();
+        e.push({
+          name: "action",
+          value: "AddExam"
+        }), $.ajax({
+          type: "POST",
+          url: ajax_url,
+          data: e,
+          success: function(a) {
+            if ("success" == a) {
+              $(".wpsp-popup-return-data").html("Exam Created Successfully !"), $("#SuccessModal").css("display", "block"), $("#SavingModal").css("display", "none"), $("#SuccessModal").addClass("wpsp-popVisible");
+              var e = $("#wpsp_locationginal").val() + "/admin.php?page=sch-exams";
+              setTimeout(function() {
+                window.location.href = e
+              }, 1e3);
+              $("#ExamEntryForm").trigger("reset"), $("#e_submit").attr("disabled", "disabled")
+            } else $(".wpsp-popup-return-data").html(a), $("#SavingModal").css("display", "none"), $("#WarningModal").css("display", "block"), $("#WarningModal").addClass("wpsp-popVisible")
+          }
+        })
+      }
     }
   }), $("#ExamEditForm").validate({
     onkeyup: !1,
@@ -185,4 +200,13 @@ $(document).ready(function() {
   }), $(document).on("click", ".exam-subjects", function() {
     0 == $(this).prop("checked") && $(".exam-all-subjects").prop("checked", !1)
   })
+  $('#subjectError').hide();
+    $('#e_submit').on('click', function (e) {
+      const anySubjectChecked = $('.exam-subjects:checked').length;
+      if (anySubjectChecked === 0) {
+        $('#subjectError').show();
+      } else {
+        $('#subjectError').hide(); // Optional: hide error if selection is valid
+      }
+    });
 });

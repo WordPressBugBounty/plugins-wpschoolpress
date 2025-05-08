@@ -90,7 +90,7 @@ if(empty( $error ) && (wpsp_IsMarkEntered( $class_id, $subject_id, $exam_id ) ) 
 				</tr>
 			</thead>
 			<tbody>
-				<?php $sno=1; foreach($wpsp_marks as $mark){ ?>
+				<?php $sno=1; foreach($wpsp_marks as $mark){ //cho "<pre>";print_r($wpsp_marks);?>
 				<tr>
 					<td><?php echo esc_html($sno);?> </td>
 					<td> <?php echo isset( $students_list[$mark->student_id]['rollno'] ) ? esc_html($students_list[$mark->student_id]['rollno']) : '';?> </td>

@@ -515,13 +515,13 @@ $(document).ready(function() {
   });
 
 
-  $('.ccheckbox ').change(function(){
-    if($(this).prop("checked")) {
-      $('.wpsp-bulkaction').removeClass("d-none");
-    } else {
-      $('.wpsp-bulkaction').addClass("d-none");
-    }
-  });
+  // $('.ccheckbox ').change(function(){
+  //   if($(this).prop("checked")) {
+  //     $('.wpsp-bulkaction').removeClass("d-none");
+  //   } else {
+  //     $('.wpsp-bulkaction').addClass("d-none");
+  //   }
+  // });
   
   $('#bulkaction').change(function() {
     var op = $(this).val();

@@ -5,7 +5,7 @@ Tags: student information management, staff information management, attendance m
 Requires at least: 6.6
 Tested up to: 6.7
 Requires PHP: 7.4
-Stable tag: 2.2.20
+Stable tag: 2.2.21
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -19,15 +19,15 @@ WPSchoolPress is currently a highly demanding WordPress plugin for the school ma
 
 * Role based access:Users like school admin, students, parents and teachers can easily login and access their respective user-friendly dashboards.
 
-* Student Attendance Management:Admin and Teachers can do entire attendance management on daily basis of the students of each class. Students and parents can see date wise attendance report. Teacher can also add the reason for absence of each student. Whenever any student is absent, an automatic message is sent to the registered parent mentioning the day, date and reason of being absent. Automatic messages are sent only if the school has purchased our SMS add-on.
+* Student Attendance Management System:Admin and Teachers can do entire attendance management on daily basis of the students of each class. Students and parents can see date wise attendance report. Teacher can also add the reason for absence of each student. Whenever any student is absent, an automatic message is sent to the registered parent mentioning the day, date and reason of being absent. Automatic messages are sent only if the school has purchased our SMS add-on.
 
-* Class rooms and subjects:As a student managing plugin,WPSchoolPresshas made simple for admin to create new classes and assign subjects. Eventually, teacher’s management can be done by assigning subjects and classes. For parents, their child information like class number, respective subjects and assigned teachers can be viewed when they login to their respective dashboards.
+* Class rooms and subjects:As a student managing plugin,WPSchoolPress has made simple for admin to create new classes and assign subjects. Eventually, teacher’s management can be done by assigning subjects and classes. For parents, their child information like class number, respective subjects and assigned teachers can be viewed when they login to their respective dashboards.
 
-* Student Grade Management:As student report management system,WPSchoolPress has a feature by which admin and teachers can insert student grades/marks on the bases of their class and subjects. Along with grades, teachers can also write remarks or student-reviews on student’s performance. Subject-wise grades will be visible on students and parent’s dashboards. Using our paidImport-Export add-on, teachers can import a .csv file with grades for quickerupload of marksin bulk. The students and parents can further print grade sheets.
+* Student Grade Management System:As student report management system,WPSchoolPress has a feature by which admin and teachers can insert student grades/marks on the bases of their class and subjects. Along with grades, teachers can also write remarks or student-reviews on student’s performance. Subject-wise grades will be visible on students and parent’s dashboards. Using our paid Import-Export add-on, teachers can import a .csv file with grades for quicker upload of marksin bulk. The students and parents can further print grade sheets.
 
-* School Schedule Management:Admin and teachers can create exam schedule for each subject of their respective class.Along with this, upcoming school event schedules like cultural festival schedule, sports tournament schedule, annual leaves management and likewise can be easily created. For sudden changes in acedemics, admin can notify teachers, students and parents by sending email-notifications(free) or sending messages through our paid SMS add-on.
+* School Schedule Management System:Admin and teachers can create exam schedule for each subject of their respective class.Along with this, upcoming school event schedules like cultural festival schedule, sports tournament schedule, annual leaves management and likewise can be easily created. For sudden changes in acedemics, admin can notify teachers, students and parents by sending email-notifications(free) or sending messages through our paid SMS add-on.
 
-* Transportation Management: Details regarding Public Transport bus, tram or School Private transport, routes and driver details can be provided on students, parents and teachers dashboards by admin. Also admin can send notifications in form of e-mail (free) or SMS (with use of paid add-on) to parentsif there is a replacement in driver, transport bus, change in route, etc.
+* School Transportation Management System: Details regarding Public Transport bus, tram or School Private transport, routes and driver details can be provided on students, parents and teachers dashboards by admin. Also admin can send notifications in form of e-mail (free) or SMS (with use of paid add-on) to parents if there is a replacement in driver, transport bus, change in route, etc.
 
 * Constant feature updates:We are constantly trying to have feature updatesfor you to run the school operations smoothly. These updates are on the bases our customer suggestions and feature requirements. Check our website for any new updates and add-ons
 
@@ -365,3 +365,7 @@ Please purchase the SMS addon from our website www.wpschoolpress.com/downloads/s
 = 2.2.20 =   
 * Fixed   - Resolved SQl injection issues and Security and performance issues.
 * Updated - LMS Add-on Script.
+
+= 2.2.21 =
+* Update - Code optimization and performance updates.
+* Update - Make add-ons related chnages.

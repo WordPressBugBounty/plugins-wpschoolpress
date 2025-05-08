@@ -183,8 +183,10 @@ wpsp_header();
 				</div>
 			</div>
 		</div>
+		<?php do_action('wpshoolpress_after_attendance') ?>
 	</div>
 </div>
+<?php do_action('wpshoolpress_after_attendance') ?>
 	 	<?php
 			wpsp_body_end();
 			wpsp_footer();

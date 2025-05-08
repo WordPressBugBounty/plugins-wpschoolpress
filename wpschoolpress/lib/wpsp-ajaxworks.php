@@ -342,8 +342,13 @@ function wpsp_GetMarks($classid, $subjectid, $examid)
 	wpsp_AllAuthenticate();
 	global $wpdb;
 	$mtable = $wpdb->prefix . "wpsp_mark";
-	$marks = $wpdb->get_results("select * from $mtable WHERE subject_id=".esc_sql($subjectid)."' and class_id='".esc_sql($classid)."' and exam_id='".esc_sql($examid)."' order by mid ASC");
-	return $marks;
+	$query = $wpdb->prepare(
+        "SELECT * FROM $mtable WHERE subject_id = %d AND class_id = %d AND exam_id = %d ORDER BY mid ASC",
+        $subjectid, $classid, $examid
+    );
+
+    $marks = $wpdb->get_results($query);
+    return $marks;
 }
 function wpsp_GetExMarks($subjectid, $examid)
 {
@@ -2671,9 +2676,10 @@ function wpsp_AddSubField()
 	$fields_tbl = $wpdb->prefix . "wpsp_mark_fields";
 	$subject_id = intval($_POST['SubjectID']);
 	$field = sanitize_text_field($_POST['FieldName']);
-	if ($subject_id == '' || $field == '')
+	if ($subject_id == 0)
 	{
-		echo  esc_html( 'Check all fields are entered!', 'wpschoolpress' );
+		echo esc_html("Check subjcet is entered!", "wpschoolpress");
+		$msg = esc_html("Check subjcet is entered!', 'wpschoolpress");
 		exit;
 	}
 	$check_field = $wpdb->get_results("select * from $fields_tbl where field_text='".esc_sql($field)."' and subject_id=".esc_sql($subject_id)."");
@@ -2684,14 +2690,17 @@ function wpsp_AddSubField()
 			'field_text' => $field
 		);
 		$ins = $wpdb->insert($fields_tbl, $fields_table_data);
+		$msg = $ins ? esc_html("success", "wpschoolpress") : esc_html("Oops! Something went wrong try again.", "wpschoolpress");
 	}
 	else
 	{
-		echo  esc_html( 'Field already exists!', 'wpschoolpress' );
+		$msg = esc_html("Field already exists!', 'wpschoolpress");
 	}
-	if ($ins) echo esc_html( 'success', 'wpschoolpress' );
-	else echo  esc_html( 'Fields not saved! Pls try again', 'wpschoolpress' );
+	echo wp_kses_post($msg);
 	wp_die();
+	// if ($ins) echo esc_html( 'success', 'wpschoolpress' );
+	// else echo  esc_html( 'Fields not saved! Pls try again', 'wpschoolpress' );
+	// wp_die();
 }
 function wpsp_DeleteSubField()
 {
@@ -4094,7 +4103,7 @@ function wpsp_getTeachersList(){
 									$rchecked = isset($reasonList[$st->wp_usr_id]) ? 1 : 0;
 									echo '<tr><td>' . esc_html($sno,'wpschoolpress') . '</td>
 												<td>' . esc_html($full_name) . '</td>
-												<td><input type="checkbox" ' . checked($rchecked, 1, false) . ' class="ccheckbox wpsp-checkbox" name="absent[]" value="' . esc_attr($st->wp_usr_id) . '"> Absent </td>
+												<td><input type="checkbox" ' . checked($rchecked, 1, true) . ' class="ccheckbox wpsp-checkbox" name="absent[]" value="' . esc_attr($st->wp_usr_id) . '"> Absent </td>
 												<td><input type="text"  name="reason[' . esc_attr($st->wp_usr_id) . ']" value="' .esc_attr($reason) . '" class="wpsp-form-control"></td>
 											  </tr>';
 									$sno++;

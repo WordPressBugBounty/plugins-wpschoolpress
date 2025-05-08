@@ -266,12 +266,18 @@ $(document).ready(function() {
     "twilio" == e ? ($(".sms_setting_div").hide(), $("#sms_main_" + e).show()) : ($("#sms_main_" + e).hide(), $(".sms_setting_div").show())
   }), $("#SubFieldsForm").validate({
     rules: {
+      // ClassID: {
+      //     required: (jQuery("input[name='ClassID']").data("is_required")) ? true : false,
+      // },
+      // SubjectID: {
+      //   required: (jQuery("input[name='SubjectID']").data("is_required")) ? true : false,
+      // },
       ClassID: {
-          required: (jQuery("input[name='ClassID']").data("is_required")) ? true : false,
+        required: ($("select[name='ClassID']").data("is_required")) ? true : false,
       },
-      SubjectID: {
-        required: (jQuery("input[name='SubjectID']").data("is_required")) ? true : false,
-      },
+      // SubjectID: {
+      //   required: ($("select[name='SubjectID']").data("is_required")) ? true : false,
+      // },
       FieldName: {
         required: (jQuery("input[name='FieldName']").data("is_required")) ? true : false,
       }
@@ -291,22 +297,31 @@ $(document).ready(function() {
         url: ajax_url,
         data: a,
         success: function(e) {
-          if ("success" == e) {
-            $("#SubFieldsForm")[0].reset(), 
-			/*$.fn.notify("success", {
+          //alert(e);
+          if ("success" == $.trim(e)) {
+            $("#SubFieldsForm").reset(), 
+			        /*$.fn.notify("success", {
               desc: "Fields added succesfully!",
               autoHide: !0,
               clickToHide: !0
-            }),*/ $("#AddFieldsModal").html(""), $("#AddFieldsModal").modal("hide");
+            }),*/ 
+            // $(".wpsp-popup-return-data").html('Data added successfully !');
+            // $("#SuccessModal").css("display", "block");
+            // $("#SuccessModal").addClass("wpsp-popVisible");
+            // $("#AddFieldsModal").html(""), $("#AddFieldsModal").modal("hide");
             setTimeout(function() {
               location.reload(!0)
             }, 1e3), $("#SubFieldsForm .btn-primary").attr("disabled", "disabled")
           } else 
-			  /*$.fn.notify("error", {
-            desc: e,
-            autoHide: !0,
-            clickToHide: !0
-          });*/
+            /*$.fn.notify("error", {
+              desc: e,
+              autoHide: !0,
+              clickToHide: !0
+            });*/
+            $(".wpsp-popup-return-data").html(e);
+            $("#SavingModal").css("display", "none");
+            $("#WarningModal").css("display", "block");
+            $("#WarningModal").addClass("wpsp-popVisible");
           $("#SubFieldsForm .btn-primary").attr("disabled", !1)
         },
         error: function() {
