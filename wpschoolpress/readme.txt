@@ -5,7 +5,7 @@ Tags: student information management, staff information management, attendance m
 Requires at least: 6.6
 Tested up to: 6.7
 Requires PHP: 7.4
-Stable tag: 2.2.21
+Stable tag: 2.2.22
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -369,3 +369,8 @@ Please purchase the SMS addon from our website www.wpschoolpress.com/downloads/s
 = 2.2.21 =
 * Update - Code optimization and performance updates.
 * Update - Make add-ons related chnages.
+
+= 2.2.22 =
+* Fixed   - Fix Studentslist page bugs and SQL injection.
+* Updated - Import-Export Add-on Script with attendance report for students.
+* Updated - Muliclass Add-on Script.

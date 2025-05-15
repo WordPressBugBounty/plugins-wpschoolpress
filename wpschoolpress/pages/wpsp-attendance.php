@@ -20,7 +20,7 @@ wpsp_header();
 								<?php
 								$item =  esc_html(apply_filters( 'wpsp_student_attendance_title_item',"Attendance"),"wpschoolpress");
 								?>
-							<div class="wpsp-col-lg-5 wpsp-col-md-5 wpsp-col-sm-12 wpsp-col-xs-12" id="AttendanceEnterForm">
+							<div class="wpsp-col-lg-4 wpsp-col-md-4 wpsp-col-sm-12 wpsp-col-xs-12" id="AttendanceEnterForm">
 							<h3 class="wpsp-card-title"><?php esc_html_e( 'Attendance', 'wpschoolpress' ); ?></h3>
 							<div class="line_box">
 									<div class="wpsp-form-group">

@@ -360,7 +360,7 @@ function wpsp_TeacherPublicProfile()
 		$profile = esc_html("No data retrived!..", "wpschoolpress");
 	}
 
-	echo wp_kses_post($profile), intval($tid);
+	echo wp_kses_post($profile);
 
 	wp_die();
 }

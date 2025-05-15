@@ -1719,36 +1719,34 @@ function wpsp_AttReport($st_id, $close = 1)
 		$classname_array[] = $clasname;
 	}
 
-// print_r($classname_array);die();
+    // print_r($classname_array);die();
 
 	$att_info = $wpdb->get_row("select count(*) as count from $att_table WHERE absents LIKE '$ser'");
 	$stinfo->c_edate = wpsp_ViewDate($stinfo->c_edate);
 	$stinfo->c_sdate = wpsp_ViewDate($stinfo->c_sdate);
 	$loc_avatar = get_user_meta($st_id, 'simple_local_avatar', true);
 	$img_url = $loc_avatar ? $loc_avatar['full'] : WPSP_PLUGIN_URL . 'img/avatar.png';
-	$attendance_days = $wpdb->get_results("select *from $att_table where class_id='".esc_sql($stinfo->class_id)."'");
+	// $attendance_days = $wpdb->get_results("select *from $att_table where class_id='".esc_sql($stinfo->class_id)."'");
 	$present_days = 0;
-	foreach($attendance_days as $days => $attendance)
-	{
-		if ($attendance->absents == 'Nil')
-		{
-			$present_days++;
-		}
-		else
-		{
-			$absents = wp_json_decode($attendance->absents, true);
-			if (array_search($st_id, array_column($absents, 'sid')) !== False)
-			{
-			}
-			else
-			{
-				$present_days++;
-			}
-		}
-	}
-
-
-	$working_days = $present_days + $att_info->count;
+	// foreach($attendance_days as $days => $attendance)
+	// {
+	// 	if ($attendance->absents == 'Nil')
+	// 	{
+	// 		$present_days++;
+	// 	}
+	// 	else
+	// 	{
+	// 		$absents = wp_json_decode($attendance->absents, true);
+	// 		if (array_search($st_id, array_column($absents, 'sid')) !== False)
+	// 		{
+	// 		}
+	// 		else
+	// 		{
+	// 			$present_days++;
+	// 		}
+	// 	}
+	// }
+	// $working_days = $present_days + $att_info->count;
 	$content = "<div class='wpsp-panel-body'>
 					<div class='wpsp-userpic'>
 						 <img src=".esc_url($img_url)." height='150px' width='150px' class='img img-circle'/>
@@ -1758,14 +1756,33 @@ function wpsp_AttReport($st_id, $close = 1)
 							<tbody>
 								<tr>
 								<td colspan='2'><strong>Name: </strong>".esc_html($stinfo->full_name)."</td>
+								</tr>";
+								foreach ($classIDArray as $id) {
+									$id = esc_sql($id);
+									$clasname = $wpdb->get_row("SELECT * FROM $class_table where cid='$id'");
+									//$classname_array[] = $clasname;
+									$att_info = $wpdb->get_row("select count(*) as count from $att_table WHERE absents LIKE '$ser' AND  class_id='" . esc_sql($id) . "'");
+									$attendance_days = $wpdb->get_results("select * from $att_table where class_id='" . esc_sql($id) . "'");
+									$present_days = 0;
+									foreach ($attendance_days as $days => $attendance) {
+										if ($attendance->absents == 'Nil') {
+											$present_days++;
+										} else {
+											$absents = json_decode($attendance->absents, true);
+											if (array_search($st_id, array_column($absents, 'sid')) !== False) {
+											} else {
+												$present_days++;
+											}
+										}
+									}
+									$working_days = $present_days + $att_info->count;
+								$content.="<tr>
+									<td width='50%'><strong>Class: </strong>".esc_html($clasname->c_name)."</td>
+									<td width='50%'><strong>RollNo. : </strong>".esc_html($stinfo->s_rollno)."</td>
 								</tr>
 								<tr>
-									<td width='50%'><strong>Class: </strong>".esc_html(implode(", ",$classname_array))."</td>
-									<td width='50%'><strong>Roll No. : </strong>".esc_html($stinfo->s_rollno)."</td>
-								</tr>
-								<tr>
-									<td width='50%'><strong>Class Start: </strong> ".esc_html($stinfo->c_sdate)." </td>
-									<td width='50%'><strong>Class End : </strong>".esc_html($stinfo->c_edate)."</td>
+									<td width='50%'><strong>Class Start: </strong> ".esc_html($clasname->c_sdate)." </td>
+									<td width='50%'><strong>Class End : </strong>".esc_html($clasname->c_edate)."</td>
 								</tr>
 								<tr>
 									<td width='50%'><strong>Number of Absent days: </strong>".esc_html($att_info->count)."</td>
@@ -1773,8 +1790,9 @@ function wpsp_AttReport($st_id, $close = 1)
 								</tr>
 								<tr>
 									<td colspan='2'><strong>Number of Attendance days: </strong>".esc_html($working_days)."</td>
-								</tr>
-							</tbody>
+								</tr>";
+								}
+							$content.="</tbody>
 						</table>
 					</div>
 				</div>";

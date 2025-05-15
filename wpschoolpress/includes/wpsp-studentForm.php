@@ -158,11 +158,11 @@
             </div>
             <div class="wpsp-col-lg-3 wpsp-col-md-4 wpsp-col-sm-4 wpsp-col-xs-12">
               <div class="wpsp-form-group">
-                <label class="wpsp-label" for="s_p_phone">
-                  <?php esc_html_e("Phone Number", "wpschoolpress");
+                <label class="wpsp-label" for="s_phone">
+                  <?php esc_html_e("Student Phone Number", "wpschoolpress");
                   /*Check Required Field*/
-                  if (isset($is_required_item['s_p_phone'])) {
-                    $is_required =  esc_html($is_required_item['s_p_phone'], "wpschoolpress");
+                  if (isset($is_required_item['s_phone'])) {
+                    $is_required =  esc_html($is_required_item['s_phone'], "wpschoolpress");
                   } else {
                     $is_required = false;
                   }
@@ -170,7 +170,7 @@
                   ?>
                   <span class="wpsp-required"><?php echo esc_html(($is_required)) ? "*" : ""; ?></span>
                 </label>
-                <input type="text" data-is_required="<?php echo esc_attr($is_required); ?>" class="wpsp-form-control" id="s_p_phone" name="s_p_phone" onkeypress='return event.keyCode == 8 || event.keyCode == 46 || event.keyCode == 37 || event.keyCode == 39 || event.charCode >= 48 && event.charCode <= 57'>
+                <input type="text" data-is_required="<?php echo esc_attr($is_required); ?>" class="wpsp-form-control" id="s_phone" name="s_phone" onkeypress='return event.keyCode == 8 || event.keyCode == 46 || event.keyCode == 37 || event.keyCode == 39 || event.charCode >= 48 && event.charCode <= 57'>
                 <small><?php echo esc_html("(Please enter country code with mobile number)", "wpschoolpress"); ?></small>
               </div>
             </div>
@@ -533,17 +533,17 @@
                 <div class="wpsp-col-md-3 wpsp-col-sm-4 wpsp-col-xs-12">
                   <div class="wpsp-form-group">
                     <label class="wpsp-label" for="phone">
-                      <?php esc_html_e("Phone", "wpschoolpress");
+                      <?php esc_html_e("Parent Phone", "wpschoolpress");
                       /*Check Required Field*/
-                      if (isset($is_required_parent['s_phone'])) {
-                        $is_required =  esc_html($is_required_parent['s_phone'], "wpschoolpress");
+                      if (isset($is_required_parent['s_p_phone'])) {
+                        $is_required =  esc_html($is_required_parent['s_p_phone'], "wpschoolpress");
                       } else {
                         $is_required = false;
                       }
                       ?>
                       <span class="wpsp-required"><?php echo esc_html(($is_required)) ? "*" : ""; ?></span>
                     </label>
-                    <input type="text" data-is_required="<?php echo esc_attr($is_required); ?>" class="wpsp-form-control" id="s_phone" name="s_phone">
+                    <input type="text" data-is_required="<?php echo esc_attr($is_required); ?>" class="wpsp-form-control" id="s_p_phone" name="s_p_phone">
                   </div>
                 </div>
                 <div class="wpsp-col-md-3 wpsp-col-sm-6 wpsp-col-xs-12">
