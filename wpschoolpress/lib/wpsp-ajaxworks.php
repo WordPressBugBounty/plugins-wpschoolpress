@@ -2614,6 +2614,10 @@ function wpsp_GenSettingsms()
 		$option_value['twilio_api_sid'] = sanitize_text_field($_POST['twilio_api_sid']);
 		$option_value['twilio_api_auth_token'] = sanitize_text_field($_POST['twilio_api_auth_token']);
 		$option_value['twilio_api_phone_number'] = sanitize_text_field($_POST['twilio_api_phone_number']);
+		$option_value['termii_api'] = sanitize_text_field($_POST['termii_api']);
+		$option_value['termii_sender_id'] = sanitize_text_field($_POST['termii_sender_id']);
+		$option_value['channel'] = sanitize_text_field($_POST['channel']);
+		$option_value['message_type'] = sanitize_text_field($_POST['message_type']);
 	}
 	/*print_r($option_value);
 	die();*/
@@ -4342,11 +4346,25 @@ function wpsp_addNotify()
                 // $sqlvar = 'select * from ' . $users_table . ' where ID = ' . esc_sql($receivers) . ' AND user_email!=""';
                 // $student_ids = $wpdb->get_results($sqlvar, ARRAY_A);
 
-				$sqlvar = $wpdb->prepare(
-					"SELECT * FROM {$users_table} WHERE ID = %d AND user_email != ''",
-					$receivers
-				);
-				$student_ids = $wpdb->get_results($sqlvar, ARRAY_A);
+				if ($notifyType == 2) { 
+					$user = get_userdata( $receivers );
+					$role = $user->roles[0];
+					if($role == 'teacher'){
+						$sqlvar = $wpdb->prepare("SELECT * FROM {$teacher_table} WHERE wp_usr_id = %d",$receivers);
+						$student_ids = $wpdb->get_results($sqlvar, ARRAY_A);
+					}else{
+						$sqlvar = $wpdb->prepare("SELECT * FROM {$student_table} WHERE wp_usr_id = %d OR parent_wp_usr_id = %d ",$receivers,$receivers);
+						$student_ids = $wpdb->get_results($sqlvar, ARRAY_A);
+						
+					}  
+				}
+				if ($notifyType == 1 || $notifyType == 0) {
+					$sqlvar = $wpdb->prepare(
+						"SELECT * FROM {$users_table} WHERE ID = %d AND user_email != ''",
+						$receivers
+					);
+					$student_ids = $wpdb->get_results($sqlvar, ARRAY_A);
+				}
 				
             }
         }
@@ -4383,9 +4401,25 @@ function wpsp_addNotify()
             if ($notifyType == 2 || $notifyType == 0) { //If notification is sms/All
                 foreach ($usersList as $key => $value) {
                     $to = $value['s_phone'];
+					
+					$uid = $value['wp_usr_id'];
+					$user = get_userdata( $uid );
+					$role = $user->roles[0];
+					if($role == 'parent'){
+						$to = $value['p_phone'];
+					}else if($role == 'teacher'){
+						$to = $value['phone'];
+					}
+					
                     if (!empty($to)) {
                         if ($wpsp_settings_data['sch_sms_slaneuser'] != "") {
                             $notify_msg_response = apply_filters('wpsp_send_notification_msg', false, $to, $description);
+                        }else if ($wpsp_settings_data['sch_sms_provider'] == "termii") {	
+							$notify_msg_response = apply_filters('wpsp_send_notification_msg_termii', false, $to, $description);
+							/* if($notify_msg_response['response']['code']){
+								echo $msg = esc_html($notify_msg_response['response']['message'], "wpschoolpress");
+								exit;
+							} */
                         } else {
                             $notify_msg_response = apply_filters('wpsp_send_notification_msg_twilio', false, $to, $description);
 							$notify_msg_response = apply_filters('wpsp_whatsapp_msg_send', $to, $description, false, false);
