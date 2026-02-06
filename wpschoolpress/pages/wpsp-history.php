@@ -17,8 +17,8 @@ if( is_user_logged_in() ) {
   $student_table = $wpdb->prefix."wpsp_student";
   $history_table = $wpdb->prefix."wpsp_history";
   $teacher_table = $wpdb->prefix . "wpsp_teacher";
-  $stinfo  =  $wpdb->get_row("select CONCAT_WS(' ', s_fname, s_mname, s_lname ) AS full_name from $student_table where wp_usr_id='".esc_sql($student_id)."'");
-
+ // $stinfo  =  $wpdb->get_row("select CONCAT_WS(' ', s_fname, s_mname, s_lname ) AS full_name from $student_table where wp_usr_id='".esc_sql($student_id)."'");
+  $stinfo = $wpdb->get_row($wpdb->prepare("SELECT CONCAT_WS(' ', s_fname, s_mname, s_lname ) AS full_name FROM $student_table WHERE wp_usr_id = %d",$student_id));
     wpsp_topbar();
     wpsp_sidebar();
     wpsp_body_start();
@@ -48,15 +48,22 @@ if( is_user_logged_in() ) {
 
             <?php
 
-              $historyData  =  $wpdb->get_results("SELECT ct.cid, ct.c_name, st.wp_usr_id, CONCAT_WS(' ', st.s_fname, st.s_mname, st.s_lname ) AS full_name, ht.* , CONCAT_WS(' ', tt.first_name, tt.middle_name, tt.last_name ) AS t_full_name FROM $history_table ht
+            /*  $historyData  =  $wpdb->get_results("SELECT ct.cid, ct.c_name, st.wp_usr_id, CONCAT_WS(' ', st.s_fname, st.s_mname, st.s_lname ) AS full_name, ht.* , CONCAT_WS(' ', tt.first_name, tt.middle_name, tt.last_name ) AS t_full_name FROM $history_table ht
                 JOIN $class_table ct ON ct.cid = ht.c_id
                 JOIN $teacher_table tt ON tt.wp_usr_id = ct.teacher_id
-                JOIN $student_table st ON ht.s_id = st.wp_usr_id WHERE st.wp_usr_id = '".esc_sql($student_id)."'");
+                JOIN $student_table st ON ht.s_id = st.wp_usr_id WHERE st.wp_usr_id = '".esc_sql($student_id)."'"); */
+
+                $historyData = $wpdb->get_results($wpdb->prepare("SELECT ct.cid, ct.c_name, st.wp_usr_id, CONCAT_WS(' ', st.s_fname, st.s_mname, st.s_lname ) AS full_name, ht.* , CONCAT_WS(' ', tt.first_name, tt.middle_name, tt.last_name ) AS t_full_name
+                FROM $history_table ht 
+                JOIN $class_table ct ON ct.cid = ht.c_id
+                JOIN $teacher_table tt ON tt.wp_usr_id = ct.teacher_id
+                JOIN $student_table st ON ht.s_id = st.wp_usr_id
+                WHERE st.wp_usr_id = %d",$student_id));
                 if(empty($historyData)){
                   echo "<tr><td colspan='6' align='center'><strong>History Not Found!</strong></td></tr>";
                 }else{
               foreach ($historyData as $history) {
-                $student_count = $wpdb->get_results("SELECT class_id FROM $student_table WHERE wp_usr_id = '".esc_sql($student_id)."' ");
+                $student_count = $wpdb->get_results($wpdb->prepare("SELECT class_id FROM $student_table WHERE wp_usr_id = %d",$student_id));
                 $scount = 0;
                 foreach ( $student_count as $count) {
 

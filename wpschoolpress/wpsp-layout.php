@@ -56,13 +56,16 @@ function wpsp_topbar(){
   $current_user_name  = $current_user->user_login;
   if( in_array( 'teacher', $roles ) ) {
     $table  = $wpdb->prefix."wpsp_teacher";
-    $query  = "SELECT CONCAT_WS(' ', first_name, middle_name, last_name ) AS full_name FROM $table WHERE wp_usr_id=$current_user->ID";
+   // $query  = "SELECT CONCAT_WS(' ', first_name, middle_name, last_name ) AS full_name FROM $table WHERE wp_usr_id=$current_user->ID";
+    $query = $wpdb->prepare("SELECT CONCAT_WS(' ', first_name, middle_name, last_name) AS full_name FROM $table WHERE wp_usr_id = %d",$current_user->ID);
   } else if( in_array( 'student', $roles ) ) {
     $table  =   $wpdb->prefix."wpsp_student";
-    $query  = "SELECT CONCAT_WS(' ', s_fname, s_mname, s_lname ) AS full_name FROM $table WHERE wp_usr_id=$current_user->ID";
+  //  $query  = "SELECT CONCAT_WS(' ', s_fname, s_mname, s_lname ) AS full_name FROM $table WHERE wp_usr_id=$current_user->ID";
+    $query = $wpdb->prepare("SELECT CONCAT_WS(' ', first_name, middle_name, last_name) AS full_name FROM $table WHERE wp_usr_id = %d",$current_user->ID);
   } else if( in_array( 'parent', $roles ) ) {
     $table  =   $wpdb->prefix."wpsp_student";
-    $query  = "SELECT CONCAT_WS(' ', p_fname, p_mname, p_lname ) AS full_name FROM $table WHERE parent_wp_usr_id=$current_user->ID";
+    //$query  = "SELECT CONCAT_WS(' ', p_fname, p_mname, p_lname ) AS full_name FROM $table WHERE parent_wp_usr_id=$current_user->ID";
+    $query = $wpdb->prepare("SELECT CONCAT_WS(' ', first_name, middle_name, last_name) AS full_name FROM $table WHERE wp_usr_id = %d",$current_user->ID);
   }
   if( !empty( $query ) ) {
     $full_name = $wpdb->get_var( $query );
@@ -349,14 +352,13 @@ function wpsp_sidebar(){
                 </li>";
           if($current_user_role == 'administrator'){
             if($proversion1['status']){
-              echo "<li class='".esc_attr($request_page)."'>
+              echo "<li class='".esc_attr((isset($request_page) ? $request_page : '')) ."'>
               <a href='".esc_url(site_url('wp-admin/admin.php?page=sch-request'))."'>
               <i class='dashicons dashicons-welcome-write-blog icon'></i>
               <span>".$sch_registration."</span>
               </a></li>";
             }
           }
-
           echo "<li class='".esc_attr($parent_page)."'>
           <a href='".esc_url(site_url('wp-admin/admin.php?page=sch-parent'))."'>
           <i class='dashicons dashicons-groups icon'></i>
@@ -493,8 +495,7 @@ function wpsp_sidebar(){
             </div>
           </aside>";
   }  elseif($current_user_role=='student'){
-      switch( $page )
-      {
+      switch( $page ){
         case 'dashboard':
         $dashboard_page="active";
         break;
@@ -554,215 +555,196 @@ function wpsp_sidebar(){
           break;
       }
        // Outputs: Full URL
-
-$query = $_SERVER['QUERY_STRING'];
-$query1 = explode("=",$query);
- $query1[1];
-$query = $_SERVER['QUERY_STRING'];
-$query1 = explode("=",$query);
- $query1[1];
- if(!isset($query1[2])){
-  $query1[2] = '';
-}
-if($query1[1] == 'sch-timetable&cid' || $query1[1] == 'sch-teacher&cid' || $query1[1] == 'sch-subject&cid' || $query1[1] == 'sch-exams&cid' || $query1[1] == 'sch-marks&cid' || $query1[1] == 'sch-attendance&cid' || $query1[1] == 'sch-leavecalendar&cid'|| $query1[1] == 'sch-student&cid')
-{
-$class_innercls1 = 'active';
-}else{
-  $class_innercls1 = '';
-
-}
-
-
-if($propayment == "installed"){
-global $wpdb;
-  $user_id = esc_sql($current_user->ID);
-$stable=$wpdb->prefix."wpsp_student";
-$wpsp_stud =$wpdb->get_results("SELECT s.class_id FROM wp_wpsp_student s
-INNER JOIN wp_wpsp_class c  where s.wp_usr_id = '".$user_id."' and c.c_fee_type = 'paid'");
-//$clsid = $wpsp_stud[0]->class_id;
-$clsid = [];
-if(is_numeric($wpsp_stud[0]->class_id) ){
-  $clsid[] = $wpsp_stud[0]->class_id;
-}else{
-  $class_id_array = unserialize( $wpsp_stud[0]->class_id );
-  $clsid[] = $class_id_array;
-}
-$courses = get_user_meta( $user_id, '_pay_woocommerce_enrolled_class_access_counter', true );
-    if ( ! empty( $courses ) ) {
-      $courses = maybe_unserialize( $courses );
-    } else {
-      $courses = array();
-    }
-
-foreach($courses as $key => $value) {
-      //if($key == $clsid)
-  $keyvakye[] =  $key;
-    }
-}
-
-
+      $query = $_SERVER['QUERY_STRING'];
+      $query1 = explode("=",$query);
+      $query1[1];
+      $query = $_SERVER['QUERY_STRING'];
+      $query1 = explode("=",$query);
+      $query1[1];
+      if(!isset($query1[2])){
+        $query1[2] = '';
+      }
+      if($query1[1] == 'sch-timetable&cid' || $query1[1] == 'sch-teacher&cid' || $query1[1] == 'sch-subject&cid' || $query1[1] == 'sch-exams&cid' || $query1[1] == 'sch-marks&cid' || $query1[1] == 'sch-attendance&cid' || $query1[1] == 'sch-leavecalendar&cid'|| $query1[1] == 'sch-student&cid'){
+        $class_innercls1 = 'active';
+      }else{
+        $class_innercls1 = '';
+      }
+      if($propayment == "installed"){
+        global $wpdb;
+        $keyvakye = [];
+        $user_id = esc_sql($current_user->ID);
+        $stable=$wpdb->prefix."wpsp_student";
+        $ctable=$wpdb->prefix."wpsp_class";
+        $wpsp_stud = $wpdb->get_results($wpdb->prepare("SELECT s.class_id FROM $stable s INNER JOIN $ctable c ON s.class_id = c.cid
+         WHERE s.wp_usr_id = %d AND c.c_fee_type = %s",$user_id,'paid'));
+        //$clsid = $wpsp_stud[0]->class_id;
+        $clsid = [];
+        if(is_numeric($wpsp_stud[0]->class_id) ){
+          $clsid[] = $wpsp_stud[0]->class_id;
+        }else{
+          $class_id_array = unserialize( $wpsp_stud[0]->class_id );
+          $clsid[] = $class_id_array;
+        }
+        $courses = get_user_meta( $user_id, '_pay_woocommerce_enrolled_class_access_counter', true );
+        if ( ! empty( $courses ) ) {
+          $courses = maybe_unserialize( $courses );
+        } else {
+          $courses = array();
+        }
+        foreach($courses as $key => $value) {
+          //if($key == $clsid)
+          $keyvakye[] =  $key;
+        }
+      }
       $loc_avatar=get_user_meta($current_user->ID,'simple_local_avatar',true);
       if( $current_user->ID == 1 )
       $img_url  =   WPSP_PLUGIN_URL.'img/admin.png';
       else
       $img_url  = $loc_avatar ? $loc_avatar['full'] : WPSP_PLUGIN_URL.'img/avatar.png';
-     global $current_user, $wpdb;
-     $ctable= $wpdb->prefix."wpsp_class";
-     $stable= $wpdb->prefix."wpsp_student";
-     // $wpsp_classes =$wpdb->get_results("SELECT cls.* FROM $ctable cls, $stable st where st.wp_usr_id = $current_user->ID AND st.class_id=cls.cid");
-      $wpsp_classes =$wpdb->get_results("SELECT class_id FROM $stable where wp_usr_id = '$current_user->ID'");
-       // print_r($wpsp_classes);
-          echo "<!-- Left side column. contains the logo and sidebar -->
-          <div class='wpsp-overlay'></div>
-            <aside class='wpsp-sidebar ifnotadmin'>
+      global $current_user, $wpdb;
+      $ctable= $wpdb->prefix."wpsp_class";
+      $stable= $wpdb->prefix."wpsp_student";
+      if(!$user_id){
+        $user_id = get_current_user_id();
+      }
+      $wpsp_classes = $wpdb->get_results($wpdb->prepare("SELECT class_id FROM $stable WHERE wp_usr_id = %d",$user_id));
+      // print_r($wpsp_classes);
+      echo "<!-- Left side column. contains the logo and sidebar -->
+        <div class='wpsp-overlay'></div>
+        <aside class='wpsp-sidebar ifnotadmin'>
           <div class='sidebarScroll'>
             <ul class='wpsp-navigation'>
-                <li class='".esc_attr($dashboard_page)."'>
-                 <a href='".esc_url(site_url('wp-admin/admin.php?page=sch-dashboard'))."'>
-                    <i class='dashicons dashicons-dashboard icon'></i>
+              <li class='".esc_attr($dashboard_page)."'>
+                <a href='".esc_url(site_url('wp-admin/admin.php?page=sch-dashboard'))."'>
+                  <i class='dashicons dashicons-dashboard icon'></i>
                     <span>".$sch_dashboard."</span>
                   </a>
+              </li>";
+              if($prosocial == 'installed'){
+                echo "<li class='has-submenu ".((isset($posts_page_main)? $posts_page_main : ''))."'>
+                  <a href='".site_url('wp-admin/admin.php?page=sch-posts')."'>
+                    <i class='dashicons dashicons-admin-post'></i>
+                    <span>".$sch_posts."</span>
+                  </a>
+                  <ul class='sub-menu'>
+                    <li class='".$posts_page."'><a href='".site_url('wp-admin/admin.php?page=sch-posts')."'>
+                      <span>".$sch_posts."</span>
+                      </a>
+                    </li>
+                    <li class='".$posts_profile_page."'><a href='".site_url('wp-admin/admin.php?page=sch-postsprofile')."'>
+                      <span>".$sch_posts_profile."</span>
+                      </a>
+                    </li>
+                  </ul>
                 </li>";
-                if($prosocial == 'installed'){
-                  echo "<li class='has-submenu ".((isset($posts_page_main)? $posts_page_main : ''))."'>
-       
-                   <a href='".site_url('wp-admin/admin.php?page=sch-posts')."'>
-       
-                     <i class='dashicons dashicons-admin-post'></i>
-       
-                     <span>".$sch_posts."</span>
-       
-                   </a>
-       
-                   <ul class='sub-menu'>
-       
-                     <li class='".$posts_page."'><a href='".site_url('wp-admin/admin.php?page=sch-posts')."'>
-       
-                       <span>".$sch_posts."</span>
-       
-                     </a></li>
-       
-                     <li class='".$posts_profile_page."'><a href='".site_url('wp-admin/admin.php?page=sch-postsprofile')."'>
-       
-                       <span>".$sch_posts_profile."</span>
-       
-                     </a></li></ul>
-                     </li>";
-               }
+              }
               if($prodisablemessage == 'installed'){
-               echo "<li class=".esc_attr($message_page).">
-             <a href='".esc_url(site_url('wp-admin/admin.php?page=sch-messages'))."'>
-               <i class='dashicons dashicons-email icon'></i>
-        <span>".$sch_message."</span><span class='pull-right label label-primary pull-right'></span>
-              </a>
-            </li>";
-          }
+                echo "<li class=".esc_attr($message_page).">
+                  <a href='".esc_url(site_url('wp-admin/admin.php?page=sch-messages'))."'>
+                    <i class='dashicons dashicons-email icon'></i>
+                    <span>".$sch_message."</span><span class='pull-right label label-primary pull-right'></span>
+                  </a>
+                </li>";
+              }
                 echo "
-            <li class='".esc_attr($parent_page)."'>
+                <li class='".esc_attr($parent_page)."'>
                   <a href='".esc_url(site_url('wp-admin/admin.php?page=sch-parent'))."'>
                     <i class='dashicons dashicons-groups icon'></i>
-
                     <span>". $sch_parent."</span>
                   </a>
                 </li>
-             <li class='has-submenu ".esc_attr($class_innercls1)."'>
-                <a href='".esc_url(site_url('wp-admin/admin.php?page=sch-class'))."'>
-                  <i class='dashicons dashicons-welcome-widgets-menus icon'></i><span>".$sch_enrolled_class."</span>
-                </a>";
-             if (is_numeric($wpsp_classes[0]->class_id)){
-                  $classIDArray[] = $wpsp_classes[0]->class_id;
-              }else{
-                  $classIDArray = unserialize($wpsp_classes[0]->class_id);
-              }
-              $classname_array = [];
-
-              if ((!empty($classIDArray)) && ($classIDArray[0] != 0)) {
-              foreach ($classIDArray as $id ) {
-               $clasname = $wpdb->get_row("SELECT * FROM $ctable where cid=$id");
-
-               $classname1 = $clasname->c_name;
-               $classname_array[] = $clasname;
-
-               if($propayment == "installed"){
-               if($clasname->c_fee_type == 'free'){
-                 $nonemenu = ' nopayment1';
-               } else {
-                 if(!empty($keyvakye)){
-                   if(in_array($id, $keyvakye)){
-                     $nonemenu = ' nopayment1';
-                   } else {
-                     $nonemenu = ' nopayment';
-                   }
-                 }else{
-                   $nonemenu = ' nopayment';
-                 }
-               }
-             }
-
-               $getid = base64_decode($query1[2]);
-               $id = base64_encode(intval($id));
-               $clsgetid = base64_decode(sanitize_text_field($id));
-               if($getid == base64_decode(stripslashes($id))){
-                 $timetable_page = 'active';
-               }
-
-               if($clsgetid != 0)
-               {
-
-                echo "<ul class='sub-menu has-submenu ".((isset($nonemenu) ? $nonemenu : ''))." '>";
-            if(trim($clsgetid) == trim($getid)){
-
-              echo "<li class='has-submenu active'>";
-            } else {
-              echo "<li class='has-submenu'>";
-            }
-
-            echo "<a href='".esc_url(site_url('wp-admin/admin.php?page=sch-class'))."'>
-                  <i class='dashicons dashicons-welcome-widgets-menus icon'></i><span>".esc_html($classname1)."</span>
-                </a>
-                <ul class='sub-menu'>
-                <li class='".esc_attr($timetable_page)."'>
-                  <a href='".esc_url(site_url('wp-admin/admin.php?page=sch-timetable&cid=').esc_attr($id))."'>
-                    <span>".$sch_timetable."</span>
-                  </a>
-                </li>
-                <li class='".esc_attr($teacher_page)."'>
-                  <a href='".esc_url(site_url('wp-admin/admin.php?page=sch-teacher&cid=').esc_attr($id))."'>
-                    <span>".$sch_teacher."</span>
-                  </a>
-                </li>
-                <li class='".esc_attr($student_page)."'>
-                  <a href='".esc_url(site_url('wp-admin/admin.php?page=sch-student&cid=').esc_attr($id))."'>
-                    <span>".$sch_student."</span>
-                  </a>
-                </li>
-                <li class='".esc_attr($subject_page)."'>
-                  <a href='".esc_url(site_url('wp-admin/admin.php?page=sch-subject&cid=').esc_attr($id))."'>
-                    <span>".$sch_subject."</span>
-                  </a>
-                </li>
-                <li class='".esc_attr($exam_page)."'>
-                  <a href='".esc_url(site_url('wp-admin/admin.php?page=sch-exams&cid=').esc_attr($id))."'>
-                    <span>".$sch_exams."</span>
-                  </a>
-                </li>
-                <li class='".esc_attr($mark_page)."'>
-                  <a href='".esc_url(site_url('wp-admin/admin.php?page=sch-marks&cid=').esc_attr($id))."'>
-                    <span>".$sch_marks."</span>
-                  </a>
-                </li>
-                <li class='".esc_attr($attendance_page)."'>
-                  <a href='".esc_url(site_url('wp-admin/admin.php?page=sch-attendance&cid=').esc_attr($id))."'>
-                    <span>".$sch_attendance."</span>
-                  </a>
-                </li>
-                <li class='".esc_attr($leave_page)."'>
-                  <a href='".esc_url(site_url('wp-admin/admin.php?page=sch-leavecalendar&cid=').esc_attr($id))."'>
-                 <span>".$sch_leavecalendar."</span></a>
-                </li>
-              </ul>
-          </li></li></ul>";
-          }
+                <li class='has-submenu".esc_attr($class_innercls1)."'>
+                  <a href='".esc_url(site_url('wp-admin/admin.php?page=sch-class'))."'>
+                    <i class='dashicons dashicons-welcome-widgets-menus icon'></i><span>".$sch_enrolled_class."</span>
+                  </a>";
+                  if (is_numeric($wpsp_classes[0]->class_id)){
+                    $classIDArray[] = $wpsp_classes[0]->class_id;
+                  }else{
+                    $classIDArray = unserialize($wpsp_classes[0]->class_id);
+                  }
+                  $classname_array = [];
+                  if ((!empty($classIDArray)) && ($classIDArray[0] != 0)) {
+                    foreach ($classIDArray as $id ) {
+                      $wpdb->prepare("SELECT * FROM $ctable WHERE cid = %d",$id);
+                      $clasname = $wpdb->get_results($wpdb->prepare("SELECT * FROM $ctable WHERE cid = %d",$id));
+                      $classname1 = $clasname[0]->c_name;
+                      $classname_array[] = $clasname;
+                      if($propayment == "installed"){
+                        if($clasname->c_fee_type == 'free'){
+                          $nonemenu = ' nopayment1';
+                        } else {
+                          if(!empty($keyvakye)){
+                            if(in_array($id, $keyvakye)){
+                              $nonemenu = ' nopayment1';
+                            } else {
+                              $nonemenu = ' nopayment';
+                            }
+                          }else{
+                            $nonemenu = ' nopayment';
+                          }
+                        }
+                      }
+                      $getid = base64_decode($query1[2]);
+                      $id = base64_encode(intval($id));
+                      $clsgetid = base64_decode(sanitize_text_field($id));
+                      if($getid == base64_decode(stripslashes($id))){
+                        $timetable_page = 'active';
+                      }
+                      if($clsgetid != 0){
+                        echo "<ul class='sub-menu has-submenu hehehe".((isset($nonemenu) ? $nonemenu : ''))." '>";
+                          if(trim($clsgetid) == trim($getid)){
+                            echo "<li class='has-submenu active'>";
+                          } else {
+                            echo "<li class='has-submenu'>";
+                          }
+                              echo "<a href='".esc_url(site_url('wp-admin/admin.php?page=sch-class'))."'>
+                                <i class='dashicons dashicons-welcome-widgets-menus icon'></i><span>".esc_html($classname1)."</span>
+                              </a>
+                              <ul class='sub-menu'>
+                                <li class='".esc_attr($timetable_page)."'>
+                                  <a href='".esc_url(site_url('wp-admin/admin.php?page=sch-timetable&cid=').esc_attr($id))."'>
+                                  <span>".$sch_timetable."</span>
+                                  </a>
+                                </li>
+                                <li class='".esc_attr($teacher_page)."'>
+                                  <a href='".esc_url(site_url('wp-admin/admin.php?page=sch-teacher&cid=').esc_attr($id))."'>
+                                  <span>".$sch_teacher."</span>
+                                </a>
+                              </li>
+                              <li class='".esc_attr($student_page)."'>
+                                <a href='".esc_url(site_url('wp-admin/admin.php?page=sch-student&cid=').esc_attr($id))."'>
+                                  <span>".$sch_student."</span>
+                                </a>
+                              </li>
+                              <li class='".esc_attr($subject_page)."'>
+                                <a href='".esc_url(site_url('wp-admin/admin.php?page=sch-subject&cid=').esc_attr($id))."'>
+                                  <span>".$sch_subject."</span>
+                                </a>
+                              </li>
+                              <li class='".esc_attr($exam_page)."'>
+                                <a href='".esc_url(site_url('wp-admin/admin.php?page=sch-exams&cid=').esc_attr($id))."'>
+                                <span>".$sch_exams."</span>
+                                </a>
+                              </li>
+                              <li class='".esc_attr($mark_page)."'>
+                                <a href='".esc_url(site_url('wp-admin/admin.php?page=sch-marks&cid=').esc_attr($id))."'>
+                                  <span>".$sch_marks."</span>
+                                </a>
+                              </li>
+                              <li class='".esc_attr($attendance_page)."'>
+                                <a href='".esc_url(site_url('wp-admin/admin.php?page=sch-attendance&cid=').esc_attr($id))."'>
+                                  <span>".$sch_attendance."</span>
+                                </a>
+                              </li>
+                              <li class='".esc_attr($leave_page)."'>
+                                <a href='".esc_url(site_url('wp-admin/admin.php?page=sch-leavecalendar&cid=').esc_attr($id))."'>
+                                <span>".$sch_leavecalendar."</span></a>
+                              </li>
+                            </ul>
+                          </li>
+                        </li>
+                      </ul>";
+                    }
         }
           }
          echo "<li class='".esc_attr($event_page)."'>
@@ -814,6 +796,7 @@ foreach($courses as $key => $value) {
             </div>
           </aside>";
   }elseif($current_user_role=='parent'){
+      $keyvakye = [];
       switch( $page )
       {
         case 'dashboard':
@@ -890,10 +873,13 @@ foreach($courses as $key => $value) {
       if($propayment == "installed"){
         global $wpdb;
         $stable=$wpdb->prefix."wpsp_student";
+        $ctable=$wpdb->prefix."wpsp_class";  
+      //  $user_id = $wpdb->get_var("SELECT wp_usr_id FROM $stable where parent_wp_usr_id = '$current_user->ID'");
+        $wpsp_classes = $wpdb->get_var($wpdb->prepare("SELECT wp_usr_id FROM $stable WHERE parent_wp_usr_id = %d",$$current_user->ID));
 
-        $user_id = $wpdb->get_var("SELECT wp_usr_id FROM $stable where parent_wp_usr_id = '$current_user->ID'");
-
-        $wpsp_stud =$wpdb->get_results("SELECT s.class_id FROM wp_wpsp_student s INNER JOIN wp_wpsp_class c  where s.wp_usr_id = '".$user_id."' and c.c_fee_type = 'paid'");
+      //  $wpsp_stud =$wpdb->get_results("SELECT s.class_id FROM $ctable s INNER JOIN $ctable c  where s.wp_usr_id = '".$user_id."' and c.c_fee_type = 'paid'");
+        $wpsp_stud = $wpdb->get_results($wpdb->prepare("SELECT s.class_id FROM $ctable s INNER JOIN $ctable c ON s.class_id = c.cid
+         WHERE s.wp_usr_id = %d AND c.c_fee_type = %s",$user_id,'paid'));
 
         $clsid = [];
         if(is_numeric($wpsp_stud[0]->class_id) ){
@@ -923,7 +909,9 @@ foreach($courses as $key => $value) {
       global $current_user, $wpdb;
       $ctable= $wpdb->prefix."wpsp_class";
       $stable= $wpdb->prefix."wpsp_student";
-      $wpsp_classes =$wpdb->get_results("SELECT class_id,sid,s_fname,s_mname,s_lname FROM $stable where parent_wp_usr_id = '$current_user->ID'");
+      //$wpsp_classes =$wpdb->get_results("SELECT class_id,sid,s_fname,s_mname,s_lname FROM $stable where parent_wp_usr_id = '$current_user->ID'");
+      $wpsp_classes = $wpdb->get_results($wpdb->prepare("SELECT class_id,sid,s_fname,s_mname,s_lname FROM $stable WHERE parent_wp_usr_id = %d",
+        $current_user->ID));
       echo "<!-- Left side column. contains the logo and sidebar -->
           <div class='wpsp-overlay'></div>
           <aside class='wpsp-sidebar ifnotadmin ".((isset($nonemenu)? esc_attr($nonemenu) : ''))."'>
@@ -1004,7 +992,8 @@ foreach($courses as $key => $value) {
 
               foreach ($classIDArray as $id ) {
                 $id =esc_sql(intval($id));
-               $clasname = $wpdb->get_row("SELECT * FROM $ctable where cid='$id'");
+              // $clasname = $wpdb->get_row("SELECT * FROM $ctable where cid='$id'");
+              $clasname = $wpdb->get_row($wpdb->prepare("SELECT * FROM $ctable WHERE cid = %d",$id));
               $classname_array[] = $clasname;
               if($clasname->c_fee_type == 'free'){
                 $nonemenu = ' nopayment1';
@@ -1306,7 +1295,8 @@ if(isset($_GET['cid'])){
   $cid = esc_sql(base64_decode($ciid));
   global $wpdb;
   $wpsp_class_table = $wpdb->prefix . "wpsp_class";
-  $classdata = $wpdb->get_row("SELECT c_name from $wpsp_class_table where cid='$cid'");
+  //$classdata = $wpdb->get_row("SELECT c_name from $wpsp_class_table where cid='$cid'");
+  $classdata = $wpdb->get_row($wpdb->prepare("SELECT c_name FROM $wpsp_class_table WHERE cid = %d",$cid));
   $c_name = sanitize_text_field($classdata->c_name);
 }
   echo "<!-- Content Wrapper. Contains page content -->

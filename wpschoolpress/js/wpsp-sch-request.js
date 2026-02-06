@@ -4,6 +4,9 @@ $(document).ready(function() {
     $("#teacherid").val(e), $("#DisapproveModal").css("display", "block")
   }), $(document).on("click", ".ClassDeleteBt", function(a) {
     var e = $("#teacherid").val()
+
+    deleteprocess.call(this);
+
     var nonce = $(this).data("nonce"),
       s = [];
     s.push({
@@ -16,9 +19,13 @@ $(document).ready(function() {
       name: "nonce",
       value: nonce
     }), jQuery.post(ajax_url, s, function(a) {
-      "success" == a ? location.reload() : ($(".wpsp-popup-return-data").html("Operation failed.Something went wrong!"), $("#SavingModal").css("display", "none"), $("#WarningModal").css("display", "block"), $("#WarningModal").addClass("wpsp-popVisible"))
+      $("#DisapproveModal").css("display", "none");
+      jQuery.trim(a) === "success" ? ($("#SuccessModal").css("display", "block"),$("#SuccessModal .wpsp-success-text").text('Student Disapproved Successfully'), location.reload()) : ($(".wpsp-popup-return-data").html(a), $("#SavingModal").css("display", "none"), $("#WarningModal").css("display", "block"), $("#WarningModal").addClass("wpsp-popVisible"))
     })
   }), $(document).on("click", "#approved_is", function(a) {
+
+    deleteprocess.call(this);
+
     var e = $(this).data("id")
     var nonce = $(this).data("nonce"),
       s = [];
@@ -33,7 +40,7 @@ $(document).ready(function() {
       name: "nonce",
       value: nonce
     }), jQuery.post(ajax_url, s, function(a) {
-      "successsuccess0" == a ? ($("#SuccessModal").css("display", "block"), location.reload()) : ($(".wpsp-popup-return-data").html("Operation failed.Something went wrong!"), $("#SavingModal").css("display", "none"), $("#WarningModal").css("display", "block"), $("#WarningModal").addClass("wpsp-popVisible"))
+      jQuery.trim(a) === "success0" ? ($("#SuccessModal").css("display", "block"),$("#SuccessModal .wpsp-success-text").text('Student Approved Successfully'),location.reload()) : ($(".wpsp-popup-return-data").html(a), $("#SavingModal").css("display", "none"), $("#WarningModal").css("display", "block"), $("#WarningModal").addClass("wpsp-popVisible"))
     })
   }), $("#request_table").dataTable({
     language: {

@@ -100,6 +100,12 @@ jQuery(document).ready(function() {
     e.preventDefault();
   });
   $('#AddMark_Submit').click(function(e) {
+
+    $(this).val('Processing...');
+    $(this).attr('aria-disabled','true');
+    $(this).attr('disabled','disabled');
+    $(this).off('click');
+
     e.preventDefault();
     var empty = 0;
     $("#AddMarkForm .markbox").each(function() {
@@ -121,9 +127,9 @@ jQuery(document).ready(function() {
         beforeSend: function() {
         },
         success: function(response) {
-          if (response == 'success') {
+          if (jQuery.trim(response) === 'success') {
             document.getElementById("AddMarkForm").reset();
-            $(".wpsp-popup-return-data").html('Marks Saved Successfully');
+            $("#SuccessModal .wpsp-success-text").html('Marks Saved Successfully');
             $("#SuccessModal").css("display", "block");
             $("#SavingModal").css("display", "none");
             $("#SuccessModal").addClass("wpsp-popVisible");
@@ -131,13 +137,13 @@ jQuery(document).ready(function() {
               $("#viewmarks").click();
             }, 2000);
             $('#AddMark_Submit').attr('disabled', 'disabled');
-          } else if (response == 'false') {
-            $(".wpsp-popup-return-data").html('Marks Entry failed');
+          } else if (jQuery.trim(response) === 'false') {
+            $("#SuccessModal .wpsp-success-text").html('Marks Entry failed');
             $("#SavingModal").css("display", "none");
             $("#WarningModal").css("display", "block");
             $("#WarningModal").addClass("wpsp-popVisible");
-          } else if (response == 'update') {
-            $(".wpsp-popup-return-data").html('Marks Updated Successfully');
+          } else if (jQuery.trim(response) === 'update') {
+            $("#SuccessModal .wpsp-success-text").html('Marks Updated Successfully');
             $("#SuccessModal").css("display", "block");
             $("#SavingModal").css("display", "none");
             $("#SuccessModal").addClass("wpsp-popVisible");

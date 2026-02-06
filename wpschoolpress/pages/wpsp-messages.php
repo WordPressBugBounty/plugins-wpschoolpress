@@ -12,28 +12,18 @@ $currentusetstatu = '';
 if (is_user_logged_in()) {
   global $current_user, $wpdb;
   $current_user_role = $current_user->roles[0];
-
   $messages_table = $wpdb->prefix . "wpsp_messages";
   $messages_delete_table = $wpdb->prefix . "wpsp_messages_delete";
-
-
-  if (isset($_GET['mid'])){
-    $mid = sanitize_text_field($_GET['mid']);
-
-  }
-
+  $mid = isset($_GET['mid']) ? sanitize_text_field($_GET['mid']) : '';
   $adminargs = array( 'role'    => 'administrator' );
   $adminusers = get_users( $adminargs );
   $admin_count = count($adminusers);
-
   $teacherargs = array( 'role'    => 'teacher' );
   $teacherusers = get_users( $teacherargs );
   $teacher_count = count($teacherusers);
-
   $parentargs = array( 'role'    => 'parent' );
   $parentusers = get_users( $parentargs );
   $parent_count = count($parentusers);
-
   $studentargs = array( 'role'    => 'student' );
   $studentusers = get_users( $studentargs );
   $student_count = count($studentusers);
@@ -46,18 +36,19 @@ if (is_user_logged_in()) {
     $messages_delete_table = $wpdb->prefix . "wpsp_messages_delete";
     $currentTab     = isset($_GET['tab']) && !empty(sanitize_text_field($_GET['tab'])) ? sanitize_text_field($_GET['tab']) : 'inbox';
     if (isset($_GET['mid'])){
-    $sender_id = $wpdb->get_results("select s_id from $messages_table where mid = '".esc_sql($mid)."'");
+  //  $sender_id = $wpdb->get_results("select s_id from $messages_table where mid = '".esc_sql($mid)."'");
+    $sender_id = $wpdb->get_results($wpdb->prepare("SELECT s_id FROM $messages_table WHERE mid = %d",$mid));
     $ss_id = $sender_id[0]->s_id;
-    $delete_msg_count = $wpdb->get_var("select count(*) from $messages_delete_table where m_id = '".esc_sql($mid)."'  AND delete_status = 1");
-
+  //  $delete_msg_count = $wpdb->get_var("select count(*) from $messages_delete_table where m_id = '".esc_sql($mid)."'  AND delete_status = 1");
+    $delete_msg_count = $wpdb->get_var($wpdb->prepare("SELECT count(*) FROM $messages_delete_table WHERE m_id = %d AND delete_status = %d",$mid,1));
     if($sender_id[0]->s_id == $current_user->ID){
       $currentusetstatu = 'sender';
-      $unread_msg_count = $wpdb->get_results("select count(*) from $messages_table where main_m_id= '".esc_sql($mid)."' AND r_read = 0 AND r_id = '".esc_sql($current_user->ID)."'");
+    // $unread_msg_count = $wpdb->get_results("select count(*) from $messages_table where main_m_id= '".esc_sql($mid)."' AND r_read = 0 AND r_id = '".esc_sql($current_user->ID)."'");
+      $unread_msg_count = $wpdb->get_results($wpdb->prepare("SELECT count(*) FROM $messages_table WHERE main_m_id = %d AND r_read = %d AND r_id = %d",$mid,0,$current_user->ID));
       if($unread_msg_count != 0){
         $m_data = array(
           's_read' => 1
         );
-
         $wpdb->update($messages_table, $m_data, array(
           'main_m_id' => $mid,
           'r_id' => $current_user->ID
@@ -65,12 +56,12 @@ if (is_user_logged_in()) {
       }
     }else{
       $currentusetstatu = 'reciver';
-      $unread_msg_count = $wpdb->get_results("select count(*) from $messages_table where main_m_id= '".esc_sql($mid)."' AND r_read = 0 AND r_id = '".esc_sql($current_user->ID)."'");
+    //  $unread_msg_count = $wpdb->get_results("select count(*) from $messages_table where main_m_id= '".esc_sql($mid)."' AND r_read = 0 AND r_id = '".esc_sql($current_user->ID)."'");
+      $unread_msg_count = $wpdb->get_results($wpdb->prepare("SELECT count(*) FROM $messages_table WHERE main_m_id = %d AND r_read = %d AND r_id = %d",$mid,0,$current_user->ID));
       if($unread_msg_count != 0){
         $m_data = array(
           'r_read' => 1
         );
-
         $wpdb->update($messages_table, $m_data, array(
           'main_m_id' => $mid,
           'r_id' => $current_user->ID
@@ -151,7 +142,7 @@ if (is_user_logged_in()) {
               padding-bottom:15px;
               color:red;
             }
-
+            #message-list tbody tr{cursor: pointer;}
           </style>
           <div class="box-footer text-black">
             <div class="wpsp-row">
@@ -207,12 +198,12 @@ if (is_user_logged_in()) {
                       ?>
                     </h3>
                     <?php
-                    if (!isset($_GET['mid']) && empty(sanitize_text_field($_GET['mid']))) {
+                    if (empty($mid)) {
                       ?>
                       <div class="wpsp-row">
                         <div class="wpsp-col-md-3">
                           <select name="bulkaction" class="wpsp-form-control" id="bulkaction" <?php echo (($multi_datele_status == 1)? 'data-trash="1"' : 'data-trash="0"') ?>>
-                            <option value=""><?php esc_html_e( 'Select Action', 'wpschoolpress' );?></option>
+                            <option value="selectAction"><?php esc_html_e( 'Select Action', 'wpschoolpress' );?></option>
                             <option value="bulkUsersDelete"><?php esc_html_e( 'Delete', 'wpschoolpress' );?></option>
                           </select>
                         </div>
@@ -221,18 +212,15 @@ if (is_user_logged_in()) {
                     }
                     ?>
                   </div>
-                  <div class="wpsp-card-body <?php echo ((!isset($_GET['mid']) && empty(sanitize_text_field($_GET['mid'])))? 'message-card-body ': '') ?>">
+                  <div class="wpsp-card-body <?php echo (empty($mid)? 'message-card-body ': '') ?>">
                     <div class="wpsp-row">
                       <div class="wpsp-col-md-12 table-responsive">
                         <?php
-
                         if (isset($_GET['mid']) && !empty(sanitize_text_field($_GET['mid']))){
                           echo '<div id="viewMessageContainer">'.wpsp_ViewMessage(sanitize_text_field($_GET['mid']), true);
                           if (isset($_REQUEST['tab']) && sanitize_text_field($_REQUEST['tab']) == 'inbox'){
-
                             if($delete_msg_count == 0){
                             ?>
-
                             <hr style="margin-bottom:15px;"/>
                             <div class="wpsp-row">
                               <div class="wpsp-col-md-12">
@@ -271,31 +259,56 @@ if (is_user_logged_in()) {
                           <tbody>
                             <?php
                             if ($currentTab == 'trash') {
-                              $mid = $wpdb->get_results("select distinct main_m_id from $messages_table where ( r_id='$current_user->ID' or s_id='".esc_sql($current_user->ID)."' ) and main_m_id IN (SELECT m_id FROM $messages_delete_table WHERE user_id = '$current_user->ID' AND delete_status = 0 )  order by mid DESC");
+                            //  $mid = $wpdb->get_results("select distinct main_m_id from $messages_table where ( r_id='$current_user->ID' or
+                            //  s_id='".esc_sql($current_user->ID)."' ) and main_m_id IN (SELECT m_id FROM $messages_delete_table WHERE
+                            //  user_id = '$current_user->ID' AND delete_status = 0 )  order by mid DESC");
+                              /*$mid = $wpdb->get_results($wpdb->prepare("SELECT distinct main_m_id FROM $messages_table WHERE
+                              ( r_id = %d or s_id = %d and main_m_id IN (SELECT m_id FROM $messages_delete_table WHERE
+                              user_id = %d AND delete_status = 0) order by mid DESC",$current_user->ID,$current_user->ID,$current_user->ID)); */
+                              
+                              $mid = $wpdb->get_results($wpdb->prepare("SELECT DISTINCT main_m_id FROM $messages_table 
+                              WHERE (r_id = %d OR s_id = %d) AND main_m_id IN (SELECT m_id FROM $messages_delete_table WHERE user_id = %d 
+                              AND delete_status = %d) ORDER BY main_m_id DESC",$current_user->ID,$current_user->ID,$current_user->ID,0));  
+
 
                             } else if ($currentTab == 'inbox') {
 
-                              $mid = $wpdb->get_results("select distinct main_m_id from $messages_table where ( r_id='$current_user->ID' ) and main_m_id NOT IN (SELECT distinct m_id FROM $messages_delete_table WHERE user_id = '".esc_sql($current_user->ID)."' ) order by mid DESC");
+                            /*  $mid = $wpdb->get_results("select distinct main_m_id from $messages_table where ( r_id='$current_user->ID' ) 
+                              and main_m_id NOT IN (SELECT distinct m_id FROM $messages_delete_table WHERE 
+                              user_id = '".esc_sql($current_user->ID)."' ) order by mid DESC"); */
 
+                              $mid = $wpdb->get_results($wpdb->prepare("SELECT distinct main_m_id FROM $messages_table WHERE
+                              (r_id = %d) and main_m_id NOT IN(SELECT distinct m_id FROM $messages_delete_table WHERE
+                              user_id = %d) order by mid DESC",$current_user->ID,$current_user->ID));
 
                             } else {
 
-                              $mid = $wpdb->get_results("select distinct main_m_id from $messages_table where ( s_id='$current_user->ID' ) and main_m_id NOT IN (SELECT distinct m_id FROM $messages_delete_table WHERE user_id = '".esc_sql($current_user->ID)."' ) order by mid DESC");
+                             /* $mid = $wpdb->get_results("select distinct main_m_id from $messages_table where ( s_id='$current_user->ID' ) 
+                              and main_m_id NOT IN (SELECT distinct m_id FROM $messages_delete_table WHERE user_id = '".esc_sql($current_user->ID)."' )
+                               order by mid DESC"); */
+
+                              $mid = $wpdb->get_results($wpdb->prepare("SELECT distinct main_m_id FROM $messages_table WHERE
+                              ( s_id = %d) and main_m_id NOT IN(SELECT distinct m_id FROM $messages_delete_table WHERE
+                              user_id = %d) order by mid DESC",$current_user->ID,$current_user->ID));
                             }
                             if(!empty($mid)){
                               foreach ($mid as $id) {
 
                                 $sub_msg_count = 0;
                                 $m = esc_sql($id->main_m_id);
-                                $read_mcount_q = $wpdb->get_results("select mid from $messages_table where main_m_id= '$m' AND r_read = 0 AND r_id = '".esc_sql($current_user->ID)."'");
+                              //  $read_mcount_q = $wpdb->get_results("select mid from $messages_table where main_m_id= '$m' AND r_read = 0 AND r_id = '".esc_sql($current_user->ID)."'");
+                                $read_mcount_q = $wpdb->get_results($wpdb->prepare("SELECT mid FROM $messages_table WHERE main_m_id = %d AND r_read = %d AND r_id = %d",$m,0,$current_user->ID));
 
-                                $sender_id = $wpdb->get_results("select s_id from $messages_table where mid = '$m'");
+                              //  $sender_id = $wpdb->get_results("select s_id from $messages_table where mid = '$m'");
+                                $sender_id = $wpdb->get_results($wpdb->prepare("SELECT s_id FROM $messages_table WHERE mid = %d",$m));
 
                                 if (!isset($_REQUEST['tab']) OR sanitize_text_field($_REQUEST['tab']) == 'inbox'){
                                   if($sender_id[0]->s_id == $current_user->ID){
-                                    $read_mcount = $wpdb->get_var("select count(*) from $messages_table where main_m_id= '$m' AND s_read = 0 AND r_id = '".esc_sql($current_user->ID)."'");
+                                  //  $read_mcount = $wpdb->get_var("select count(*) from $messages_table where main_m_id= '$m' AND s_read = 0 AND r_id = '".esc_sql($current_user->ID)."'");
+                                    $read_mcount = $wpdb->get_var($wpdb->prepare("SELECT count(*) FROM $messages_table WHERE main_m_id = %d AND s_read = %d AND r_id =%d",$m,0,$current_user->ID));
                                   }else{
-                                    $read_mcount = $wpdb->get_var("select count(*) from $messages_table where main_m_id= '$m' AND r_read = 0 AND r_id = '".esc_sql($current_user->ID)."'");
+                                  //  $read_mcount = $wpdb->get_var("select count(*) from $messages_table where main_m_id= '$m' AND r_read = 0 AND r_id = '".esc_sql($current_user->ID)."'");
+                                    $read_mcount = $wpdb->get_var($wpdb->prepare("SELECT count(*) FROM $messages_table WHERE main_m_id = %d AND r_read = %d AND r_id =%d",$m,0,$current_user->ID));
                                   }
                                 }else{
                                   $read_mcount = 0;
@@ -304,24 +317,31 @@ if (is_user_logged_in()) {
 
                                 if($id->main_m_id != 0){
                                   if ($currentTab == 'trash') {
-                                    $msgb = $wpdb->get_results("select * from $messages_table where main_m_id = '$m'");
+                                    //$msgb = $wpdb->get_results("select * from $messages_table where main_m_id = '$m'");
+                                    $msgb = $wpdb->get_results($wpdb->prepare("SELECT * FROM $messages_table WHERE main_m_id = %d",$m));
                                   }else{
-                                    $msgb = $wpdb->get_results("select * from $messages_table where (del_stat IS NULL OR del_stat != '$current_user->ID') and main_m_id = '$m'");
+                                   // $msgb = $wpdb->get_results("select * from $messages_table where (del_stat IS NULL OR del_stat != '$current_user->ID') and main_m_id = '$m'");
+                                    $msgb = $wpdb->get_results($wpdb->prepare("SELECT * FROM $messages_table WHERE (del_stat IS NULL OR del_stat != %d) and main_m_id = %d",$current_user->ID,$m));
                                   }
                                 }else{
-                                  $msgb = $wpdb->get_results("select * from $messages_table where ( r_id = '$current_user->ID' ) and de(del_stat IS NULL OR del_stat != '$current_user->ID') and main_m_id = '$m'");
+                                  //$msgb = $wpdb->get_results("select * from $messages_table where ( r_id = '$current_user->ID' ) and de(del_stat IS NULL OR del_stat != '$current_user->ID') and main_m_id = '$m'");
+                                  $msgb = $wpdb->get_results($wpdb->prepare("SELECT * FROM $messages_table WHERE (r_id =  %d) and (del_stat IS NULL OR del_stat != %d) main_m_id = %d",$current_user->ID,$current_user->ID,$m));
                                 }
 
                                 if(!empty($msgb)){
                                   $msg_id  = esc_sql($msgb[0]->main_m_id);
                                   if (isset($_REQUEST['tab']) && sanitize_text_field($_REQUEST['tab']) == 'inbox'){
-                                    $sub_msg_count = $wpdb->get_var("select count(*) from $messages_table where main_m_id= '$msg_id' AND r_id = '$current_user->ID'");
+                                   // $sub_msg_count = $wpdb->get_var("select count(*) from $messages_table where main_m_id= '$msg_id' AND r_id = '$current_user->ID'");
+                                    $sub_msg_count = $wpdb->get_var($wpdb->prepare("SELECT count(*) FROM $messages_table WHERE main_m_id = %d AND r_id = %d",$msg_id,$current_user->ID));
                                   }elseif (isset($_REQUEST['tab']) && sanitize_text_field($_REQUEST['tab']) == 'sentbox'){
-                                    $sub_msg_count = $wpdb->get_var("select count(*) from $messages_table where main_m_id= '$msg_id' AND s_id = '$current_user->ID'");
+                                  //  $sub_msg_count = $wpdb->get_var("select count(*) from $messages_table where main_m_id= '$msg_id' AND s_id = '$current_user->ID'");
+                                    $sub_msg_count = $wpdb->get_var($wpdb->prepare("SELECT count(*) FROM $messages_table WHERE main_m_id = %d AND s_id = %d",$msg_id,$current_user->ID));
                                   }else if (isset($_REQUEST['tab']) && sanitize_text_field($_REQUEST['tab']) == 'trash'){
-                                    $sub_msg_count = $wpdb->get_var("select count(*) from $messages_table where main_m_id= '$msg_id' AND del_stat = '$current_user->ID' AND (s_id = '$current_user->ID' OR r_id = '$current_user->ID')");
+                                  //  $sub_msg_count = $wpdb->get_var("select count(*) from $messages_table where main_m_id= '$msg_id' AND del_stat = '$current_user->ID' AND (s_id = '$current_user->ID' OR r_id = '$current_user->ID')");
+                                    $sub_msg_count = $wpdb->get_var($wpdb->prepare("SELECT count(*) FROM $messages_table WHERE main_m_id = %d AND del_stat = %d AND (s_id = %d OR r_id = %d)",$msg_id,$current_user->ID,$current_user->ID,$current_user->ID));
                                   }else{
-                                    $sub_msg_count = $wpdb->get_var("select count(*) from $messages_table where main_m_id= '$msg_id' AND del_stat!='$current_user->ID'");
+                                   // $sub_msg_count = $wpdb->get_var("select count(*) from $messages_table where main_m_id= '$msg_id' AND del_stat!='$current_user->ID'");
+                                    $sub_msg_count = $wpdb->get_var($wpdb->prepare("SELECT count(*) FROM $messages_table WHERE main_m_id = %d AND del_stat = %d ",$msg_id,$current_user->ID));
                                   }
 
                                   $rep         = json_decode($msgb[0]->msg);
@@ -348,12 +368,12 @@ if (is_user_logged_in()) {
                                       <td class="time"><?php echo esc_html(wpsp_ViewDate($msgb[0]->m_date)); ?></td>
                                       <td class="small-col">
                                         <?php
-                                        if (sanitize_text_field($_REQUEST['tab']) != 'trash') {
+                                      //  if (isset($_REQUEST['tab'])) {
                                         ?>
                                         <a class="pointer text-blue viewMess" title="view" href="<?php echo esc_url(wpsp_admin_url()); ?>sch-messages&tab=<?php echo esc_attr($currentTab);?>&mid=<?php echo esc_attr(intval($msgb[0]->mid)); ?>">
                                           <i class="fa fa-eye btn btn-success"></i>
                                         </a>
-                                      <?php } ?>
+                                      <?php // } ?>
                                         <a href="javascript:;" title="Delete"  class="delete_messages" <?php
                                           if(isset($_REQUEST['tab'])) {
                                             if($_REQUEST['tab'] == 'trash') { echo 'data-trash="1"';}else{echo 'data-trash="0"';}
@@ -420,7 +440,8 @@ if (is_user_logged_in()) {
                $studentData = [];
                $studentData_2 = [];
 
-              $class_list = $wpdb->get_results("SELECT DISTINCT cid  FROM $class_table WHERE teacher_id = '$current_user->ID'");
+            //  $class_list = $wpdb->get_results("SELECT DISTINCT cid  FROM $class_table WHERE teacher_id = '$current_user->ID'");
+              $class_list = $wpdb->get_results($wpdb->prepare("SELECT DISTINCT cid FROM $class_table WHERE teacher_id = %d",$current_user_id));
               foreach ($class_list as $cid) {
 
                 $s_lists = $wpdb->get_results("select wp_usr_id,class_id from $studenttable");
@@ -446,8 +467,8 @@ if (is_user_logged_in()) {
              } elseif ($current_user_role == 'parent') {
                $parent_id = intval($current_user->ID);
 
-               $student_list = $wpdb->get_results("SELECT wp_usr_id from $studenttable WHERE sid in ( select DISTINCT st.sid from $studenttable st WHERE st.parent_wp_usr_id = '".esc_sql($parent_id)."') ");
-
+              // $student_list = $wpdb->get_results("SELECT wp_usr_id from $studenttable WHERE sid in ( select DISTINCT st.sid from $studenttable st WHERE st.parent_wp_usr_id = '".esc_sql($parent_id)."') ");
+              $student_list = $wpdb->get_results($wpdb->prepare("SELECT wp_usr_id FROM $studenttable WHERE sid in (select DISTINCT st.sid from $studenttable st WHERE st.parent_wp_usr_id = %d)",$parent_id));
                $students = [];
                foreach($student_list as $student){
                 $students[] = $student->wp_usr_id;
@@ -460,7 +481,7 @@ if (is_user_logged_in()) {
 
             if ($current_user_role == 'administrator'){
               $parents = [];
-              $parent_list = $wpdb->get_results("SELECT DISTINCT parent_wp_usr_id from $studenttable where parent_wp_usr_id != 0 ");
+              $parent_list = $wpdb->get_results("SELECT DISTINCT parent_wp_usr_id from $studenttable where parent_wp_usr_id != %d",0);
 
               foreach($parent_list as $parent){
                $parents[] = $parent->parent_wp_usr_id;
@@ -469,8 +490,9 @@ if (is_user_logged_in()) {
               $parents = [];
               $parents_data = [];
 
-              $parent_list = $wpdb->get_results("select DISTINCT parent_wp_usr_id, class_id from $studenttable where parent_wp_usr_id != 0");
-              $class_list = $wpdb->get_results("SELECT cid FROM $class_table where teacher_id = '$current_user->ID'");
+              $parent_list = $wpdb->get_results("select DISTINCT parent_wp_usr_id, class_id from $studenttable where parent_wp_usr_id != %d",0);
+            //  $class_list = $wpdb->get_results("SELECT cid FROM $class_table where teacher_id = '$current_user->ID'");
+              $class_list = $wpdb->get_results($wpdb->prepare("SELECT cid FROM $class_table WHERE teacher_id = %d",$current_user->ID));
 
 
               foreach ($class_list as $cid) {
@@ -497,8 +519,8 @@ if (is_user_logged_in()) {
 
             }elseif ($current_user_role == 'student') {
               $parents = [];
-              $parent_list = $wpdb->get_results("SELECT CONCAT_WS(' ', p_fname, p_mname, p_lname) AS full_name, sid, parent_wp_usr_id from $studenttable WHERE parent_wp_usr_id != 0 AND sid in ( select DISTINCT st.sid from $studenttable st WHERE st.wp_usr_id = '$current_user->ID') ");
-
+            //  $parent_list = $wpdb->get_results("SELECT CONCAT_WS(' ', p_fname, p_mname, p_lname) AS full_name, sid, parent_wp_usr_id from $studenttable WHERE parent_wp_usr_id != 0 AND sid in ( select DISTINCT st.sid from $studenttable st WHERE st.wp_usr_id = '$current_user->ID') ");
+              $parent_list = $wpdb->get_results($wpdb->prepare("SELECT CONCAT_WS(' ', p_fname, p_mname, p_lname) AS full_name, sid, parent_wp_usr_id FROM $studenttable WHERE parent_wp_usr_id != %d AND sid in ( select DISTINCT st.sid from $studenttable st WHERE st.wp_usr_id = %d)",0,$current_user->ID));
               foreach($parent_list as $parent){
                $parents[] = $parent->parent_wp_usr_id;
               }
@@ -513,14 +535,16 @@ if (is_user_logged_in()) {
                $teachers[] = $teacher->wp_usr_id;
               }
             }elseif ( $current_user_role == 'teacher') {
-              $teachers_data = $wpdb->get_results("select wp_usr_id from $teacher_table WHERE wp_usr_id !='$current_user->ID' order by tid DESC");
+            //  $teachers_data = $wpdb->get_results("select wp_usr_id from $teacher_table WHERE wp_usr_id !='$current_user->ID' order by tid DESC");
+              $teachers_data = $wpdb->get_results($wpdb->prepare("SELECT wp_usr_id FROM $teacher_table WHERE wp_usr_id != %d order by tid DESC",$current_user->ID));
               foreach($teachers_data as $teacher){
                $teachers[] = $teacher->wp_usr_id;
               }
             }elseif ($current_user_role == 'parent') {
               $parent_id = intval($current_user->ID);
 
-              $s_data = $wpdb->get_results("SELECT class_id FROM $studenttable where parent_wp_usr_id = '".esc_sql($parent_id)."'");
+            //  $s_data = $wpdb->get_results("SELECT class_id FROM $studenttable where parent_wp_usr_id = '".esc_sql($parent_id)."'");
+              $s_data = $wpdb->get_results($wpdb->prepare("SELECT class_id FROM $studenttable WHERE parent_wp_usr_id = %d",$parent_id));
               $class_data = array();
 
               foreach ($s_data as $sid) {
@@ -540,8 +564,8 @@ if (is_user_logged_in()) {
               $class_data_array = array_map('intval', $class_data);
               foreach ($class_data_array as $cid ) {
                 $cid = esc_sql($cid);
-                $teachers_data = $wpdb->get_results("SELECT DISTINCT wp_usr_id FROM $teacher_table WHERE wp_usr_id in ( SELECT teacher_id FROM $class_table WHERE cid = '$cid' ) order by tid DESC" );
-
+              //  $teachers_data = $wpdb->get_results("SELECT DISTINCT wp_usr_id FROM $teacher_table WHERE wp_usr_id in ( SELECT teacher_id FROM $class_table WHERE cid = '$cid' ) order by tid DESC" );
+                $teachers_data = $wpdb->get_results($wpdb->prepare("SELECT DISTINCT wp_usr_id FROM $teacher_table WHERE wp_usr_id in ( SELECT teacher_id FROM $class_table WHERE cid = %d ) order by tid DESC ",$cid));
                 foreach($teachers_data as $teacher){
                   $teacher_data[] = $teacher->wp_usr_id;
                 }
@@ -556,7 +580,8 @@ if (is_user_logged_in()) {
 
             }elseif ($current_user_role == 'student') {
               $student_id = intval($current_user->ID);
-              $s_data = $wpdb->get_results("SELECT class_id FROM $studenttable where wp_usr_id = '".esc_sql($student_id)."'");
+            //  $s_data = $wpdb->get_results("SELECT class_id FROM $studenttable where wp_usr_id = '".esc_sql($student_id)."'");
+              $s_data = $wpdb->get_results($wpdb->prepare("SELECT class_id FROM $studenttable WHERE wp_usr_id = %d",$student_id));
 
               $class_data = [];
               foreach ($s_data as $sid) {
@@ -570,7 +595,9 @@ if (is_user_logged_in()) {
               $class_data_array = array_map('intval', $class_data);
               foreach ($class_data_array as $cid ) {
                   $cid = esc_sql($cid);
-                $teachers_data = $wpdb->get_results("SELECT DISTINCT wp_usr_id FROM $teacher_table WHERE wp_usr_id in ( SELECT teacher_id FROM $class_table WHERE cid = '$cid' ) order by tid DESC" );
+              //  $teachers_data = $wpdb->get_results("SELECT DISTINCT wp_usr_id FROM $teacher_table WHERE wp_usr_id in ( SELECT teacher_id FROM $class_table WHERE cid = '$cid' ) order by tid DESC" );
+                $teachers_data = $wpdb->get_results($wpdb->prepare("SELECT DISTINCT wp_usr_id FROM $teacher_table WHERE wp_usr_id in ( SELECT teacher_id FROM $class_table WHERE cid = %d ) order by tid DESC ",$cid));
+
                 foreach($teachers_data as $teacher){
                  $teachers[] = $teacher->wp_usr_id;
                 }
@@ -626,7 +653,8 @@ if (is_user_logged_in()) {
                         echo '<optgroup label="All Teachers">';
                         foreach ($teachers as $id) {
                           $id = esc_sql($id);
-                          $teachers_data = $wpdb->get_results("SELECT CONCAT_WS(' ', first_name, middle_name, last_name) AS full_name, wp_usr_id FROM $teacher_table WHERE wp_usr_id= '$id'");
+                        //  $teachers_data = $wpdb->get_results("SELECT CONCAT_WS(' ', first_name, middle_name, last_name) AS full_name, wp_usr_id FROM $teacher_table WHERE wp_usr_id= '$id'");
+                          $teachers_data = $wpdb->get_results($wpdb->prepare("SELECT CONCAT_WS(' ', first_name, middle_name, last_name) AS full_name, wp_usr_id FROM $teacher_table WHERE wp_usr_id = %d",$id));
                           ?>
                           <option value="<?php echo esc_attr(intval($teachers_data[0]->wp_usr_id)); ?>"><?php echo esc_html($teachers_data[0]->full_name); ?></option>
                           <?php
@@ -653,7 +681,8 @@ if (is_user_logged_in()) {
                             echo '<optgroup label="Select Students">';
                             foreach ($students as $sinfo) {
                               $sinfo = esc_sql($sinfo);
-                              $student_list = $wpdb->get_results("SELECT CONCAT_WS(' ', s_fname, s_mname, s_lname) AS full_name from $studenttable where wp_usr_id = '$sinfo'  order by sid DESC");
+                            //  $student_list = $wpdb->get_results("SELECT CONCAT_WS(' ', s_fname, s_mname, s_lname) AS full_name from $studenttable where wp_usr_id = '$sinfo'  order by sid DESC");
+                              $student_list = $wpdb->get_results($wpdb->prepare("SELECT CONCAT_WS(' ', s_fname, s_mname, s_lname) AS full_name FROM $studenttable WHERE wp_usr_id = %d order by sid DESC",$sinfo));
                               ?>
                                 <option value="<?php echo esc_attr(intval($sinfo)); ?>"><?php echo esc_html($student_list[0]->full_name); ?></option>
                               <?php
@@ -682,7 +711,8 @@ if (is_user_logged_in()) {
                               $parent_name = '';
                               foreach ($parents as $key => $pinfo) {
                                 $pinfo = esc_sql($pinfo);
-                                $parent_list = $wpdb->get_results("SELECT CONCAT_WS(' ', p_fname, p_mname, p_lname) AS full_name, sid, parent_wp_usr_id from $studenttable WHERE parent_wp_usr_id = '$pinfo'");
+                              //  $parent_list = $wpdb->get_results("SELECT CONCAT_WS(' ', p_fname, p_mname, p_lname) AS full_name, sid, parent_wp_usr_id from $studenttable WHERE parent_wp_usr_id = '$pinfo'");
+                                $parent_list = $wpdb->get_results($wpdb->prepare("SELECT CONCAT_WS(' ', p_fname, p_mname, p_lname) AS full_name, sid, parent_wp_usr_id FROM $studenttable WHERE parent_wp_usr_id = %d",$pinfo));
                                 if(intval(intval($parent_list[0]->parent_wp_usr_id)) != 0 ){
                                   if($parent_list[0]->full_name != ''){
                                     $parent_obj = get_user_by('id', intval($parent_list[0]->parent_wp_usr_id));

@@ -56,6 +56,15 @@ $(document).ready(function() {
     var e = $(this).data("id");
     console.log(e), $("#teacherid").val(e), $("#DeleteModal").css("display", "block")
   }), $(document).on("click", ".ClassDeleteBt", function() {
+
+    $(this).text('Processing....');
+    $(this).attr('aria-disabled','true');
+    $(this).attr('disabled','disabled');
+    $(this).off('click');
+    $(this).next().attr('aria-disabled','true');
+    $(this).next().off('click');
+    $(this).next().attr('disabled','disabled');
+
     var nn = $('#wps_generate_nonce').val();
     var a = $("#teacherid").val(),
       e = [];
@@ -73,7 +82,11 @@ $(document).ready(function() {
       url: ajax_url,
       data: e,
       success: function(a) {
-        "success" == a ? location.reload() : ($(".wpsp-popup-return-data").html("Operation failed.Something went wrong!"), $("#SavingModal").css("display", "none"), $("#WarningModal").css("display", "block"), $("#WarningModal").addClass("wpsp-popVisible"))
+        "success" === jQuery.trim(a) ? ($("#SuccessModal").css("display", "block"),$("#DeleteModal").css("display", "none"),
+$("#SuccessModal .wpsp-success-text").text('Leaves Deleted Successfully'),
+setTimeout(function() {
+	location.reload();
+}, 2000)) : ($(".wpsp-popup-return-data").html("Operation failed.Something went wrong!"), $("#SavingModal").css("display", "none"), $("#WarningModal").css("display", "block"), $("#WarningModal").addClass("wpsp-popVisible"))
       }
     })
   }), $(document).on("focus", ".spls", function() {
@@ -107,6 +120,12 @@ $(document).ready(function() {
       }
     })
   }), $(document).on("submit", "#addLeaveDateForm", function(a) {
+
+    $('#addLeaveDateSubmit').val('Processing....');
+    $('#addLeaveDateSubmit').attr('aria-disabled','true');
+    $('#addLeaveDateSubmit').attr('disabled','disabled');
+    $('#addLeaveDateSubmit').off('click');
+
     a.preventDefault();
     var e = $(this).serializeArray();
     e.push({
@@ -117,9 +136,9 @@ $(document).ready(function() {
       url: ajax_url,
       data: e,
       success: function(a) {
-        "success" == a ? ($(".wpsp-popup-return-data").html("Dates added Successfully"), $("#SuccessModal").css("display", "block"), $("#SavingModal").css("display", "none"), $("#SuccessModal").addClass("wpsp-popVisible"), setTimeout(function() {
+        "success" == jQuery.trim(a) ? ($("#SuccessModal .wpsp-success-text").html("Dates added Successfully"), $("#SuccessModal").css("display", "block"), $("#SavingModal").css("display", "none"), $("#SuccessModal").addClass("wpsp-popVisible"), setTimeout(function() {
           location.reload()
-        }, 2e3)) : ($(".wpsp-popup-return-data").html(a), $("#SavingModal").css("display", "none"), $("#WarningModal").css("display", "block"), $("#WarningModal").addClass("wpsp-popVisible")), $("#leaveModal").modal("hide")
+        }, 2000)) : ($(".wpsp-popup-return-data").html(a), $("#SavingModal").css("display", "none"), $("#WarningModal").css("display", "block"), $("#WarningModal").addClass("wpsp-popVisible")), $("#leaveModal").modal("hide")
       },
       error: function() {
         $(".wpsp-popup-return-data").html("Operation failed.Something went wrong!"), $("#SavingModal").css("display", "none"), $("#WarningModal").css("display", "block"), $("#WarningModal").addClass("wpsp-popVisible")

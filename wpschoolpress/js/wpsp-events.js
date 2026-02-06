@@ -57,10 +57,29 @@ $(document).ready(function() {
       $("#sdate").val(t), $("#edate").val(l), $("#eventPop").addClass("wpsp-popVisible"), $("body").addClass("wpsp-bodyFixed")
     },
     eventClick: function(e, a, t) {
-      $("#viewEventTitle").html(e.title), null == e.start ? $("#eventStart").html("N/A") : $("#eventStart").html(e.start.format("MM/DD/YYYY h:mm A")), null == e.end ? $("#eventEnd").html("N/A") : $("#eventEnd").html(e.end.format("MM/DD/YYYY h:mm A")), $("#eventDesc").html(e.description), $("#editeventPop").addClass("wpsp-popVisible"), $("body").addClass("wpsp-bodyFixed"), $("#editEvent").click(function() {
+      $("#viewEventTitle").html(e.title);
+      var start = moment(e.start, 'YYYY-MM-DD HH:mm:ss');
+      var end = moment(e.end, 'YYYY-MM-DD HH:mm:ss');
+      null == e.start ? $("#eventStart").html("N/A") : (start.format('HH:mm:ss') === '00:00:00') ? $("#eventStart").html(e.start.format("MM/DD/YYYY")) : $("#eventStart").html(e.start.format("MM/DD/YYYY h:mm A")),
+      null == e.end ? $("#eventEnd").html("N/A") : (start.format('HH:mm:ss') === '00:00:00' && end.format('HH:mm:ss') === '18:30:00') ? $("#eventEnd").html(e.end.format("MM/DD/YYYY")) : $("#eventEnd").html(e.end.format("MM/DD/YYYY h:mm A")),
+      $("#eventDesc").html(e.description),
+      $("#editeventPop").addClass("wpsp-popVisible"),
+      $("body").addClass("wpsp-bodyFixed"),
+      $("#editEvent").click(function() {
         edit_event(e)
       }), $("#deleteEvent").click(function() {
         if (1 == confirm("Are you sure want to delete?")) {
+          
+          $("#editEvent").attr('aria-disabled','true');
+          $("#editEvent").attr('disabled','disabled');
+          $("#editEvent").off('click');
+
+          $("#deleteEvent").text('Processing....');
+          $("#deleteEvent").attr('aria-disabled','true');
+          $("#deleteEvent").attr('disabled','disabled');
+          $("#deleteEvent").off('click');
+
+
           var a = new Array;
           a.push({
             name: "action",
@@ -69,7 +88,7 @@ $(document).ready(function() {
             name: "evid",
             value: e.id
           }), jQuery.post(ajax_url, a, function(e) {
-            "success" == e ? ($("#response").html("<div class='alert alert-success'>Event deleted successfully..</div>"), location.reload(!0)) : ($("#response").html("<div class='alert alert-danger'>Action failed please refresh and try..</div>"), location.reload(!0))
+            "success" == jQuery.trim(e) ? ($("#editeventPop").css("display", "none"),$("#SuccessModal").css("display", "block"),$("#SuccessModal .wpsp-success-text").text('Event Deleted Successfully...'), location.reload(!0)) : ($("#response").html("<div class='alert alert-danger'>Action failed please refresh and try..</div>"), location.reload(!0))
           })
         }
       })
@@ -77,6 +96,18 @@ $(document).ready(function() {
     eventDrop: function(e) {
       e.preventDefault()
     },
+    eventDataTransform: function(eventData) {
+      if (eventData.end) {
+        var start = moment(eventData.start, 'YYYY-MM-DD HH:mm:ss');
+        var end = moment(eventData.end, 'YYYY-MM-DD HH:mm:ss');
+        var isAllDay = start.format('HH:mm:ss') === '00:00:00' && end.format('HH:mm:ss') === '00:00:00';
+        if (isAllDay) {
+          end.add(1, 'days');  // Add one day as before
+          eventData.end = end.toISOString();  // Convert back to ISO string
+        }
+      }
+      return eventData;
+    },    
     eventLimit: !0,
     events: {
       url: ajax_url,
@@ -104,9 +135,9 @@ $(document).ready(function() {
         name: "action",
         value: "addEvent"
       }), jQuery.post(ajax_url, l, function(e) {
-        "success" == e ? ($("#evid").val(""), $(".wpsp-popup-return-data").html("Event details saved successfully.."), $("#SuccessModal").css("display", "block"), $("#SavingModal").css("display", "none"), $("#SuccessModal").addClass("wpsp-popVisible"), location.reload(!0), $("#basicModal").html(""), $("#eventPop").hide(), setTimeout(function() {
+        "success" === jQuery.trim(e) ? ($("#evid").val(""), $("#SuccessModal .wpsp-success-text").text("Event details saved successfully.."), $("#SuccessModal").css("display", "block"), $("#SavingModal").css("display", "none"), $("#SuccessModal").addClass("wpsp-popVisible"), location.reload(!0), $("#basicModal").html(""), $("#eventPop").hide(), setTimeout(function() {
           location.reload(!0)
-        }, delay)) : ($(".wpsp-popup-return-data").html("Please try Again.."), $("#SavingModal").css("display", "none"), $("#WarningModal").css("display", "block"), $("#WarningModal").addClass("wpsp-popVisible"), $("#calevent_save").prop("disabled", !1))
+        }, delay)) : ($(".wpsp-popup-return-data").html(e), $("#SavingModal").css("display", "none"), $("#WarningModal").css("display", "block"), $("#WarningModal").addClass("wpsp-popVisible"), $("#calevent_save").prop("disabled", !1))
       })
     }
   })

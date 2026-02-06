@@ -543,7 +543,7 @@
                       ?>
                       <span class="wpsp-required"><?php echo esc_html(($is_required)) ? "*" : ""; ?></span>
                     </label>
-                    <input type="text" data-is_required="<?php echo esc_attr($is_required); ?>" class="wpsp-form-control" id="s_p_phone" name="s_p_phone">
+                    <input type="text" data-is_required="<?php echo esc_attr($is_required); ?>" maxwidth="12" class="wpsp-form-control" id="s_p_phone" name="s_p_phone" onkeypress='return event.keyCode == 8 || event.keyCode == 46 || event.keyCode == 37 || event.keyCode == 39 || event.charCode >= 48 && event.charCode <= 57'>
                   </div>
                 </div>
                 <div class="wpsp-col-md-3 wpsp-col-sm-6 wpsp-col-xs-12">

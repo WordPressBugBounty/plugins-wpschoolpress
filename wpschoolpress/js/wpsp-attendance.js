@@ -35,7 +35,7 @@ $(document).ready(function() {
         success: function(e) {
           $("#AttendanceEnter").removeAttr("disabled");
           var a = jQuery.parseJSON(e);
-          0 == a.status ? ($("#wpsp-error-msg").html(a.msg), location.reload(!0)) : $("#AddModalContent").html(a.msg)
+          0 == jQuery.trim(a.status) ? ($("#wpsp-error-msg").html(a.msg), location.reload(!0)) : $("#wpsp-error-msg").html(a.msg)
         },
         error: function() {
           $("#AttendanceEnter").removeAttr("disabled"), $(".wpsp-popup-return-data").html("Something went wrong. Try after refreshing page.."), $("#SavingModal").css("display", "none"), $("#WarningModal").css("display", "block"), $("#WarningModal").addClass("wpsp-popVisible")
@@ -48,11 +48,19 @@ $(document).ready(function() {
   }), $(document).on("click", "#AttendanceSubmit", function(e) {
     if (e.preventDefault(), $('input[type="checkbox"]:checked').length > 0) {
       var a = $("#AttendanceEntryForm").serializeArray();
+
+      $(this).text('Processing....');
+      $(this).attr('aria-disabled','true');
+      $(this).attr('disabled','disabled');
+      $(this).off('click');
+
+
+
       a.push({
         name: "action",
         value: "AttendanceEntry"
       }), jQuery.post(ajax_url, a, function(e) {
-        "success" == e ? ($(".wpsp-popup-return-data").html("Attendance entered successfully!"),
+        "success" == jQuery.trim(e) ? ($("#SuccessModal .wpsp-success-text").text("Attendance entered successfully!"),
 		$("#SuccessModal").css("display", "block"),
 		$("#SavingModal").css("display", "none"),
 		$("#SuccessModal").addClass("wpsp-popVisible"),
@@ -60,8 +68,9 @@ $(document).ready(function() {
 		setTimeout(function() {
 		  $(".alert").remove(), 
 		  $("#SuccessModal").css("display", "none"),
+      location.reload(!0),
 		  $("#Attendanceview").click()
-        }, 2e3)) : "updated" == e ? ($("#formresponse").html("<div class='alert alert-warning'>Attendance updated successfully!</div>"),
+        }, 3000)) : "updated" == jQuery.trim(e) ? ($("#formresponse").html("<div class='alert alert-warning'>Attendance updated successfully!</div>"),
 		location.reload(!0)) : ($(".wpsp-popup-return-data").html("Something went "),
 		$("#SavingModal").css("display", "none"), $("#WarningModal").css("display", "block"),
 		$("#WarningModal").addClass("wpsp-popVisible"), window.setTimeout(function() {
@@ -158,6 +167,11 @@ $(document).ready(function() {
     $("#AttendanceClass").parent().parent().find(".clserror").removeClass("error"), $("#AttendanceDate").parent().parent().find(".clsdate").removeClass("error"), $("#wpsp-error-msg").html();
     var e = $("#AttendanceClass").val(),
       a = $("#AttendanceDate").val();
+    if(e == ''){
+      $("#WarningModal").css("display", "block"),
+      $(".wpsp-popup-return-data").html("Please select class");
+    }
+
     if ("" == e && $("#AttendanceClass").parent().parent().find(".clserror").addClass("error"), "" == a && $("#AttendanceDate").parent().parent().find(".clsdate").addClass("error"), "" != e && "" != a) {
       var t = [];
       t.push({

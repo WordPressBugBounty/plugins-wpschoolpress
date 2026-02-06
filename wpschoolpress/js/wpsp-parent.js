@@ -1,13 +1,4 @@
 $(document).ready(function() {
-    //   $("#child_list").multiselect({
-    //     columns: 1,
-    //     placeholder: "Select Student",
-    //     search: !0,
-    //     searchOptions: {
-    //       default: "Search Student",
-    //       showOptGroups: !0
-    //     }
-    //   });
     $("#child_list").selectpicker();
     var e = [];
     $(".dropdown-menu").click(function(e) {
@@ -125,7 +116,11 @@ $(document).ready(function() {
     }), $("#parent_table").on("click", ".ViewParent", function(e) {
         e.preventDefault();
         var t = [],
-            a = $(this).data("id");
+        a = $(this).data("id");
+
+        $("#ViewModalContent").addClass('loader');    
+        $("#ViewModalContent").html("Loading....");    
+
         t.push({
             name: "action",
             value: "ParentPublicProfile"

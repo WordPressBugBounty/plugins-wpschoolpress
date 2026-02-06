@@ -21,8 +21,10 @@ if ( !defined( 'ABSPATH' ) ) exit;
                 $edate=date('Y-m-d');
             }
 			$class_id		=	intval($get_class->cid);
-			$att			=	$wpdb->get_row("SELECT * from $att_table where date='".esc_sql($today)."' and class_id='".esc_sql($class_id)."'");
-            $check_leave	=	$wpdb->get_row("SELECT * from $leave_table where leave_date='".esc_sql($today)."' and class_id='".esc_sql($class_id)."'");
+			//$att			=	$wpdb->get_row("SELECT * from $att_table where date='".esc_sql($today)."' and class_id='".esc_sql($class_id)."'");
+            $att = $wpdb->get_row($wpdb->prepare("SELECT * FROM $att_table WHERE date = %s and class_id=%d",$today,$class_id));
+            //$check_leave	=	$wpdb->get_row("SELECT * from $leave_table where leave_date='".esc_sql($today)."' and class_id='".esc_sql($class_id)."'");
+            $check_leave = $wpdb->get_row($wpdb->prepare("SELECT * FROM $leave_table WHERE leave_date = %s and class_id=%d",$today,$class_id));
 			if($att) {
                 if($att->absents=='Nil')
                     $tot_abs=0;

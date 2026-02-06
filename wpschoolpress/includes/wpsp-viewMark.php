@@ -15,10 +15,10 @@ if( empty( $class_id ) ) {
 if(empty( $error ) && (wpsp_IsMarkEntered( $class_id, $subject_id, $exam_id ) ) ) {
 	$extra_tbl		=	$wpdb->prefix."wpsp_mark_fields";
 	$student_table	=	$wpdb->prefix."wpsp_student";
-	$extra_fields	=	$wpdb->get_results("select * from $extra_tbl where subject_id='".esc_sql($subject_id)."'");
+	// $extra_fields	=	$wpdb->get_results("select * from $extra_tbl where subject_id='".esc_sql($subject_id)."'");
+	$extra_fields = $wpdb->get_results($wpdb->prepare("SELECT * FROM $extra_tbl WHERE subject_id = %d",$subject_id));
 	$wpsp_marks		=	wpsp_GetMarks($class_id,$subject_id,$exam_id);
 	$wpsp_exmarks	=	wpsp_GetExMarks($subject_id,$exam_id);
-	// $class_students	=	$wpdb->get_results("select s_rollno,wp_usr_id,s_fname,s_mname,s_lname from $student_table where class_id='$class_id'",ARRAY_A);
 	if( isset($_POST['ClassID'] )) {
 		$class_id=sanitize_text_field($_POST['ClassID']);
 		$stl = [];
@@ -49,7 +49,8 @@ if(empty( $error ) && (wpsp_IsMarkEntered( $class_id, $subject_id, $exam_id ) ) 
         $stl = array_map('intval', $stl);
 		foreach ($stl as $id ) {
         $id = esc_sql($id);
-		$class_students	=	$wpdb->get_results("select s_rollno,wp_usr_id,s_fname,s_mname,s_lname from $student_table where sid = '$id' ",ARRAY_A);
+		$q = $wpdb->prepare("SELECT s_rollno,wp_usr_id,s_fname,s_mname,s_lname FROM $student_table WHERE sid = %d",$id);
+		$class_students	=	$wpdb->get_results($q,ARRAY_A);
 			foreach($class_students as $cstud){
 				$students_list[$cstud['wp_usr_id']]=array('rollno'=>$cstud['s_rollno'],'name'=>$cstud['s_fname'].' '.$cstud['s_mname'].' '.$cstud['s_lname']);
 			}
@@ -62,11 +63,14 @@ if(empty( $error ) && (wpsp_IsMarkEntered( $class_id, $subject_id, $exam_id ) ) 
 	<div class="wpsp-col-md-12 wpsp-col-lg-12 wpsp-col-sm-12" id="marks-information">
 		<?php
 			$classTable	=	$wpdb->prefix.'wpsp_class';
-			$className	=	$wpdb->get_var( "SELECT c_name FROM `$classTable` where cid='".esc_sql($class_id)."'" );
+		//	$className	=	$wpdb->get_var( "SELECT c_name FROM `$classTable` where cid='".esc_sql($class_id)."'" );
+			$className = $wpdb->get_var($wpdb->prepare("SELECT c_name FROM $classTable WHERE cid = %d",$class_id));
 			$subTable	=	$wpdb->prefix."wpsp_subject";
-			$subName	=	$wpdb->get_var( "SELECT sub_name FROM `$subTable` where id='".esc_sql($subject_id)."'" );
+		//	$subName	=	$wpdb->get_var( "SELECT sub_name FROM `$subTable` where id='".esc_sql($subject_id)."'" );
+			$subName = $wpdb->get_var($wpdb->prepare("SELECT sub_name FROM $subTable WHERE id = %d",$subject_id));
 			$exTable	=	$wpdb->prefix.'wpsp_exam';
 			$examName	=	$wpdb->get_var( "SELECT e_name FROM `$exTable` where eid='".esc_sql($exam_id)."'" );
+			$subName = $wpdb->get_var($wpdb->prepare("SELECT e_name FROM $exTable WHERE eid = %s",$exam_id));
 			echo '<div class="wp-mark-info" style="display:none;">';
 			echo !empty( $className ) ? '<b>Class Name 		: </b>'.esc_html($className) : '';
 			echo !empty( $subName ) ? '<br><b>Subject Name	: </b>'.esc_html($subName) : '';

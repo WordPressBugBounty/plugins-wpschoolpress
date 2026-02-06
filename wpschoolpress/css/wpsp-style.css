@@ -1,5 +1,4 @@
 @import url('https://fonts.googleapis.com/css?family=Rubik:300,300i,400,400i,500,500i,700,700i,900,900i');
-
 /*
 	font-family: 'Rubik', sans-serif;
 */
@@ -13,97 +12,50 @@
     box-sizing: border-box;
 }
 
-
-/* html, body, div, span, applet, object, iframe,
-h1, h2, h3, h4, h5, h6, p, blockquote, pre,
-a, abbr, acronym, address, big, cite, code,
-del, dfn, em, img, ins, kbd, q, s, samp,
-small, strike, strong, sub, sup, tt, var,
-b, u, i, center,
-dl, dt, dd, ol, ul, li,
-fieldset, form, label, legend,
-table, caption, tbody, tfoot, thead, tr, th, td,
-article, aside, canvas, details, embed,
-figure, figcaption, footer, header, hgroup,
-menu, nav, output, ruby, section, summary,
-time, mark, audio, video {
-	margin: 0;
-	padding: 0;
-	border: 0;
-	font-size: 100%;
-	font: inherit;
-	vertical-align: baseline;
-} */
-
-
-/* a:visited{background-color: inherit; color: inherit} */
-
 :focus {
     outline: none;
 }
-
 .plg-option {
     min-width: 100px;
 }
-
 .plg-value {
-    margin-bottom: 15px;
+	margin-bottom: 15px;
     padding-bottom: 15px;
 }
-
 .wpschoolpress {
     background: #f1f1f1 !important;
 }
-
 .wpsp-body sup {
     font-size: 70%;
     top: -6px;
     position: relative;
 }
-
 .wpschoolpress #wpcontent {
     margin-left: 0 !important;
     padding: 0 !important;
 }
-
-
-/* html.wp-toolbar{
-	padding-top: 0 !important;
-} */
-
 a {
     text-decoration: none;
 }
-
 a:focus {
     outline: none;
     box-shadow: none;
 }
-
 .wpsp-body {
     font-family: 'Rubik', sans-serif;
     font-size: 16px;
     line-height: 1.4;
     color: #212529;
 }
-
-
-/* .icon[class^="wpsp-"]:before, .icon[class*=" wpsp-"]:before{
-	vertical-align: middle;
-} */
-
 .wpsp-ipad-show {
     display: none;
 }
-
 .wpschoolpress #wpbody-content {
     padding-bottom: 0;
 }
-
 .wpschoolpress #wpfooter {
     display: none !important;
 }
-
 .wpsp-menuIcon {
     width: 60px;
     height: 100%;
@@ -111,7 +63,6 @@ a:focus {
     padding: 13px 15px;
     display: none;
 }
-
 .wpsp-menuIcon span {
     display: block;
     width: 22px;
@@ -127,7 +78,6 @@ a:focus {
     -webkit-transition: all 0.4s ease-in-out;
     transition: all 0.4s ease-in-out;
 }
-
 .wpsp-menuIcon span:before {
     content: "";
     width: 22px;
@@ -141,7 +91,6 @@ a:focus {
     -webkit-transition: all 0.4s ease-in-out;
     transition: all 0.4s ease-in-out;
 }
-
 .wpsp-menuIcon span:after {
     content: "";
     width: 22px;
@@ -155,25 +104,20 @@ a:focus {
     -webkit-transition: all 0.4s ease-in-out;
     transition: all 0.4s ease-in-out;
 }
-
 .wpsp-right {
     float: right !important;
 }
-
 .wpsp-left {
     float: left !important;
 }
-
 .wpsp-clear {
     clear: both;
 }
-
 .wpsp-wrapper {
     max-width: 100%;
     overflow: hidden;
     margin-left: 240px;
 }
-
 .wpsp-header {
     display: block;
     position: fixed;
@@ -189,7 +133,6 @@ a:focus {
     filter: progid: DXImageTransform.Microsoft.gradient(startColorstr='#0178bc', endColorstr='#00bdda', GradientType=1);
     z-index: 9999;
 }
-
 .wpsp-header .wpsp-logo {
     float: left;
     display: table;
@@ -201,12 +144,10 @@ a:focus {
     padding: 10px;
     border-bottom: 1px solid #e1e1e1;
 }
-
 .wpsp-logo-mini {
     display: table-cell;
     vertical-align: middle;
 }
-
 .wpsp-header .wpsp-schoolname {
     display: table-cell;
     vertical-align: middle;
@@ -215,7 +156,6 @@ a:focus {
     padding: 0 0 0 8px;
     font-weight: 700;
 }
-
 .wpsp-overlay {
     visibility: hidden;
     opacity: 0;
@@ -227,7 +167,6 @@ a:focus {
     background-color: #000;
     z-index: 22;
 }
-
 .wpsp-bodyFix {
     position: fixed;
     top: 0;
@@ -235,15 +174,11 @@ a:focus {
     width: 100%;
     overflow: hidden;
 }
-
 .wpsp-bodyFix .wpsp-overlay {
     visibility: visible;
     opacity: .5;
 }
-
-
 /* Sidebar Navigation */
-
 .wpsp-sidebar {
     width: 240px;
     height: 100%;
@@ -260,19 +195,16 @@ a:focus {
     transition: 0.05s ease-in;
     /* overflow: auto; */
 }
-
 .wpsp-sidebar-head {
     display: block;
     height: 85px;
     padding: 15px;
 }
-
 .wpsp-navigation {
     display: block;
     list-style: none;
     margin-top: 85px;
 }
-
 .wpsp-navigation li {
     display: block;
     font-size: 16px;
@@ -281,7 +213,6 @@ a:focus {
     position: relative;
     margin-bottom: 0;
 }
-
 .wpsp-navigation li a {
     display: block;
     padding: 15px;
@@ -289,16 +220,13 @@ a:focus {
     color: #54667a;
     transition: all 0.4s ease-in-out;
 }
-
 .wpsp-navigation li a:hover,
 .wpsp-navigation li .wpsp-droparrow:hover+a {
     background-color: #f5f5f5;
 }
-
 .wpsp-navigation li.active a {
     background-color: #f3f3f3;
 }
-
 .wpsp-count {
     position: absolute;
     right: 15px;
@@ -312,18 +240,15 @@ a:focus {
     color: #fff;
     padding: 4px;
 }
-
 .wpsp-navigation li .icon {
-    font-size: 20px;
+	font-size: 20px;
     margin-right: 6px;
     display: inline-block;
     vertical-align: middle;
 }
-
 .wpsp-navigation li.has-submenu {
     position: relative;
 }
-
 .wpsp-navigation li.has-submenu .wpsp-droparrow {
     position: absolute;
     height: 50px;
@@ -334,7 +259,6 @@ a:focus {
     z-index: 12;
     cursor: pointer;
 }
-
 .wpsp-navigation li.has-submenu .wpsp-droparrow:before {
     content: "\66";
     width: 36px;
@@ -354,82 +278,46 @@ a:focus {
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
 }
-
 .wpsp-navigation li .sub-menu {
-    /* margin-bottom: 10px; */
     display: none;
 }
-
-
-/* .has-submenu .sub-menu.has-submenu .sub-menu {
-    margin-top: 12px;
-} */
-
 .has-submenu .sub-menu.has-submenu .has-submenu .wpsp-droparrow {
     height: 50px;
     padding-top: 0;
 }
-
 .has-submenu .sub-menu.has-submenu .has-submenu .wpsp-droparrow:before {
     line-height: 50px;
 }
-
 .wpsp-navigation li .sub-menu li {
     border-bottom: none;
-    /* margin-left: 40px; */
     position: relative;
 }
-
 .wpsp-navigation li .sub-menu li:before {
     content: "-";
     position: absolute;
     left: 20px;
     top: 15px;
 }
-
 .wpsp-navigation li.has-submenu.active>.sub-menu {
     display: block;
 }
-
 .wpsp-navigation li .sub-menu li a {
     padding: 15px;
     font-size: 14px;
     font-weight: 300;
     padding-left: 40px;
 }
-
 .wpsp-navigation li .sub-menu li.active>a {
     background-color: #e2e2e2;
 }
-
 .wpsp-navigation li .sub-menu li a:hover {
     background-color: transparent;
     color: #0178bc;
 }
-
 .wpsp-head {
     padding: 0 15px;
     height: 100%;
 }
-
-
-/* .active.has-submenu span.wpsp-droparrow {
-    padding-top: 15px;
-} */
-
-
-/* .wpsp-pagetitle{
-	display: inline-block;
-	vertical-align: middle;
-	height: 100%;
-	font-size: 22px;
-	color: #fff;
-	font-weight: 700;
-	margin-left: 40px;
-	text-transform: uppercase;
-	margin:0 0 0 40px;
-} */
-
 .wpsp-customeMsg {
     display: inline-block;
     vertical-align: middle;
@@ -439,7 +327,6 @@ a:focus {
     font-weight: 400;
     margin-left: 40px;
 }
-
 .wpsp-menuIcon:before,
 .wpsp-customeMsg:before {
     content: '';
@@ -448,16 +335,13 @@ a:focus {
     display: inline-block;
     vertical-align: middle;
 }
-
 .wpsp-righthead {
     float: right;
 }
-
 .wpsp-head-action {
     display: inline-block;
     vertical-align: middle;
 }
-
 .wpsp-notification,
 .wpsp-message {
     display: inline-block;
@@ -467,7 +351,6 @@ a:focus {
     position: relative;
     font-size: 24px;
 }
-
 .wpsp-notification a,
 .wpsp-message a {
     color: #fff;
@@ -476,31 +359,25 @@ a:focus {
     display: inline-block;
     vertical-align: top;
 }
-
 .wpsp-notification a .icon:before,
 .wpsp-message a .icon:before {
     vertical-align: middle;
 }
-
 .wpsp-notification .wpsp-count,
 .wpsp-message .wpsp-count {
     right: 4px;
     top: 20px;
 }
-
 .wpsp-userMain {
     display: inline-block;
     vertical-align: middle;
-    /* margin-left:15px; */
     position: relative;
     padding: 0;
 }
-
 .wpsp-profile-pic {
     display: block;
     padding: 15px;
 }
-
 .wpsp-userPic {
     display: inline-block;
     vertical-align: middle;
@@ -512,7 +389,6 @@ a:focus {
     background: #e2e2e2;
     margin-right: 10px;
 }
-
 .wpsp-username {
     display: inline-block;
     vertical-align: middle;
@@ -522,7 +398,6 @@ a:focus {
     position: relative;
     padding-right: 20px;
 }
-
 .wpsp-username:after {
     content: '';
     width: 0;
@@ -536,18 +411,12 @@ a:focus {
     bottom: 0;
     margin: auto;
 }
-
 .wpsp-dropdownmain {
     position: relative;
 }
-
 .wpsp-dropdown-toggle {
     cursor: pointer;
 }
-
-
-/*  .wpsp-dropdown-toggle.wpsp-dropdown-active{background: rgba(0, 0, 0, 0.05);} */
-
 .wpsp-dropdown {
     display: none;
     position: absolute;
@@ -572,48 +441,39 @@ a:focus {
     -moz-box-shadow: 1px 0px 20px rgba(0, 0, 0, 0.08);
     border-color: #e9ecef;
 }
-
 .wpsp-dropdown.wpsp-dropdown-right {
     right: 0;
     left: inherit
 }
-
 .wpsp-message .wpsp-dropdown,
 .wpsp-notification .wpsp-dropdown,
 .wpsp-userMain .wpsp-dropdown {
     border-top-left-radius: 0;
     border-top-right-radius: 0;
 }
-
 .wpsp-dropdown-md {
     min-width: 260px;
 }
-
 .wpsp-dropdown ul {
     list-style: none;
 }
-
 .wpsp-dropdown ul li {
     display: block;
     border-bottom: 1px solid #e1e1e1;
     margin-bottom: 0;
 }
-
 .wpsp-dropdown ul li:last-child {
     border-bottom: none;
 }
-
 .wpsp-dropdown ul li a {
     display: block;
     color: #6c757d;
     text-decoration: none;
     padding: 10px 15px;
 }
-
 .wpsp-dropdown ul li a:hover {
     background-color: #f5f5f5;
 }
-
 .wpsp-drop-title {
     border-bottom: 1px solid rgba(0, 0, 0, 0.1);
     color: #54667a;
@@ -621,31 +481,24 @@ a:focus {
     font-weight: 600;
     padding: 11px 20px 15px;
 }
-
 .wpsp-messagelist {}
-
 .wpsp-messagelist a {
-    /* border-bottom: 1px solid rgba(120, 130, 140, 0.13); */
     display: block;
     padding: 9px 15px
 }
-
 .wpsp-messagelist a:hover {
     background: #f7fafc
 }
-
 .wpsp-messagelist .wpsp-user-img {
     width: 40px;
     float: left;
     position: relative;
     margin: 0 10px 15px 0px
 }
-
 .wpsp-messagelist .wpsp-user-img img {
     width: 100%;
     border-radius: 50%;
 }
-
 .wpsp-messagelist .wpsp-user-img .profile-status {
     border: 2px solid #ffffff;
     border-radius: 50%;
@@ -656,23 +509,18 @@ a:focus {
     top: 1px;
     width: 10px
 }
-
 .wpsp-messagelist .wpsp-user-img .online {
     background: #7ace4c
 }
-
 .wpsp-messagelist .wpsp-user-img .busy {
     background: #f33155
 }
-
 .wpsp-messagelist .wpsp-user-img .away {
     background: #ffbb44
 }
-
 .wpsp-messagelist .wpsp-user-img .offline {
     background: #ffbb44
 }
-
 .wpsp-messagelist .wpsp-mail-contnet .wpsp-mail-username {
     margin: 0px;
     font-weight: 400;
@@ -682,7 +530,6 @@ a:focus {
     white-space: nowrap;
     color: #313131;
 }
-
 .wpsp-messagelist .wpsp-mail-contnet .wpsp-mail-desc {
     font-size: 12px;
     display: block;
@@ -694,18 +541,15 @@ a:focus {
     color: #54667a;
     font-weight: 300;
 }
-
 .wpsp-messagelist .wpsp-mail-contnet .wpsp-mail-time {
     display: block;
     font-size: 10px;
     color: #54667a;
     font-weight: 300;
 }
-
 .wpsp-messagelist li a {
     line-height: 1.4;
 }
-
 .wpsp-dropdown .wpsp-view-all {
     background: #f7fafc;
     text-align: center;
@@ -713,7 +557,6 @@ a:focus {
     color: #54667a;
     font-size: 14px;
 }
-
 .wpsp-dropdown .wpsp-view-all:after {
     content: '';
     width: 6px;
@@ -723,12 +566,10 @@ a:focus {
     transform: rotate(-45deg);
     display: inline-block;
 }
-
 .wpsp-back-wp a {
     background: #0073aa !important;
     color: #fff !important;
 }
-
 .wpsp-pageHead {
     display: block;
     background-color: #fff;
@@ -736,7 +577,6 @@ a:focus {
     margin: 0 -42px 40px -42px;
     box-shadow: 0 0 8px rgba(0, 0, 0, 0.06);
 }
-
 .wpsp-pagetitle {
     display: inline-block;
     vertical-align: middle;
@@ -747,7 +587,6 @@ a:focus {
     margin: 10px 0;
     text-transform: uppercase;
 }
-
 .wpsp-breadcrumb {
     display: inline-block;
     vertical-align: middle;
@@ -755,7 +594,6 @@ a:focus {
     margin: 0;
     list-style: none;
 }
-
 .wpsp-breadcrumb li {
     display: inline-block;
     vertical-align: middle;
@@ -766,11 +604,9 @@ a:focus {
     margin: 0;
     position: relative;
 }
-
 .wpsp-breadcrumb li:first-child {
     padding-left: 0;
 }
-
 .wpsp-breadcrumb li:not(:last-child):after {
     content: "";
     width: 6px;
@@ -784,53 +620,40 @@ a:focus {
     bottom: 0;
     margin: auto;
 }
-
 .wpsp-breadcrumb li a {
     color: #212529;
     text-decoration: none;
     transition: all 0.4s ease-in-out;
 }
-
 .wpsp-breadcrumb li a:hover,
 .wpsp-breadcrumb li .active {
     color: #00bdda
 }
-
 .wpsp-breadcrumb li .active {
     font-weight: 500;
 }
-
 .breadcrumb-item+.breadcrumb-item {
     padding-left: 0.5rem
 }
-
 .breadcrumb-item+.breadcrumb-item:before {
     display: inline-block;
     padding-right: 0.5rem;
     color: #6c757d;
     content: "/"
 }
-
 .breadcrumb-item+.breadcrumb-item:hover:before {
     text-decoration: underline
 }
-
 .breadcrumb-item+.breadcrumb-item:hover:before {
     text-decoration: none
 }
-
 .breadcrumb-item.active {
     color: #6c757d
 }
-
-
-/* Content Part style */
-
 .wpsp-container {
     margin-top: 85px;
     padding: 0 40px;
 }
-
 .wpsp-colorBox {
     display: block;
     padding: 20px 30px;
@@ -841,19 +664,15 @@ a:focus {
     text-decoration: none;
     margin-bottom: 30px;
 }
-
 .wpsp-orangebox {
     background-color: #ff911b;
 }
-
 .wpsp-yellowbox {
     background-color: #ffc000;
 }
-
 .wpsp-greenbox {
     background-color: #a7c850;
 }
-
 .wpsp-colorBox:before {
     content: "\f118";
     width: 224px;
@@ -876,28 +695,24 @@ a:focus {
     right: -80px;
     margin: auto;
 }
-
 .wpsp-teacherInfo:before {
     content: "\f338";
     font-size: 120px;
     top: 50px;
     right: -90px;
 }
-
 .wpsp-parentsInfo:before {
     content: "\f307";
     font-size: 120px;
     top: 50px;
     right: -90px;
 }
-
 .wpsp-classInfo:before {
     content: "\f116";
     font-size: 120px;
     top: 50px;
     right: -90px;
 }
-
 .wpsp-colorBox .wpsp-colorBox-title {
     display: block;
     font-size: 22px;
@@ -906,7 +721,6 @@ a:focus {
     text-transform: uppercase;
     margin-bottom: 0;
 }
-
 .wpsp-colorBox .wpsp-colorBox-head {
     display: block;
     font: inherit;
@@ -915,10 +729,7 @@ a:focus {
     font-weight: 700;
     margin: 0;
 }
-
-
 /* wpsp-card style */
-
 .wpsp-card {
     display: block;
     width: 100%;
@@ -928,12 +739,10 @@ a:focus {
     padding: 0;
     margin-bottom: 30px;
 }
-
 .wpsp-card-head {
     display: block;
     padding: 25px 25px 0 25px;
 }
-
 .wpsp-card-title {
     display: block;
     font-size: 20px;
@@ -943,7 +752,6 @@ a:focus {
     margin: 0;
     margin-bottom: 6px;
 }
-
 .wpsp-card-subtitle {
     display: block;
     font-size: 16px;
@@ -952,11 +760,9 @@ a:focus {
     margin: 0;
     margin-bottom: 0;
 }
-
 .wpsp-cards-indicators {
     list-style: none;
 }
-
 .wpsp-cards-indicators li {
     display: inline-block;
     vertical-align: top;
@@ -964,7 +770,6 @@ a:focus {
     color: #212529;
     margin: 0 2px;
 }
-
 .wpsp-indic {
     display: inline-block;
     vertical-align: middle;
@@ -974,25 +779,19 @@ a:focus {
     background-color: #3c8dbc;
     margin-right: 2px;
 }
-
 .wpsp-indic.wpsp-red-indic {
     background-color: #dd4b39;
 }
-
 .wpsp-indic.wpsp-green-indic {
     background-color: #00a65a;
 }
-
 .wpsp-card-body {
     display: inline-block;
     vertical-align: top;
     width: 100%;
     padding: 25px;
 }
-
-
 /* Table style */
-
 .wpsp-table {
     width: 100%;
     border: 1px solid #e1e1e1;
@@ -1006,7 +805,6 @@ a:focus {
     border-spacing: 0;
     text-align: left;
 }
-
 .wpsp-table th {
     padding: 10px 15px;
     font-size: 16px;
@@ -1017,24 +815,19 @@ a:focus {
     position: relative;
     cursor: pointer;
 }
-
 .wpsp-table tr:nth-of-type(odd) {
     background: #f2f7f8;
 }
-
 .wpsp-table thead tr,
 .wpsp-table tfoot tr {
     background-color: #fff !important;
 }
-
 .wpsp-table thead+tbody tr:nth-of-type(odd) {
     background: #f2f7f8;
 }
-
 .wpsp-table thead+tbody tr:nth-of-type(even) {
     background: #fff;
 }
-
 .wpsp-table tr td {
     padding: 10px 15px;
     border-right: 1px solid #e1e1e1;
@@ -1043,41 +836,28 @@ a:focus {
     color: #54667a;
     font-weight: 300;
 }
-
-
 /*******************/
-
-
 /*Copy Right & Version Text Style */
-
-
 /*******************/
-
 .wpsp-footer {
     display: inline-block;
     width: 100%;
     margin: 60px 0 20px 0;
 }
-
 .wpsp-footer p {
     display: block;
     font-size: 14px;
     font-weight: 400;
     color: #54667a;
 }
-
 .wpsp-footer p a {
     color: #0178bc;
     text-decoration: none;
 }
-
 .wpsp-footer p a:hover {
     color: #00bdda;
 }
-
-
 /* Buttons style */
-
 .wpsp-btn {
     display: inline-block;
     font-weight: 400;
@@ -1106,79 +886,64 @@ a:focus {
     cursor: not-allowed;
     margin-bottom: 5px;
 }
-
 .wpsp-btn:not([disabled]) {
     opacity: 1;
     cursor: pointer;
 }
-
 .wpsp-btn:hover:not([disabled]) {
     background-color: transparent;
     color: #00bdda;
 }
-
 .wpsp-btn:active:not([disabled]) {
     color: #fff;
 }
-
 .wpsp-dark-btn {
     color: #fff;
     background-color: #343a40;
     border-color: #343a40;
 }
-
 .wpsp-dark-btn:hover:not([disabled]) {
     color: #343a40;
 }
-
 .wpsp-btn-success {
     color: #fff;
     background-color: #5cb85c;
     border-color: #4cae4c;
 }
-
 .wpsp-btn-success:hover:not([disabled]) {
     color: #398439;
     border-color: #398439;
 }
-
 .wpsp-btn-danger {
     color: #fff;
     background-color: #f33155;
     border-color: #f33155;
 }
-
 .wpsp-btn-danger:hover:not([disabled]) {
     color: #f33155;
     border-color: #f33155;
 }
-
 .wpsp-btn-warning {
     color: #fff;
     background-color: #8a6d3b;
     border-color: #8a6d3b;
 }
-
 .wpsp-btn-warning:hover:not([disabled]) {
     color: #8a6d3b;
     border-color: #8a6d3b;
 }
-
 .wpsp-button-group .wpsp-btn {
     border-radius: 4px 0px 0px 4px;
 }
-
 .wpsp-button-group .wpsp-btn+.wpsp-btn {
     border-left: 1px solid #fff;
 }
-
 .wpsp-button-group .wpsp-dropdown-toggle {
     border-radius: 0px 4px 4px 0px;
     margin-left: -4px;
     position: relative;
     height: 35px;
 }
-
 .wpsp-button-group .wpsp-dropdown-toggle:before {
     content: '';
     width: 0;
@@ -1193,17 +958,14 @@ a:focus {
     bottom: 0;
     margin: auto;
 }
-
 .wpsp-button-group .wpsp-btn-blue.wpsp-dropdown-toggle:hover:before {
     border-top-color: #00bdda;
 }
-
 .wpsp-form-group {
     display: block;
     margin-bottom: 25px;
     position: relative;
 }
-
 .wpsp-label {
     display: inline-block;
     font-weight: 400;
@@ -1212,7 +974,6 @@ a:focus {
     color: #54667a;
     margin-bottom: 6px;
 }
-
 .wpsp-checkbox-label {
     font-weight: 400;
     font-size: 16px;
@@ -1221,7 +982,6 @@ a:focus {
     margin-bottom: 6px;
     padding-right: 15px;
 }
-
 input[type=checkbox].wpsp-checkbox {
     font-size: 16px;
     font-weight: 400;
@@ -1233,15 +993,10 @@ input[type=checkbox].wpsp-checkbox {
     border-radius: 4px;
     transition: border-color .15s ease-in-out, box-shadow .15s ease-in-out;
     box-shadow: none;
-    /* width: 20px;
-    height: 20px;
-    min-width: 20px; */
 }
-
 .wpsp-required {
     color: #ff0000;
 }
-
 .wpschoolpress .wpsp-form-control {
     display: block;
     width: 100%;
@@ -1258,16 +1013,13 @@ input[type=checkbox].wpsp-checkbox {
     transition: border-color .15s ease-in-out, box-shadow .15s ease-in-out;
     box-shadow: none;
 }
-
 .wpschoolpress select.wpsp-form-control:disabled {
     opacity: 0.4;
 }
-
 .wpschoolpress select.wpsp-form-control {
     padding: 6px 25px 6px 15px;
     min-width: 130px;
 }
-
 .wpschoolpress select.wpsp-form-control {
     vertical-align: middle;
     background: url(../img/svg/wpsp-select-arrow.svg) no-repeat right .75rem center/8px 10px;
@@ -1278,50 +1030,35 @@ input[type=checkbox].wpsp-checkbox {
     -moz-appearance: none;
     appearance: none;
 }
-
 .wpsp-form-group .wpsp-form-control.error {
     border-color: #f62d51;
 }
-
 .wpsp-btn-lists {
     display: block;
     margin: 0 -2px
 }
-
 .wpsp-btn-lists .wpsp-btn-list {
     display: inline-block;
     vertical-align: top;
     padding: 0 2px;
     margin-bottom: 10px;
 }
-
 .wpsp-dropdown ul li.wpsp-checkList {
     padding: 5px 15px;
 }
-
 label.error {
     font-size: 12px;
     color: #f62d51;
-    /*
-	position: absolute;
-	bottom: -16px;   */
 }
-
 .wpsp-radio-inline {
     display: block;
 }
-
 .wpsp-radio-inline .wpsp-radio {
     display: inline-block;
     vertical-align: middle;
     margin-top: 10px;
     margin-right: 10px;
 }
-
-.wpsp-radio-inline .wpsp-radio~.wpsp-radio {
-    /*margin-left:15px;*/
-}
-
 .wpsp-profileUp {
     border-radius: 1000px !important;
     width: 128px;
@@ -1331,7 +1068,6 @@ label.error {
     margin: 0;
     position: relative;
 }
-
 .wpsp-profileUp .wpsp-upAvatar {
     width: 100%;
     height: 100%;
@@ -1341,7 +1077,6 @@ label.error {
     margin: 0;
     border-radius: 1000px !important;
 }
-
 .wpsp-profileUp .wpsp-upload-button {
     position: absolute;
     bottom: 10px;
@@ -1355,7 +1090,6 @@ label.error {
     transition: all .3s cubic-bezier(.175, .885, .32, 1.275);
     cursor: pointer;
 }
-
 .wpsp-profileUp .wpsp-upload-button:before {
     content: "";
     position: absolute;
@@ -1366,7 +1100,6 @@ label.error {
     border: 4px solid rgba(1, 120, 188, 0.54);
     border-radius: 50%;
 }
-
 .wpsp-profileUp .wpsp-file-upload {
     position: absolute;
     opacity: 0;
@@ -1378,18 +1111,15 @@ label.error {
     font-size: 0;
     width: 100%;
 }
-
 .wpsp-profileUp .wpsp-upload-button:hover {
     background-color: #00bdda;
 }
-
 .wpsp-profileUp .wpsp-upload-button:hover:before {
     border-color: rgba(0, 189, 218, 0.54);
 }
-
 .wpsp-table.dataTable.dtr-inline.collapsed>tbody>tr[role="row"]>td:first-child:before,
 .wpsp-table.dataTable.dtr-inline.collapsed>tbody>tr[role="row"]>th:first-child:before {
-    top: 50%;
+	top: 50%;
     left: 10px;
     transform: translateY(-50%);
     background: rgb(1, 120, 188);
@@ -1398,47 +1128,29 @@ label.error {
     background: linear-gradient(to right, rgba(1, 120, 188, 1) 0%, rgba(0, 189, 218, 1) 100%);
     filter: progid: DXImageTransform.Microsoft.gradient(startColorstr='#0178bc', endColorstr='#00bdda', GradientType=1);
 }
-
 .wpsp-table.dataTable input[type=checkbox] {
     width: 16px;
     height: 16px;
     margin-left: 5px;
 }
-
-.wpsp-table.dataTable select {
-    /* padding: 2px;
-	    line-height: 28px;
-	    height: 28px !important;
-	    vertical-align: middle;
-	    font-size: 14px !important;
-	    font-family: 'Rubik', sans-serif;
-	    font-weight: 400; */
-}
-
 .wpsp-table.dataTable.dtr-inline.collapsed>thead>tr[role="row"]>th input[type=checkbox] {
     margin-left: 25px;
 }
-
 .wpsp-table.dataTable>tbody>tr.child span.dtr-title {
     min-width: 30%;
 }
-
 .wpsp-table.dataTable .wpsp-action-col {
     display: inline-block;
     vertical-align: middle;
-    /* min-width: 105px; */
 }
-
 .wpsp-table.dataTable .wpsp-action-col.minWidthAuto {
     min-width: auto;
 }
-
 .wpsp-table.dataTable .wpsp-action-col a {
     padding: 0 3px;
     text-decoration: none;
     float: left;
 }
-
 .wpsp-table.dataTable .wpsp-action-col a i {
     font-size: 20px;
     line-height: 18px;
@@ -1446,16 +1158,13 @@ label.error {
     vertical-align: middle;
     display: inline-block;
 }
-
 .wpsp-table.dataTable input[type=checkbox]:checked:before {
     font: normal 21px/1 dashicons;
     margin: -3px 0 0 -4px;
 }
-
 .dataTables_wrapper .dataTables_paginate .pagination .paginate_button {
     display: inline-block;
 }
-
 .dataTables_wrapper .dataTables_paginate .pagination .paginate_button a {
     -webkit-transition: all 0.4s ease-in-out;
     -o-transition: all 0.4s ease-in-out;
@@ -1464,7 +1173,6 @@ label.error {
     height: 30px;
     text-align: center;
 }
-
 .dataTables_wrapper .dataTables_paginate .pagination .paginate_button.active a,
 .dataTables_wrapper .dataTables_paginate .pagination .paginate_button a:hover {
     background: rgb(1, 120, 188);
@@ -1475,38 +1183,29 @@ label.error {
     color: #fff;
     border-radius: 3px;
 }
-
 .dataTables_wrapper .dataTables_paginate .pagination .paginate_button.active a,
 .dataTables_wrapper .dataTables_paginate .pagination .paginate_button a:hover {
     color: #fff;
 }
-
 .wpsp-view-icon {
     color: #0080bf;
 }
-
 .wpsp-edit-icon {
     color: #5cb85c;
 }
-
 .wpsp-delete-icon {
     color: #f33155;
 }
-
-
 /* Custome Tabings */
-
 .wpsp-nav-tabs {
     display: block;
     width: 100%;
     border-bottom: 2px solid #e4e7ed;
 }
-
 .wpsp-nav-tabs li {
     display: inline-block;
     vertical-align: top;
 }
-
 .wpsp-nav-tabs li a {
     display: block;
     font-size: 16px;
@@ -1515,36 +1214,30 @@ label.error {
     text-decoration: none;
     padding: 10px 15px;
 }
-
 .wpsp-labelMain {
     padding: 10px 15px 0 0;
     font-size: 16px;
     font-weight: 500;
     color: #54667a;
 }
-
 .dataTables_length .wpsp-form-control {
     display: inline-block;
     vertical-align: middle;
 }
-
 .dataTables_length .wpsp-form-control.wpsp-input-sm {
     width: 80px;
     min-width: 80px;
 }
-
 .wpsp-class-filter .wpsp-labelMain {
     display: inline-block;
     vertical-align: middle;
     padding-top: 0;
 }
-
 .wpsp-class-filter .wpsp-form-control {
     display: inline-block;
     vertical-align: middle;
     width: auto;
 }
-
 .wpsp-bulkaction {
     float: left;
     width: 160px;
@@ -1552,7 +1245,6 @@ label.error {
     position: relative;
     margin-bottom: -40px;
 }
-
 .wpsp-bulkaction {
     float: left;
     width: 160px;
@@ -1560,7 +1252,6 @@ label.error {
     position: relative;
     margin-bottom: -40px;
 }
-
 .wpsp-nav-tabs-custom .wpsp-resp-tabs-list .wpsp-tabing.wpsp-resp-tab-item {
     width: auto;
     display: inline-block;
@@ -1570,11 +1261,9 @@ label.error {
     margin-bottom: 0;
     border: 1px solid #f5f5f5;
 }
-
 .wpsp-resp-tabs-list {
     border-bottom: 1px solid #00bdda;
 }
-
 .wpsp-nav-tabs-custom .wpsp-resp-tabs-list .wpsp-tabing.wpsp-resp-tab-item.wpsp-resp-tab-active {
     color: #00bdda;
     border-color: #00bdda;
@@ -1583,33 +1272,25 @@ label.error {
     margin-bottom: -1px;
     vertical-align: top;
 }
-
 .tabBody {
     width: 100%;
 }
-
 .resp-accordion {
     display: none;
 }
-
 .wpsp-tabMain {
     display: none;
     width: 100%;
     padding: 15px 0 0 0;
 }
-
-
 /* Alert Box Button */
-
 .wpsp-popBody.wpsp-alert-body {
     max-width: 450px;
 }
-
 .wpsp-alertbox {
     padding: 30px;
     width: 100%;
 }
-
 .wpsp-alertbox .wpsp-alert-icon-box {
     width: 100px;
     height: 100px;
@@ -1619,7 +1300,6 @@ label.error {
     position: relative;
     border: 1px solid #f8d7da;
 }
-
 .wpsp-alertbox .wpsp-alert-icon-box i {
     font-size: 50px;
     vertical-align: middle;
@@ -1630,89 +1310,66 @@ label.error {
     transform: translateY(-50%);
     line-height: 1;
 }
-
 .wpsp-alertbox .wpsp-alert-data {
     text-align: center;
     color: #f33155;
 }
-
 .wpsp-alertbox .wpsp-alert-data h4 {
     font-size: 1.25em;
     margin: 20px auto 5px;
 }
-
 .wpsp-alertbox .wpsp-alert-data p {
     font-size: 1em;
     margin-top: 0;
 }
-
 .wpsp-alertbox .wpsp-alert-btn {
     text-align: center;
     margin: 20px auto 0;
 }
-
 .wpsp-alertbox .wpsp-alert-btn .wpsp-btn {
     min-width: 80px;
 }
-
-
 /* Danger */
-
 .wpsp-alertbox.wpsp-alert-danger .wpsp-alert-icon-box {
     background-color: rgba(243, 49, 85, 0.2);
     border-color: #f33155;
 }
-
 .wpsp-alertbox.wpsp-alert-danger .wpsp-alert-icon-box i {
     color: #f33155;
 }
-
 .wpsp-alertbox.wpsp-alert-danger .wpsp-alert-data {
     color: #f33155;
 }
-
-
 /* success */
-
 .wpsp-alertbox.wpsp-alert-success .wpsp-alert-icon-box {
     background-color: #d4edda;
     border-color: #155724;
 }
-
 .wpsp-alertbox.wpsp-alert-success .wpsp-alert-icon-box i {
     color: #155724;
 }
-
 .wpsp-alertbox.wpsp-alert-success .wpsp-alert-data {
     color: #155724;
 }
-
-
 /* Warning */
-
 .wpsp-alertbox.wpsp-alert-warning .wpsp-alert-icon-box {
     background-color: #fcf8e3;
     border-color: #8a6d3b;
 }
-
 .wpsp-alertbox.wpsp-alert-warning .wpsp-alert-icon-box i {
     color: #8a6d3b;
 }
-
 .wpsp-alertbox.wpsp-alert-warning .wpsp-alert-data {
     color: #8a6d3b;
 }
-
 .wpsp-ulli-list {
     position: relative;
     padding: 15px 0;
 }
-
 .wpsp-ulli-list li {
     position: relative;
     padding-left: 25px;
 }
-
 .wpsp-ulli-list li:before {
     content: "";
     width: 8px;
@@ -1725,15 +1382,12 @@ label.error {
     transform: rotate(45deg);
     margin-top: 5px;
 }
-
 .mapsection {
     padding: 0;
 }
-
 .slimScrollBar {
     background: linear-gradient(to bottom, rgba(1, 120, 188, 1) 0%, rgba(0, 189, 218, 1) 100%) !important;
 }
-
 .wpsp-loader {
     position: fixed;
     top: 0;
@@ -1743,7 +1397,6 @@ label.error {
     background-color: #3cb9e9;
     z-index: 99999999;
 }
-
 .wpsp-loader img {
     position: absolute;
     left: 0;
@@ -1766,9 +1419,8 @@ label.error {
     -moz-transform-style: preserve-3d;
     -ms-transform-style: preserve-3d;
     transform-style: preserve-3d;
-    color: $white;
+    color: white;
 }
-
 @-webkit-keyframes spinner {
     from {
         -webkit-transform: rotateY(0deg);
@@ -1777,7 +1429,6 @@ label.error {
         -webkit-transform: rotateY(-360deg);
     }
 }
-
 @keyframes spinner {
     from {
         -moz-transform: rotateY(0deg);
@@ -1790,10 +1441,7 @@ label.error {
         transform: rotateY(-360deg);
     }
 }
-
-
 /* WPSP Pre loading style */
-
 .wpsp-preLoading {
     background: rgb(1, 120, 188);
     background: -moz-linear-gradient(left, rgba(1, 120, 188, 1) 0%, rgba(0, 189, 218, 1) 100%);
@@ -1810,7 +1458,6 @@ label.error {
     left: 0;
     z-index: 999999;
 }
-
 .wpsp-bookshelf_wrapper {
     position: relative;
     top: 60%;
@@ -1818,13 +1465,11 @@ label.error {
     -webkit-transform: translate(-50%, -50%);
     transform: translate(-50%, -50%);
 }
-
 .wpsp-books_list {
     margin: 0 auto;
     width: 300px;
     padding: 0;
 }
-
 .wpsp-book_item {
     position: absolute;
     top: -120px;
@@ -1842,12 +1487,10 @@ label.error {
     -webkit-animation: travel 2500ms linear infinite;
     animation: travel 2500ms linear infinite;
 }
-
 .wpsp-book_item.wpsp-first {
     top: -140px;
     height: 140px;
 }
-
 .wpsp-book_item.wpsp-first:before,
 .wpsp-book_item.wpsp-first:after {
     content: '';
@@ -1858,12 +1501,10 @@ label.error {
     height: 5px;
     background-color: white;
 }
-
 .wpsp-book_item.wpsp-first:after {
     top: initial;
     bottom: 10px;
 }
-
 .wpsp-book_item.wpsp-second:before,
 .wpsp-book_item.wpsp-second:after,
 .wpsp-book_item.wpsp-fifth:before,
@@ -1878,13 +1519,11 @@ label.error {
     border-top: 5px solid white;
     border-bottom: 5px solid white;
 }
-
 .wpsp-book_item.wpsp-second:after,
 .wpsp-book_item.wpsp-fifth:after {
     top: initial;
     bottom: 10px;
 }
-
 .wpsp-book_item.wpsp-third:before,
 .wpsp-book_item.wpsp-third:after {
     box-sizing: border-box;
@@ -1897,17 +1536,14 @@ label.error {
     border-radius: 50%;
     border: 5px solid white;
 }
-
 .wpsp-book_item.wpsp-third:after {
     top: initial;
     bottom: 10px;
 }
-
 .wpsp-book_item.wpsp-fourth {
     top: -130px;
     height: 130px;
 }
-
 .wpsp-book_item.wpsp-fourth:before {
     box-sizing: border-box;
     content: '';
@@ -1919,17 +1555,14 @@ label.error {
     border-top: 5px solid white;
     border-bottom: 5px solid white;
 }
-
 .wpsp-book_item.wpsp-fifth {
     top: -100px;
     height: 100px;
 }
-
 .wpsp-book_item.wpsp-sixth {
     top: -140px;
     height: 140px;
 }
-
 .wpsp-book_item.wpsp-sixth:before {
     box-sizing: border-box;
     content: '';
@@ -1940,7 +1573,6 @@ label.error {
     height: 5px;
     background-color: white;
 }
-
 .wpsp-book_item.wpsp-sixth:after {
     box-sizing: border-box;
     content: '';
@@ -1952,32 +1584,26 @@ label.error {
     border-radius: 50%;
     border: 5px solid white;
 }
-
 .wpsp-book_item:nth-child(2) {
     -webkit-animation-delay: 416.6666666667ms;
     animation-delay: 416.6666666667ms;
 }
-
 .wpsp-book_item:nth-child(3) {
     -webkit-animation-delay: 833.3333333333ms;
     animation-delay: 833.3333333333ms;
 }
-
 .wpsp-book_item:nth-child(4) {
     -webkit-animation-delay: 1250ms;
     animation-delay: 1250ms;
 }
-
 .wpsp-book_item:nth-child(5) {
     -webkit-animation-delay: 1666.6666666667ms;
     animation-delay: 1666.6666666667ms;
 }
-
 .wpsp-book_item:nth-child(6) {
     -webkit-animation-delay: 2083.3333333333ms;
-    animation-delay: 2083.3333333333ms;
+	animation-delay: 2083.3333333333ms;
 }
-
 .wpsp-shelf {
     width: 300px;
     height: 5px;
@@ -1989,7 +1615,6 @@ label.error {
     right: 0;
     margin-top: 0;
 }
-
 .wpsp-shelf:before,
 .wpsp-shelf:after {
     content: '';
@@ -2005,12 +1630,10 @@ label.error {
     -webkit-animation: move 250ms linear infinite;
     animation: move 250ms linear infinite;
 }
-
 .wpsp-shelf:after {
     top: 400%;
     left: 7.5%;
 }
-
 @-webkit-keyframes move {
     from {
         background-position-x: 0;
@@ -2019,7 +1642,6 @@ label.error {
         background-position-x: 10px;
     }
 }
-
 @keyframes move {
     from {
         background-position-x: 0;
@@ -2028,7 +1650,6 @@ label.error {
         background-position-x: 10px;
     }
 }
-
 @-webkit-keyframes travel {
     0% {
         opacity: 0;
@@ -2086,7 +1707,6 @@ label.error {
         transform: translateX(0px) rotateZ(-90deg);
     }
 }
-
 @keyframes travel {
     0% {
         opacity: 0;
@@ -2144,17 +1764,14 @@ label.error {
         transform: translateX(0px) rotateZ(-90deg);
     }
 }
-
 .wpsp-ulli-list {
     position: relative;
     padding: 15px 0;
 }
-
 .wpsp-ulli-list li {
     position: relative;
     padding-left: 25px;
 }
-
 .wpsp-ulli-list li:before {
     content: "";
     width: 8px;
@@ -2167,53 +1784,41 @@ label.error {
     transform: rotate(45deg);
     margin-top: 5px;
 }
-
 .mapsection {
     padding: 0;
 }
-
 .slimScrollBar {
     background: linear-gradient(to bottom, rgba(1, 120, 188, 1) 0%, rgba(0, 189, 218, 1) 100%) !important;
 }
-
 .wpsp-timetable-btn {
     padding-top: 30px;
     display: inline-block;
     vertical-align: middle;
 }
-
 .wpsp-timetable-btn i {
     font-size: 25px;
 }
-
 .wpsp-text-red {
     color: #FF0000;
 }
-
 .wpsp-label-danger {
     color: #FF0000;
 }
-
 .wpsp-text-green {
     color: #008000;
 }
-
 .wpsp-text-blue {
     color: #00bdda;
 }
-
 .wpschoolpress .update-nag {
     display: none;
 }
-
 .wpsp-f500 {
     font-weight: 500;
 }
-
 .wpsp-text-left {
     text-align: left !important;
 }
-
 .wpsp-preLoading-onsubmit {
     position: fixed;
     top: 0;
@@ -2224,7 +1829,6 @@ label.error {
     z-index: 99999;
     background: rgba(0, 0, 0, 0.5);
 }
-
 .wpsp-preLoading-onsubmit .wpsp-loading_shape-onsubmit {
     width: 400px;
     height: 300px;
@@ -2235,7 +1839,6 @@ label.error {
     margin: 0 auto;
     transform: translateY(-50%);
 }
-
 .wpsp-preLoading-onsubmit .wpsp-loading_shape-onsubmit .wpsp-loader-onsubmit {
     display: inline-block;
     border: 6px solid #01a0ce;
@@ -2251,10 +1854,7 @@ label.error {
     margin-left: -30px;
     z-index: 999;
 }
-
-
 /* Safari */
-
 @-webkit-keyframes spin {
     0% {
         -webkit-transform: rotate(0deg);
@@ -2263,7 +1863,6 @@ label.error {
         -webkit-transform: rotate(360deg);
     }
 }
-
 @keyframes spin {
     0% {
         transform: rotate(0deg);
@@ -2272,7 +1871,6 @@ label.error {
         transform: rotate(360deg);
     }
 }
-
 .wpsp-closeLoading {
     position: absolute;
     right: -40px;
@@ -2282,7 +1880,6 @@ label.error {
     transition: all .4s ease-in-out;
     z-index: 12;
 }
-
 .wpsp-closeLoading:after,
 .wpsp-closeLoading:before {
     position: absolute;
@@ -2296,21 +1893,18 @@ label.error {
     margin: auto;
     left: 0;
 }
-
 .wpsp-closeLoading:after {
     -moz-transform: rotate(45deg);
     -ms-transform: rotate(45deg);
     -webkit-transform: rotate(45deg);
     transform: rotate(45deg);
 }
-
 .wpsp-closeLoading:before {
     -moz-transform: rotate(-45deg);
     -ms-transform: rotate(-45deg);
     -webkit-transform: rotate(-45deg);
     transform: rotate(-45deg);
 }
-
 .wpsp-saving-text {
     position: absolute;
     top: 60%;
@@ -2319,41 +1913,32 @@ label.error {
     text-align: center;
     font-size: 16px;
 }
-
 .wpsp-closeLoading:hover {
     -moz-transform: rotate(180deg);
     -ms-transform: rotate(180deg);
     -webkit-transform: rotate(180deg);
     transform: rotate(180deg);
 }
-
 .wpsp-display-none {
     display: none;
 }
-
 .datepicker.dropdown-menu {
     z-index: 1000000 !important;
 }
-
-
 /* Progress bar */
-
 .wpsp-progress-group {
     margin-bottom: 15px;
     font-size: 14px;
 }
-
 .wpsp-progress-group .wpsp-progress-number {
     float: right;
 }
-
 .wpsp-progress {
     width: 100%;
     height: 8px;
     background: #eee;
     border-radius: 60px;
 }
-
 .wpsp-progress .wpsp-progress-bar {
     float: left;
     width: 0;
@@ -2367,23 +1952,18 @@ label.error {
     font-size: 12px;
     z-index: 12;
 }
-
 .wpsp-progress-bar.wpsp-progress-bar-success {
     background: #61c250;
 }
-
 .wpsp-progress-bar.wpsp-progress-bar-danger {
     background: #f33155;
 }
-
 .wpsp-progress-bar.wpsp-progress-bar-warning {
     background: #f0ad4e;
 }
-
 .wpsp-progress-bar.wpsp-progress-bar-info {
     background: #00bdda;
 }
-
 .wpsp-progress .wpsp-progress-bar:before {
     position: absolute;
     right: 0;
@@ -2408,7 +1988,6 @@ label.error {
     left: 0;
     bottom: 0;
 }
-
 @-webkit-keyframes move01 {
     0% {
         background-position: 0 0;
@@ -2417,7 +1996,6 @@ label.error {
         background-position: 50px 50px;
     }
 }
-
 @-moz-keyframes move01 {
     0% {
         background-position: 0 0;
@@ -2426,49 +2004,37 @@ label.error {
         background-position: 50px 50px;
     }
 }
-
 textarea {
     min-height: 100px;
 }
-
 .select_date {
     background-image: url(http://betatesting87.com/wpschoolpresstest/wp-content/plugins/wpschoolpress/img/svg/datepicker-icon.svg);
     background-repeat: no-repeat;
     background-position: calc(100% - 12px);
     background-size: 18px;
 }
-
 .wpsp-bg-green {
     background-color: #5cb85c;
     color: #fff;
     border-radius: 4px;
     padding: 5px 15px;
 }
-
 .wpsp-bg-yellow {
     background-color: #f0ad4e;
     color: #fff;
     border-radius: 4px;
     padding: 5px 15px;
 }
-
 .wpsp-bg-red {
     background-color: #f33155;
     color: #fff;
     border-radius: 4px;
     padding: 5px 15px;
 }
-
 .wpsp-tt-delete-icon {
-    /* position: relative;*/
     display: inline-block;
     margin: 0 -2px;
-    /*	position: relative;
-	display: inline-block;
-	margin: 0 -2px;
-*/
 }
-
 .wpsp-tt-delete-icon:before,
 .wpsp-tt-delete-icon:after {
     position: absolute;
@@ -2480,26 +2046,13 @@ textarea {
     width: 13px;
     margin: auto;
     right: 0;
-    /*position: absolute;
-    content: '';
-    top: -20px;
-    bottom: auto;
-    height: 2px;
-    background: #f33155;
-    width: 13px;
-    right: 0;
-    margin: auto;
-    left: 20px;*/
 }
-
 .wpsp-tt-delete-icon:before {
     transform: rotate(-45deg);
 }
-
 .wpsp-tt-delete-icon:after {
     transform: rotate(45deg);
 }
-
 .wpsp-assigned-item {
     padding: 5px;
     display: inherit;
@@ -2514,7 +2067,6 @@ textarea {
     min-width: 150px;
     font-weight: 500;
 }
-
 .removesubject.droppable .item {
     float: left;
     padding: 5px 15px;
@@ -2525,25 +2077,18 @@ textarea {
     color: #fff !important;
     z-index: 1;
 }
-
-
 /*Responsive table scroll*/
-
 .wpsp-table-responsive {
     width: 100%;
     overflow: auto;
 }
-
-
-/* wpsp-tooltip
- */
+/* wpsp-tooltip */
 
 [wpsp-tooltip] {
     position: relative;
     display: inline-block;
     z-index: 1;
 }
-
 [wpsp-tooltip]::before {
     content: "";
     position: absolute;
@@ -2556,31 +2101,26 @@ textarea {
     z-index: 99;
     opacity: 0;
 }
-
 [wpsp-tooltip-position='left']::before {
     left: 0%;
     top: 50%;
     margin-left: -12px;
     transform: translatey(-50%) rotate(-90deg)
 }
-
 [wpsp-tooltip-position='top']::before {
     left: 50%;
 }
-
 [wpsp-tooltip-position='buttom']::before {
     top: 100%;
     margin-top: 8px;
     transform: translateX(-50%) translatey(-100%) rotate(-180deg)
 }
-
 [wpsp-tooltip-position='right']::before {
     left: 100%;
     top: 50%;
     margin-left: 1px;
     transform: translatey(-50%) rotate(90deg)
 }
-
 [wpsp-tooltip]::after {
     content: attr(wpsp-tooltip);
     position: absolute;
@@ -2599,49 +2139,40 @@ textarea {
     z-index: 99;
     opacity: 0;
 }
-
 [wpsp-tooltip-position='left']::after {
     left: 0%;
     top: 50%;
     margin-left: -8px;
     transform: translateX(-100%) translateY(-50%);
 }
-
 [wpsp-tooltip-position='top']::after {
     left: 50%;
 }
-
 [wpsp-tooltip-position='buttom']::after {
     top: 100%;
     margin-top: 8px;
     transform: translateX(-50%) translateY(0%);
 }
-
 [wpsp-tooltip-position='right']::after {
     left: 100%;
     top: 50%;
     margin-left: 8px;
     transform: translateX(0%) translateY(-50%);
 }
-
 [wpsp-tooltip]:hover::after,
 [wpsp-tooltip]:hover::before {
     opacity: 1
 }
-
 .wpsp-img-circle {
     border-radius: 50%;
 }
-
 .smf-inline-form .wpsp-form-control {
     display: inline-block;
     width: calc(100% - 95px);
 }
-
 .smf-inline-form .wpsp-btn {
     font-size: 16px;
 }
-
 #eventContent {
     display: none;
     /* Hidden by default */
@@ -2662,7 +2193,6 @@ textarea {
     background-color: rgba(0, 0, 0, 0.4);
     /* Black w/ opacity */
 }
-
 .modal-content {
     background-color: #fefefe;
     margin: 15% auto;
@@ -2672,33 +2202,26 @@ textarea {
     width: 40%;
     /* Could be more or less, depending on screen size */
 }
-
-
 /* The Close Button */
-
 .close {
     color: #aaa;
     float: right;
     font-size: 28px;
     font-weight: bold;
 }
-
 .close:hover,
 .close:focus {
     color: black;
     text-decoration: none;
     cursor: pointer;
 }
-
 .dashicons {
     font-family: dashicons !important;
 }
-
 .dashicons[class^="wpsp-"]:before,
 .dashicons[class*=" wpsp-"]:before {
     font-family: dashicons !important;
 }
-
 #AddModal .modal-content,
 #InfoModal .modal-content {
     margin: 0;
@@ -2706,7 +2229,6 @@ textarea {
     border: none;
     width: auto;
 }
-
 .mainadmin #eventContent .modal-content {
     background-color: #fefefe;
     margin: 15% auto;
@@ -2715,22 +2237,18 @@ textarea {
     width: 40%;
     border-radius: 15px
 }
-
 .mainadmin #eventContent .modal-content h4 {
     border-bottom: 1px solid #eeeeee;
     padding-bottom: 10px;
     margin-top: 11px;
 }
-
 #ExamEditForm .exam-class-list {
     padding: 10px 0;
     line-height: 2;
 }
-
 #ExamEditForm .exam-class-list .wpsp-checkbox-label {
     padding-right: 21px;
 }
-
 .wpsp-alertbox .wpsp-alert-icon-box i.dashicons-yes {
     font-size: 95px;
     vertical-align: middle;
@@ -2741,21 +2259,16 @@ textarea {
     transform: translateY(-50%);
     line-height: 1;
 }
-
 .line_box .smf-inline-form .wpsp-form-control {
     width: calc(100% - 101px);
 }
-
-
 /* multiselect dropdown with checkbox */
-
 .bootstrap-select.wpsp-form-control,
 .multiselect-native-select .btn-group.wpsp-form-control {
     background: url(../img/svg/wpsp-select-arrow.svg) no-repeat right .75rem center/8px 10px;
     /* padding: 0; */
     /* height: auto; */
 }
-
 .multiselect-native-select .btn-group .btn {
     width: 100%;
     text-align: left;
@@ -2764,18 +2277,15 @@ textarea {
     color: #54667a;
     height: 38px;
 }
-
 .multiselect-container>li>a {
     color: #54667a;
 }
-
 .multiselect-native-select .btn-group,
 .btn-group-vertical {
     position: relative;
     display: inline-block;
     vertical-align: middle;
 }
-
 .multiselect-native-select .dropdown-menu {
     position: absolute;
     top: 100%;
@@ -2802,39 +2312,27 @@ textarea {
     height: 200px;
     overflow: auto;
 }
-
 .open>.dropdown-menu {
     display: block;
 }
-
 .multiselect-container .input-group {
     margin: 10px 12px;
 }
-
 .multiselect-native-select .input-group-btn,
 .multiselect-native-select .input-group-addon {
     display: none;
 }
-
 .multiselect-native-select .multiselect-container>li>a>label {
     padding: 3px 20px 3px 10px;
 }
-
-
 /*=====================updated 6th may==============================*/
-
-
 /*.wpschoolpress_page_sch-editprofile .wpsp-wrapper .wpsp-container {
 	    margin-top: 0px;
 }*/
-
-
 /*=====================parent page hide popup==============================*/
-
 .wpschoolpress_page_sch-parent .modal-content {
     display: none;
 }
-
 .wpschoolpress .dropdown-menu {
     position: absolute;
     top: 100%;
@@ -2854,15 +2352,12 @@ textarea {
     border: 1px solid rgba(0, 0, 0, .15);
     border-radius: .25rem
 }
-
 .bootstrap-select .dropdown-toggle .filter-option {
     background-color: #fff !important;
 }
-
 .dropdown-toggle {
     white-space: nowrap
 }
-
 .dropdown-toggle::after {
     display: inline-block;
     margin-left: .255em;
@@ -2873,11 +2368,9 @@ textarea {
     border-bottom: 0;
     border-left: .3em solid transparent
 }
-
 .dropdown-toggle:empty::after {
     margin-left: 0
 }
-
 .dropdown-menu.show {
     display: block;
     left: 0;
@@ -2885,32 +2378,25 @@ textarea {
     font-size: 16px;
     margin-top: 13px;
     margin-right: 17px;
-    /* width: 120px; */
     left: -13px !important;
 }
-
 .dropdown-menu-left {
     right: auto;
     left: 0
 }
-
 .dropdown-menu-right {
     right: 0;
     left: auto
 }
-
 .bootstrap-select.btn-group.show-tick .dropdown-menu li.selected a span.check-mark {
     position: relative;
     display: inline-block;
     right: 15px;
-    /*margin-top: 5px;*/
     left: 2px;
 }
-
 .bootstrap-select.btn-group.show-tick .dropdown-menu li a span.text {
     margin-right: 34px;
 }
-
 @media (min-width:576px) {
     .dropdown-menu-sm-left {
         right: auto;
@@ -2921,7 +2407,6 @@ textarea {
         left: auto
     }
 }
-
 @media (min-width:768px) {
     .dropdown-menu-md-left {
         right: auto;
@@ -2932,7 +2417,6 @@ textarea {
         left: auto
     }
 }
-
 @media (min-width:992px) {
     .dropdown-menu-lg-left {
         right: auto;
@@ -2943,7 +2427,6 @@ textarea {
         left: auto
     }
 }
-
 @media (min-width:1200px) {
     .dropdown-menu-xl-left {
         right: auto;
@@ -2954,34 +2437,24 @@ textarea {
         left: auto
     }
 }
-
-
 /*updated 6th may 2019*/
-
 .alert.alert-danger {
     padding: 20px;
     color: red;
 }
-
 .wpschoolpress .open .dropdown-menu {
     display: block;
 }
-
 td.drop.droppable {
     position: relative;
 }
-
-
 /* Addon Page */
-
 .addon-page .wrap h1 {
     margin-bottom: 15px;
 }
-
 .addon-page .addon-img {
     line-height: 0;
 }
-
 .addon-page .wpsp-row {
     display: -webkit-box;
     display: -ms-flexbox;
@@ -2992,80 +2465,85 @@ td.drop.droppable {
     margin-left: -15px;
     align-items: stretch;
 }
-
 .addon-page .common-sec {
     padding: 30px 0;
 }
-
 .addon-page .addon-img img {
     width: 100%;
     height: auto;
 }
-
 .addon-page .addon-box {
     height: calc(100% - 30px);
     background: #fff;
     margin-bottom: 30px;
     padding-bottom: 40px;
 }
-
 .addon-page .addon-box .btn-div {
     position: absolute;
     bottom: 50px;
 }
-
 .addon-page .addon-details {
     padding: 15px 30px 30px;
 }
-
 .addon-page .addon-details p {
     padding-bottom: 15px;
     margin: 0;
 }
-
 #history_table {}
-
 @media (min-width: 991px) {
     .addon-page .container {
         width: 960px;
     }
 }
-
 .fc-time {
     display: none;
 }
-
 .nopayment1 a {
     pointer-events: initial;
 }
-
 .nopayment a {
     pointer-events: none;
 }
-
 .nopayment-none {
     display: none;
 }
-
 .wpschoolpress .is-dismissible {
     display: none;
 }
-
 .dropdown-menu.show {
     position: absolute;
     will-change: auto !important;
     min-width: 378px !important;
-    /* max-height: 190.6px; */
-    /* overflow: hidden; */
-    /* min-height: 133px; */
-    /* top: 0px !important; */
     left: 0px;
     transform: translate3d(0px, 5px, 0px) !important;
 }
-
 .tdwrap{
     word-break: break-word !important;
 }
 .d-none{
     display:none;
+}
+
+#ImportModal .box-footer.mapsection{margin-left: 15px;margin-bottom: 30px;}
+#ImportModal .wpsp-popup-cont{padding: 20px 10px 0px 10px;}
+#StudentEditForm > .wpsp-col-xs-12{
+    padding: 0px;
+}
+/* #NotifyEntryForm button.dropdown-toggle{
+    display: none;
+} */
+#NotifyEntryForm .bootstrap-select label{
+    position: relative;
+    top:28px;
+}
+#NotifyEntryForm .bootstrap-select:has(select.error){
+    border: 1px solid red;
+    padding-left: 0px;
+}
+#ViewModalContent.loader{
+	text-align:center;
+	min-height:300px;
+	display:grid;
+	align-items:center;
+	font-size:35px;
 }

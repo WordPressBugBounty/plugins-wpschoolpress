@@ -114,12 +114,12 @@ $(document).ready(function() {
           $("#SavingModal").css("display", "block"), $("#parentform").attr("disabled", "disabled")
         },
         success: function(e) {
-          if ($("#parentform").removeAttr("disabled"), "success0" == e) {
-            $(".wpsp-popup-return-data").html("Parent updated successfully !"), $("#SuccessModal").css("display", "block"), $("#SavingModal").css("display", "none"), $("#SuccessModal").addClass("wpsp-popVisible");
+          if ($("#parentform").removeAttr("disabled"), "success0" == jQuery.trim(e)) {
+            $("#SuccessModal p").html("Parent updated successfully !"), $("#SuccessModal").css("display", "block"), $("#SavingModal").css("display", "none"), $("#SuccessModal").addClass("wpsp-popVisible");
             var a = $("#wpsp_locationginal").val() + "admin.php?page=sch-editprofile";
             setTimeout(function() {
               window.location.href = a
-            }, 1e3);
+            }, 2000); 
             $("#parentform").attr("disabled", "disabled")
           } else $(".wpsp-popup-return-data").html(e), $("#SavingModal").css("display", "none"), $("#WarningModal").css("display", "block"), $("#WarningModal").addClass("wpsp-popVisible")
         },

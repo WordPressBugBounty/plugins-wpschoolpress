@@ -9,7 +9,11 @@ if ('POST' == $_SERVER['REQUEST_METHOD'] && isset($_POST['noh']) && $_POST['noh'
     $wpsp_class_id = intval($_POST['wpsp_class_name']);
     $noh           = intval($_POST['noh']);
     $sess_template = sanitize_text_field($_POST['sessions_template']);
-    $check_tt      = $wpdb->get_row("Select heading from $tt_table where class_id='".esc_sql($wpsp_class_id)."' and heading!=''", ARRAY_N);
+    $sql_query = $wpdb->prepare("SELECT heading FROM $tt_table WHERE class_id = %d AND heading != %s",$wpsp_class_id,'');
+
+// Get the row using the prepared query.
+    $check_tt = $wpdb->get_row($sql_query, ARRAY_N);
+    //$check_tt      = $wpdb->get_row("Select heading from $tt_table where class_id='".esc_sql($wpsp_class_id)."' and heading!=''", ARRAY_N);
     if (!empty($check_tt)) {
         $_POST['sessions_template'] = 'available';
         $skip_hours = TRUE;
@@ -52,6 +56,7 @@ if ('POST' == $_SERVER['REQUEST_METHOD'] && isset($_POST['noh']) && $_POST['noh'
     }
 }
 if (($skip_hours === TRUE) || ('POST' == $_SERVER['REQUEST_METHOD'] && sanitize_text_field($_POST['sessions_template']) == 'available' && sanitize_text_field($_POST['template_class']) != '') || ('POST' == $_SERVER['REQUEST_METHOD'] && isset($_POST['last-step']) && sanitize_text_field($_POST['last-step']) == 'submit')) {
+    $session = sanitize_price_array($_POST['session']);
     $tt_table      = $wpdb->prefix . "wpsp_timetable";
     $subject_table = $wpdb->prefix . "wpsp_subject";
     $h_table       = $wpdb->prefix . "wpsp_workinghours";
@@ -69,8 +74,9 @@ if (($skip_hours === TRUE) || ('POST' == $_SERVER['REQUEST_METHOD'] && sanitize_
             $template_class_id = $class_id;
         } else {
             $template_class_id = sanitize_text_field($_POST['template_class']);
+            
         }
-        $check_tt = $wpdb->get_row("Select heading from $tt_table where class_id='".esc_sql($template_class_id)."' and heading!=''");
+        $check_tt = $wpdb->get_row($wpdb->prepare("SELECT heading FROM $tt_table WHERE class_id = %d AND heading != %s",$wpsp_class_id,''));
         if (!empty($check_tt)) {
             $get_sessions = unserialize($check_tt->heading);
             foreach ($get_sessions as $sesio) {
@@ -83,7 +89,8 @@ if (($skip_hours === TRUE) || ('POST' == $_SERVER['REQUEST_METHOD'] && sanitize_
         }
     }
     if (count($session) > 0) {
-        $chck_hd = $wpdb->get_row("SELECT * from $tt_table where class_id='".esc_sql($class_id)."' and time_id='0' and day='0' and heading!=''");
+        //$chck_hd = $wpdb->get_row("SELECT * from $tt_table where class_id='".esc_sql($class_id)."' and time_id='0' and day='0' and heading!=''");
+        $chck_hd = $wpdb->get_row($wpdb->prepare("SELECT * FROM $tt_table WHERE class_id = %d and time_id='%s' and day='%s' AND heading != %s",$wpsp_class_id,'0','0',''));
         if (empty($chck_hd)) {
             $ins = $wpdb->insert($tt_table, array(
                 'class_id' => $class_id,
@@ -99,14 +106,17 @@ if (($skip_hours === TRUE) || ('POST' == $_SERVER['REQUEST_METHOD'] && sanitize_
     }
     $wpsp_hours_table    = $wpdb->prefix . "wpsp_workinghours";
     $wpsp_subjects_table = $wpdb->prefix . "wpsp_subject";
-    $clt                 = $wpdb->get_results("SELECT * FROM $wpsp_subjects_table WHERE class_id='".esc_sql($class_id)."' or class_id=0 order by class_id desc");
+    //$clt                 = $wpdb->get_results("SELECT * FROM $wpsp_subjects_table WHERE class_id='".esc_sql($class_id)."' or class_id=0 order by class_id desc");
+    $clt = $wpdb->get_results($wpdb->prepare("SELECT * FROM $wpsp_subjects_table WHERE class_id = %d or class_id = %d order by class_id desc",$class_id,0));
     if (count($clt) == 0) {
         $error = 1;
         echo "<div class='wpsp-text-red'>No Subjects retrieved, Check you have subject for this class at <a href='" . esc_url(admin_url('admin.php?page=sch-subject')) . "'>Subjects</a></div>";
     }
     if ($error == 0) {
         $timetable = array();
-        $tt_days   = $wpdb->get_results("select * from $tt_table where class_id='".esc_sql($class_id)."' and time_id !='0' ", ARRAY_A);
+        //$tt_days   = $wpdb->get_results("select * from $tt_table where class_id='".esc_sql($class_id)."' and time_id !='0' ", ARRAY_A);
+        $tt_query = $wpdb->prepare("SELECT * FROM $tt_table WHERE class_id = %d or time_id = %s",$class_id,'0');
+        $tt_days = $wpdb->get_results($tt_query, ARRAY_A);
         foreach ($tt_days as $ttd) {
             $timetable[$ttd['day']][$ttd['time_id']] = $ttd['subject_id'];
         }
@@ -149,7 +159,8 @@ if (($skip_hours === TRUE) || ('POST' == $_SERVER['REQUEST_METHOD'] && sanitize_
             </th> <?php //print_r($session);
              foreach ($session as $sess) {
 ?> <th> <?php
-        $ses_info = $wpdb->get_row("Select * from $wpsp_hours_table where id='$sess'");
+        //$ses_info = $wpdb->get_row("Select * from $wpsp_hours_table where id='$sess'");
+        $ses_info = $wpdb->get_row($wpdb->prepare("SELECT * FROM $wpsp_hours_table WHERE id = %s",$sess));
         echo esc_html($ses_info->begintime . " to " . $ses_info->endtime);
 ?> </th> <?php
     }
@@ -160,7 +171,8 @@ if (($skip_hours === TRUE) || ('POST' == $_SERVER['REQUEST_METHOD'] && sanitize_
           <?php
                     $dayname = array("Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday");
                     $leave_table=$wpdb->prefix."wpsp_leavedays";/* Sat-sun Off */
-                    $check      =   $wpdb->get_row("select description from $leave_table where class_id='".esc_sql($class_id)."'");
+                  //  $check      =   $wpdb->get_row("select description from $leave_table where class_id='".esc_sql($class_id)."'");
+                    $check = $wpdb->get_row($wpdb->prepare("SELECT description FROM $leave_table WHERE class_id = %d",$class_id));
                     $wd = explode(',', $check->description);
                     for ($j = 1; $j <= 7; $j++) {
                         /* Sat-sun Off */
@@ -182,7 +194,8 @@ if (($skip_hours === TRUE) || ('POST' == $_SERVER['REQUEST_METHOD'] && sanitize_
             </td> <?php
       foreach ($session as $key => $ses)  {
             $ses = esc_sql($ses);
-            $hour_det = $wpdb->get_row("Select * from $wpsp_hours_table where id='$ses'");
+           // $hour_det = $wpdb->get_row("Select * from $wpsp_hours_table where id='$ses'");
+            $hour_det = $wpdb->get_row($wpdb->prepare("SELECT * FROM $wpsp_hours_table WHERE id = %s",$ses));
             if ($hour_det->type == "1") {
                 $td_class = "drop";
             } else {
@@ -193,12 +206,14 @@ if (($skip_hours === TRUE) || ('POST' == $_SERVER['REQUEST_METHOD'] && sanitize_
     } $sub_id = ''; $sub_name = '';
     if (isset($timetable[$j][$ses])) $sub_id = $timetable[$j][$ses];
     if ($sub_id > 0) {
-    $sub_name_f = $wpdb->get_row("SELECT sub_name from $subject_table where id='".esc_sql($sub_id)."'");
+    //$sub_name_f = $wpdb->get_row("SELECT sub_name from $subject_table where id='".esc_sql($sub_id)."'");
+    $sub_name_f = $wpdb->get_row($wpdb->prepare("SELECT sub_name FROM $subject_table WHERE id = %d",$sub_id));
     $sub_name = $sub_name_f->sub_name; }
     if ($sub_name != '') {
     $sub_name='<div class="item1 assigned wpsp-assigned-item">'. esc_html($sub_name).'</div>'; } else { $sub_name = $sub_name; }
     if($td_class == "break"){
-    $sub_name_f1 = $wpdb->get_row("SELECT id from wp_wpsp_subject where sub_name='Break'");
+  //  $sub_name_f1 = $wpdb->get_row("SELECT id from $subject_table where sub_name='Break'");
+    $sub_name_f1 = $wpdb->get_row($wpdb->prepare("SELECT id FROM $subject_table WHERE sub_name = %s",'Break'));
     $time_table = $wpdb->prefix . "wpsp_timetable";
     $time_table_data = array( 'class_id' => $class_id, 'time_id' => $ses, 'subject_id' => $sub_name_f1->id, 'session_id' => $key, 'day' => $j );
     $ins = $wpdb->insert($time_table, $time_table_data); } ?> <td class="<?php echo esc_attr($td_class); ?>" tid="<?php echo esc_attr($ses); ?>" data-sessionid="<?php echo esc_attr($key); ?>"><?php if($td_class == "break"){ echo esc_html("Break","wpschoolpress");} else {echo wp_kses_post($sub_name); }?></td> <?php
@@ -303,7 +318,8 @@ if ('POST' != $_SERVER['REQUEST_METHOD']) {
             </p>
           </div>
         </div> <?php
-    $avail_sess = $wpdb->get_results("SELECT t.class_id from $tt_table t, $class_table c where heading!='' and day=0 and c.cid=t.class_id");
+  //  $avail_sess = $wpdb->get_results("SELECT t.class_id from $tt_table t, $class_table c where heading!='' and day=0 and c.cid=t.class_id");
+    $avail_sess = $wpdb->get_results($wpdb->prepare("SELECT t.class_id FROM $tt_table t $class_table c WHERE heading!= %s and day = %d and c.cid=t.class_id",'',0));
 ?> <div class="wpsp-col-lg-3 wpsp-col-md-4 wpsp-col-sm-4 wpsp-col-xs-12" id="select_template" style="display:none">
           <div class="wpsp-form-group">
             <label class="wpsp-label"><?php esc_html_e("Select Class","wpschoolpress");?>

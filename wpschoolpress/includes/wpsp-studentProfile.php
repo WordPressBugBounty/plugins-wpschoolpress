@@ -11,7 +11,8 @@ if( isset($_GET['edit']) && sanitize_text_field($_GET['edit'])=='true' && ($curr
     ob_start();
     wpsp_UpdateStudent();
 }
-$stinfo  =  $wpdb->get_row("select * from $student_table where wp_usr_id='".esc_sql($sid)."'");
+//$stinfo  =  $wpdb->get_row("select * from $student_table where wp_usr_id='".esc_sql($sid)."'");
+$stinfo = $wpdb->get_row($wpdb->prepare("SELECT * FROM $student_table WHERE wp_usr_id = %d",$sid));
 // print_r($stinfo);
 if( !empty( $stinfo ) ) {
     $student_index = $stinfo->sid;
@@ -667,21 +668,22 @@ if( !empty( $stinfo ) ) {
             <div class="date-input-block">
               <table class="table table-bordered" width="100%" cellspacing="0" cellpadding="5">
                 <?php
-
-                          foreach ($classes as $class) {
-                            $class_data = $wpdb->get_results("select * from $class_mapping_table where sid='".esc_sql($student_index)."' AND cid = '".esc_sql($class->cid)."'");
-                            if(!empty($classIDArray)){
-                            if (in_array( $class->cid , $classIDArray )){
-                            ?>
-                <tr>
-                  <td style="border:1px solid;padding:5px;">
-                    <strong><?php echo esc_html($class->c_name); ?></strong>
-                  </td>
-                  <td style="border:1px solid;padding:5px;">
-                    <input type='text' class='someclass datepicker' name='Classdata[]' placeholder='yyyy-mm-dd' <?php echo (((isset($class_data[0]->date) && ($class_data[0]->date != ''))) ? 'value="'.esc_attr($class_data[0]->date).'"' : ''); ?>>
-                  </td>
-                </tr>
-                <?php } }
+                foreach ($classes as $class) {
+                  // $class_data = $wpdb->get_results("select * from $class_mapping_table where sid='".esc_sql($student_index)."' AND cid = '".esc_sql($class->cid)."'");
+                  $class_data = $wpdb->get_results($wpdb->prepare("SELECT * FROM $class_mapping_table WHERE sid = %d and cid = %d",$student_index,$class->cid));
+                  if(!empty($classIDArray)){
+                    if (in_array( $class->cid , $classIDArray )){
+                      ?>
+                      <tr>
+                        <td style="border:1px solid;padding:5px;">
+                          <strong><?php echo esc_html($class->c_name); ?></strong>
+                        </td>
+                        <td style="border:1px solid;padding:5px;">
+                          <input type='text' class='someclass datepicker' name='Classdata[]' placeholder='yyyy-mm-dd' <?php echo (((isset($class_data[0]->date) && ($class_data[0]->date != ''))) ? 'value="'.esc_attr($class_data[0]->date).'"' : ''); ?>>
+                        </td>
+                      </tr>
+                 <?php }
+                  }
                            }?>
               </table>
             </div>

@@ -71,14 +71,14 @@ $(document).ready(function() {
             s = $(this).val();
         a > 3145728 && ($("#test").html("File Size should be less than 3 MB, Please select another file"), $(this).val("")), a < 3145728 && $("#test").css("display", "none");
         var t = s.substring(s.lastIndexOf(".") + 1); - 1 == $.inArray(t, ["jpg", "jpeg"]) && ($("#test").html("Please select either jpg or jpeg file"), $(this).val("")),
-            function(e) {
-                if (e.files) {
-                    var a = new FileReader;
-                    a.onload = function(e) {
-                        $("#img_preview_teacher").attr("src", e.target.result).width(112).height(112)
-                    }, a.readAsDataURL(e.files[0])
-                }
-            }(this)
+        function(e) {
+            if (e.files) {
+                var a = new FileReader;
+                a.onload = function(e) {
+                    $("#img_preview_teacher").attr("src", e.target.result).width(112).height(112)
+                }, a.readAsDataURL(e.files[0])
+            }
+        }(this)
     }), $("#TeacherEditForm").validate({
         rules: {
             firstname: {
@@ -107,17 +107,6 @@ $(document).ready(function() {
                 required: (jQuery("input[name='Email']").data("is_required")) ? true : false,
                 email: !0
             },
-            //   Phone: {
-            //     required: (jQuery("input[name='Phone']").data("is_required")) ? true : false,
-            //     minlength: 7
-            //   },
-            //   zipcode: {
-            //     required: (jQuery("input[name='zipcode']").data("is_required")) ? true : false,
-            //     number: !0
-            //   },
-            //   whours:  {
-            //     required: (jQuery("input[name='whours']").data("is_required")) ? true : false,
-            //   },
         },
         messages: {
             firstname: "Please Enter Teacher Name",
@@ -156,12 +145,12 @@ $(document).ready(function() {
                     $("#u_teacher").attr("disabled", "disabled"), $("#SavingModal").css("display", "block")
                 },
                 success: function(e) {
-                    if ("success0" == e) {
-                        $(".wpsp-popup-return-data").html("Teacher Updated successfully !"), $("#SuccessModal").css("display", "block"), $("#SavingModal").css("display", "none"), $("#SuccessModal").addClass("wpsp-popVisible");
+                    if ("success0" === jQuery.trim(e)) {    
+                        $("#SuccessModal p").html("Teacher Updated successfully !"), $("#SuccessModal").css("display", "block"), $("#SavingModal").css("display", "none"), $("#SuccessModal").addClass("wpsp-popVisible");
                         var a = $("#wpsp_locationginal").val() + "/admin.php?page=sch-teacher";
                         setTimeout(function() {
                             window.location.href = a
-                        }, 1e3);
+                        }, 2000);
                         $("#TeacherEditForm").trigger("reset"), $("#u_teacher").attr("disabled", "disabled")
                     } else $(".wpsp-popup-return-data").html(e), $("#SavingModal").css("display", "none"), $("#WarningModal").css("display", "block"), $("#WarningModal").addClass("wpsp-popVisible")
                 },
@@ -201,17 +190,6 @@ $(document).ready(function() {
                 required: (jQuery("input[name='Email']").data("is_required")) ? true : false,
                 email: !0
             },
-            // Phone: {
-            //     required: (jQuery("input[name='ConfirmPassword']").data("is_required")) ? true : false,
-            //     minlength: 7
-            // },
-            // zipcode: {
-            //     required: (jQuery("input[name='ConfirmPassword']").data("is_required")) ? true : false,
-            //     number: !0
-            // },
-            // whours: {
-            //     required: (jQuery("input[name='ConfirmPassword']").data("is_required")) ? true : false,
-            // }
         },
         messages: {
             firstname: "Please Enter Teacher Name",
@@ -249,8 +227,8 @@ $(document).ready(function() {
                     $("#SavingModal").css("display", "block"), $("#teacherform").attr("disabled", "disabled")
                 },
                 success: function(e) {
-                    if ($("#teacherform").removeAttr("disabled"), "success" == e) {
-                        $(".wpsp-popup-return-data").html("Teacher added successfully !"), $("#SuccessModal").css("display", "block"), $("#SavingModal").css("display", "none"), $("#SuccessModal").addClass("wpsp-popVisible");
+                    if ($("#teacherform").removeAttr("disabled"), "success" === jQuery.trim(e)) {
+                        $("#SuccessModal .wpsp-success-text").html("Teacher added successfully !"), $("#SuccessModal").css("display", "block"), $("#SavingModal").css("display", "none"), $("#SuccessModal").addClass("wpsp-popVisible");
                         var a = $("#wpsp_locationginal").val() + "/admin.php?page=sch-teacher";
                         setTimeout(function() {
                             window.location.href = a
@@ -269,6 +247,8 @@ $(document).ready(function() {
         e.preventDefault();
         var a = [],
             s = $(this).data("id");
+        $("#ViewModalContent").addClass('loader');    
+        $("#ViewModalContent").html("Loading....");    
         a.push({
             name: "action",
             value: "TeacherPublicProfile"
@@ -276,6 +256,7 @@ $(document).ready(function() {
             name: "id",
             value: s
         }), jQuery.post(ajax_url, a, function(e) {
+            
             $("#ViewModalContent").html(e), $(this).click()
         })
     }), $("#AddTeacher").on("click", function(e) {
@@ -295,29 +276,15 @@ $(document).ready(function() {
         $("#DeleteModal").attr('data-single-delete', true);
         $("#DeleteModal").attr('data-id', a);
     }), $(document).on("click", ".ClassDeleteBt", function(e) {
-        // var a = $("#teacherid").val(),
-        //     s = [];
-        // s.push({
-        //     name: "action",
-        //     value: "DeleteTeacher"
-        // }, {
-        //     name: "tid",
-        //     value: a
-        // }), jQuery.post(ajax_url, s, function(e) {
-        //     "success" == e ? location.reload() : ($(".wpsp-popup-return-data").html("Operation failed.Something went wrong!"), $("#SavingModal").css("display", "none"), $("#WarningModal").css("display", "block"), $("#WarningModal").addClass("wpsp-popVisible"))
-        // })
-
         var singledata = $("#DeleteModal").attr("data-single-delete");
         if (singledata == 'true'){
-        $("#DeleteModal").css("display", "none");
-        $("#SavingModal").css("display", "block");
-        $("#SavingModal").addClass("wpsp-popVisible");
-        $(".wpsp-saving-text").html('Deleting user..');
-        // var singledata = $("#DeleteModal").attr("data-single-delete");
-        // if (singledata == 'true') {
+            $("#DeleteModal").css("display", "none");
+            $("#SavingModal").css("display", "block");
+            $("#SavingModal").addClass("wpsp-popVisible");
+            $(".wpsp-saving-text").html('Deleting user..');
             var a = $("#teacherid").val();
             var n = $("#wps_generate_nonce").val();
-                s = [];
+            s = [];
             s.push({
                 name: "action",
                 value: "DeleteTeacher"
@@ -329,9 +296,8 @@ $(document).ready(function() {
                 name: "wps_generate_nonce",
                 value: n
             }), jQuery.post(ajax_url, s, function(e) {
-                // alert(e);
                 if ("success" == $.trim(e)) {
-                    $(".wpsp-success-text").html("Teacher deleted successfully !"), 
+                    $("#SuccessModal .wpsp-success-text").html("Teacher deleted successfully !"), 
                     $("#SuccessModal").css("display", "block"); 
                     $("#SavingModal").css("display", "none"); 
                     $("#SuccessModal").addClass("wpsp-popVisible");
@@ -344,54 +310,46 @@ $(document).ready(function() {
 
         }
     });
-    // $("#bulkaction").change(function() {
-    //     if ("bulkUsersDelete" == $(this).val()) {
-            // if (0 == e.length) return $(".wpsp-popup-return-data").html("No user selected!"), $("#SavingModal").css("display", "none"), $("#WarningModal").css("display", "block"), $("#WarningModal").addClass("wpsp-popVisible"), !1;
-            // $("#DeleteModal").css("display", "block"), 
-            $('.ccheckbox ').change(function(){
-                if($(this).prop("checked")) {
-                  $('.wpsp-bulkaction').removeClass("d-none");
-                } else {
-                  $('.wpsp-bulkaction').addClass("d-none");
-                }
-            });
-            $(document).on("click", "#bulkDel", function(a) {
-                var e = $('input[name^="UID"]').map(function() {
-                    if (1 == $(this).prop("checked")) { return this.value ;}
-                }).get();
-                // alert(e);
-            $("#DeleteModal").css("display", "block");
-            $("#DeleteModal").addClass("wpsp-popVisible");
-            $(document).on("click", ".ClassDeleteBt", function(a) {
-                var s = new Array;
-                var n = $("#wps_generate_nonce").val();
-                s.push({
-                    name: "action",
-                    value: "bulkDelete"
-                }), s.push({
-                    name: "UID",
-                    value: e
-                }),s.push({
-                    name: "type",
-                    value: "teacher"
-                }),s.push({
-                    name: "wps_generate_nonce",
-                    value: n
-                }), jQuery.post(ajax_url, s, function(e) {
-                    // "success" == e ? location.reload() : ($(".wpsp-popup-return-data").html("Operation failed.Something went wrong!"), $("#SavingModal").css("display", "none"), $("#WarningModal").css("display", "block"), $("#WarningModal").addClass("wpsp-popVisible"))
-                    // alert(e);
-                    if ("success" == $.trim(e)) {
-                        $(".wpsp-success-text").html("Teacher deleted successfully!"); 
-                        $("#SuccessModal").css("display", "block");
-                         $("#SavingModal").css("display", "none");
-                         $("#SuccessModal").addClass("wpsp-popVisible");
-                         location.reload();
+    $('.ccheckbox ').change(function(){
+        if($(this).prop("checked")) {
+            $('.wpsp-bulkaction').removeClass("d-none");
+        } else {
+            $('.wpsp-bulkaction').addClass("d-none");
+        }
+    });
+    $(document).on("click", "#bulkDel", function(a) {
+        var e = $('input[name^="UID"]').map(function() {
+            if (1 == $(this).prop("checked")) { return this.value ;}
+        }).get();
+        $("#DeleteModal").css("display", "block");
+        $("#DeleteModal").addClass("wpsp-popVisible");
+        $(document).on("click", ".ClassDeleteBt", function(a) {
+            var s = new Array;
+            var n = $("#wps_generate_nonce").val();
+            s.push({
+                name: "action",
+                value: "bulkDelete"
+            }), s.push({
+                name: "UID",
+                value: e
+            }),s.push({
+                name: "type",
+                value: "teacher"
+            }),s.push({
+                name: "wps_generate_nonce",
+                value: n
+            }), jQuery.post(ajax_url, s, function(e) {
+                if ("success" == $.trim(e)) {
+                    $(".wpsp-success-text").html("Teacher deleted successfully!"); 
+                    $("#SuccessModal").css("display", "block");
+                    $("#SavingModal").css("display", "none");
+                    $("#SuccessModal").addClass("wpsp-popVisible");
+                        location.reload();
                     } else {
                         ($(".wpsp-popup-return-data").html("Operation failed.Something went wrong!"), $("#SavingModal").css("display", "none"), $("#WarningModal").css("display", "block"), $("#WarningModal").addClass("wpsp-popVisible"))
                     }
                 })
-            })
-        //}
+        })
     });
     $("#selectall").click(function() {
         $('.wpsp-bulkaction').removeClass("d-none");

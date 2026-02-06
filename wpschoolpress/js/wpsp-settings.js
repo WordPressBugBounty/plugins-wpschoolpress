@@ -19,7 +19,7 @@ $(document).ready(function() {
       processData: !1,
       contentType: !1,
       success: function(e) {
-        if ("success" == e) {
+        if ("success" === jQuery.trim(e)) {
           var a = "success",
             s = "Information Saved Successfully";
           window.location.reload()
@@ -32,7 +32,9 @@ $(document).ready(function() {
         $(".pnloader").remove()
       }
     })
-  }), $("#Settingslicensing #s_save").click(function(e) {
+  }), 
+  
+  $("#Settingslicensing #s_save").click(function(e) {
     e.preventDefault(), $(".pnloader").remove();
     var a = new FormData,
       s = $("#Settingslicensing").serializeArray();
@@ -46,7 +48,7 @@ $(document).ready(function() {
       processData: !1,
       contentType: !1,
       success: function(e) {
-        "success" == e ? ($(".wpsp-popup-return-data").html("Information Saved Successfully"), $("#SuccessModal").css("display", "block"), $("#SavingModal").css("display", "none"), $("#SuccessModal").addClass("wpsp-popVisible"), window.location.reload()) : ($(".wpsp-popup-return-data").html("Something went wrong"), $("#SavingModal").css("display", "none"), $("#WarningModal").css("display", "block"), $("#WarningModal").addClass("wpsp-popVisible"))
+        e.success && jQuery.trim(e.data) === "success" ? ($("#SuccessModal .wpsp-success-text").html("Information Saved Successfully"), $("#SuccessModal").css("display", "block"), $("#SavingModal").css("display", "none"), $("#SuccessModal").addClass("wpsp-popVisible"), window.location.reload()) : ($(".wpsp-popup-return-data").html("Something went wrong"), $("#SavingModal").css("display", "none"), $("#WarningModal").css("display", "block"), $("#WarningModal").addClass("wpsp-popVisible"))
       },
       complete: function() {
         $(".pnloader").remove()
@@ -71,7 +73,7 @@ $(document).ready(function() {
         $("#u_teacher").attr("disabled", "disabled"), $("#SavingModal").css("display", "block")
       },
       success: function(e) {
-        $("#setting_submit").attr("disabled", !1), "success" == e ? ($(".wpsp-popup-return-data").html("Information Saved Successfully"), $("#SuccessModal").css("display", "block"), $("#SavingModal").css("display", "none"), $("#SuccessModal").addClass("wpsp-popVisible"), window.location.reload()) : ($(".wpsp-popup-return-data").html("Something went wrong"), $("#SavingModal").css("display", "none"), $("#WarningModal").css("display", "block"), $("#WarningModal").addClass("wpsp-popVisible"))
+        $("#setting_submit").attr("disabled", !1), jQuery.trim(e) === "success" ? ($("#SuccessModal .wpsp-success-text").html("Information Saved Successfully"), $("#SuccessModal").css("display", "block"), $("#SavingModal").css("display", "none"), $("#SuccessModal").addClass("wpsp-popVisible"), window.location.reload()) : ($(".wpsp-popup-return-data").html("Something went wrong"), $("#SavingModal").css("display", "none"), $("#WarningModal").css("display", "block"), $("#WarningModal").addClass("wpsp-popVisible"))
       },
       complete: function() {
         $(".pnloader").remove(), $("#overlay").removeClass("overlays")
@@ -92,10 +94,10 @@ $(document).ready(function() {
       contentType: !1,
       beforeSend: function() {},
       success: function(e) {
-        "success" == e ? ($(".wpsp-popup-return-data").html("Teacher Updated successfully !"),
+        jQuery.trim(e) === "success" ? ($("#SuccessModal .wpsp-success-text").html("SMS Details Updated successfully !"),
 		$("#SuccessModal").css("display", "block"),
 		$("#SavingModal").css("display", "none"),
-		$("#SuccessModal").addClass("wpsp-popVisible")) : ($(".wpsp-popup-return-data").html("Something went wrong"), $("#SavingModal").css("display", "none"), $("#WarningModal").css("display", "block"), $("#WarningModal").addClass("wpsp-popVisible"))
+		$("#SuccessModal").addClass("wpsp-popVisible"),location.reload()) : ($(".wpsp-popup-return-data").html("Something went wrong"), $("#SavingModal").css("display", "none"), $("#WarningModal").css("display", "block"), $("#WarningModal").addClass("wpsp-popVisible"))
       },
       complete: function() {
         $(".pnloader").remove()
@@ -136,7 +138,7 @@ $(document).ready(function() {
 		  $("#grade_save").attr("disabled", "disabled")
         },
         success: function(e) {
-          if ($("#grade_save").removeAttr("disabled"), $("#AddGradeForm").trigger("reset"), "success" == e) var a = "success",
+          if ($("#grade_save").removeAttr("disabled"), $("#AddGradeForm").trigger("reset"), "success" === jQuery.trim(e)) var a = "success",
             s = "Grade Saved Successfully";
           else a = "error", s = "Something went wrong";
           $.fn.notify(a, {
@@ -275,9 +277,9 @@ $(document).ready(function() {
       ClassID: {
         required: ($("select[name='ClassID']").data("is_required")) ? true : false,
       },
-      // SubjectID: {
-      //   required: ($("select[name='SubjectID']").data("is_required")) ? true : false,
-      // },
+       SubjectID: {
+         required: ($("select[name='SubjectID']").data("is_required")) ? true : false,
+       },
       FieldName: {
         required: (jQuery("input[name='FieldName']").data("is_required")) ? true : false,
       }
@@ -288,6 +290,9 @@ $(document).ready(function() {
       FieldName: "Please enter Field Name"
     },
     submitHandler: function(e) {
+      
+      deleteprocess.call(this);
+
       var a = $("#SubFieldsForm").serializeArray();
       a.push({
         name: "action",
@@ -297,39 +302,23 @@ $(document).ready(function() {
         url: ajax_url,
         data: a,
         success: function(e) {
-          //alert(e);
-          if ("success" == $.trim(e)) {
-            $("#SubFieldsForm").reset(), 
-			        /*$.fn.notify("success", {
-              desc: "Fields added succesfully!",
-              autoHide: !0,
-              clickToHide: !0
-            }),*/ 
-            // $(".wpsp-popup-return-data").html('Data added successfully !');
-            // $("#SuccessModal").css("display", "block");
-            // $("#SuccessModal").addClass("wpsp-popVisible");
-            // $("#AddFieldsModal").html(""), $("#AddFieldsModal").modal("hide");
+          if ("success" === jQuery.trim(e)) {
+            $("#SuccessModal .wpsp-success-text").html('Subject Mark Fields added successfully !');
+            $("#SuccessModal").css("display", "block");
+            $("#SuccessModal").addClass("wpsp-popVisible");
+            $("#AddFieldsModal").html(""), $("#AddFieldsModal").modal("hide");
             setTimeout(function() {
               location.reload(!0)
-            }, 1e3), $("#SubFieldsForm .btn-primary").attr("disabled", "disabled")
-          } else 
-            /*$.fn.notify("error", {
-              desc: e,
-              autoHide: !0,
-              clickToHide: !0
-            });*/
+            }, 2000), $("#SubFieldsForm .btn-primary").attr("disabled", "disabled")
+          } else {
             $(".wpsp-popup-return-data").html(e);
             $("#SavingModal").css("display", "none");
             $("#WarningModal").css("display", "block");
             $("#WarningModal").addClass("wpsp-popVisible");
-          $("#SubFieldsForm .btn-primary").attr("disabled", !1)
+          $("#SubFieldsForm .btn-primary").attr("disabled", !1);
+          }
         },
         error: function() {
-         /* $.fn.notify("error", {
-            desc: "Something went wrong",
-            autoHide: !0,
-            clickToHide: !0
-          })*/
         },
         beforeSend: function() {
         
@@ -339,7 +328,10 @@ $(document).ready(function() {
         }
       })
     }
-  }), $(".SFUpdate").click(function() {
+  }), $("#SubFieldsForm .wpsp-dark-btn").click(function() {
+      $(".wpsp-popupMain").removeClass("wpsp-popVisible")
+  })  
+  , $(".SFUpdate").click(function() {
     var e = $(this).attr("data-id"),
       a = $("#" + e + "SF").val(),
       s = new Array;
@@ -357,12 +349,10 @@ $(document).ready(function() {
       url: ajax_url,
       data: s,
       success: function(e) {
-        if ("success" == e) {
-         /* $.fn.notify("success", {
-            desc: "Field updated succesfully!",
-            autoHide: !0,
-            clickToHide: !0
-          });*/
+        alert(e);
+        if ("success" === jQuery.trim(e)) {
+          $("#SuccessModal").css("display", "block");
+          $("#SuccessModal .wpsp-success-text").text('Field updated succesfully!');
           var a = $("#wpsp_locationginal").val() + "/admin.php?page=sch-settings&sc=subField";
           setTimeout(function() {
             window.location.href = a
@@ -378,8 +368,13 @@ $(document).ready(function() {
     })
   }), $(document).on("click", "#d_teacher", function(e) {
     var a = $(this).data("id");
+    $("#DeleteModal").addClass("wpsp-popVisible");
+
     $("#teacherid").val(a), $("#DeleteModal").css("display", "block")
   }), $(document).on("click", ".ClassDeleteBt", function(e) {
+
+  deleteprocess.call(this);
+
     var nn = $('#wps_generate_nonce').val();
     var a = $("#teacherid").val(),
       s = new Array;
@@ -397,8 +392,10 @@ $(document).ready(function() {
       url: ajax_url,
       data: s,
       success: function(e) {
-        if ("success" == e) {
-          var a = 1e3,
+        if ("success" === jQuery.trim(e)) {
+          var a = 1e3
+            $("#SuccessModal").css("display", "block"),
+            $("#SuccessModal .wpsp-success-text").text('Student Mark Fields Deleted Successfully'),
             s = $("#wpsp_locationginal").val() + "/admin.php?page=sch-settings&sc=subField";
           setTimeout(function() {
             window.location.href = s

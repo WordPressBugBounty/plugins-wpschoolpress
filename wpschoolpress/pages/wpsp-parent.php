@@ -70,7 +70,8 @@ if( is_user_logged_in() ) {
      if( $current_user_role=='student' ) {
        $student_id		=	intval($current_user->ID);
 			 $student_table	=	$wpdb->prefix."wpsp_student";
-			 $parent_info	=	$wpdb->get_row("select parent_wp_usr_id from $student_table where wp_usr_id='".esc_sql($student_id)."'");
+			// $parent_info	=	$wpdb->get_row("select parent_wp_usr_id from $student_table where wp_usr_id='".esc_sql($student_id)."'");
+       $parent_info = $wpdb->get_row($wpdb->prepare("SELECT parent_wp_usr_id FROM $student_table WHERE wp_usr_id = %d",$student_id));
 			 $parent_id		=	sanitize_text_field($parent_info->parent_wp_usr_id);
 			 $label	=	esc_html('Parent Profile','wpschoolpress');
      }
@@ -84,7 +85,7 @@ if( is_user_logged_in() ) {
        }else{
          $pid = '';
        }
-	   if (!empty($pid)) $where = "where p.parent_wp_usr_id='".esc_sql($pid)."'";
+	     if (!empty($pid)) $where = "where p.parent_wp_usr_id='".esc_sql($pid)."'";
 
        $button = isset($_POST['button']) ? sanitize_text_field($_POST['button']) : '';
 

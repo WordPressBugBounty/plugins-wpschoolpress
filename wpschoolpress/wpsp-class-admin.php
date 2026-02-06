@@ -322,7 +322,6 @@ function wpsp_admin_menu()
 
 		$prohistory    =    wpsp_check_pro_version('wpsp_mc_version');
     	$prodisablehistory    =    !$prohistory['status'] ? 'notinstalled'    : 'installed';
-
 		wp_register_style('wpsp_wp_admin_font_awesome', WPSP_PLUGIN_URL . 'css/font-awesome.min.css', false, '1.0.0');
 		wp_enqueue_style('wpsp_wp_admin_font_awesome');
 		wp_register_style('wpsp_wp_admin_ionicons', WPSP_PLUGIN_URL . 'css/ionicons.min.css', false, '1.0.0');

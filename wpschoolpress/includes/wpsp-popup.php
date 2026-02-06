@@ -201,7 +201,7 @@
 
 </div>
 <!-- End Data Delete Popup -->
- <div class="wpsp-popupMain wpsp-popVisible" id="DeleteModal" data-pop="DeleteModal" style="display:none;">
+<!-- <div class="wpsp-popupMain wpsp-popVisible" id="DeleteModal" data-pop="DeleteModal" style="display:none;">
 
   <div class="wpsp-overlayer"></div>
 
@@ -245,4 +245,4 @@
 
   </div>
 
-</div>
+</div> -->

@@ -45,15 +45,22 @@ $(document).ready(function() {
       },
       Number: {
         required: (jQuery("input[name='Number']").data("is_required")) ? true : false,
+        digits: true,
+        min: 1
       },
       capacity: {
         required: (jQuery("input[name='capacity']").data("is_required")) ? true : false,
+        digits: true,
+        min: 1
       },
       Sdate: {
         required: (jQuery("input[name='Sdate']").data("is_required")) ? true : false,
       },
       Edate: {
         required: (jQuery("input[name='Edate']").data("is_required")) ? true : false,
+      },
+      ClassTeacherID: {
+        required: (jQuery("select[name='ClassTeacherID']").data("is_required")) ? true : false
       }
     },
     messages: {
@@ -63,11 +70,18 @@ $(document).ready(function() {
       },
       capacity: {
         max: "Class Out of capacity",
-        required: "Please enter class capacity"
+        required: "Please enter class capacity",
+        number: "Only Number Allowed",
       },
-      Number: "Please enter class number",
+      Number: {
+        required: "Please enter class number",
+        number: "Only Number Allowed",
+        min: "More then 0" 
+        
+      },
       Sdate: "Please enter Start Date",
-      Edate: "Please enter End Date"
+      Edate: "Please enter End Date",
+      ClassTeacherID: "Please enter Class Teacher",
     },
     submitHandler: function(a) {
       var e = $("#ClassAddForm").serializeArray();
@@ -82,8 +96,8 @@ $(document).ready(function() {
           $("#SavingModal").css("display", "block"), $("#c_submit").attr("disabled", "disabled")
         },
         success: function(a) {
-          if ("inserted" == a) {
-            $(".wpsp-popup-return-data").html("Class created successfully !"), $("#SuccessModal").css("display", "block"), $("#SavingModal").css("display", "none"), $("#SuccessModal").addClass("wpsp-popVisible");
+          if ("inserted" === jQuery.trim(a)) {
+            $("#SuccessModal .wpsp-success-text").html("Class created successfully !"), $("#SuccessModal").css("display", "block"), $("#SavingModal").css("display", "none"), $("#SuccessModal").addClass("wpsp-popVisible");
             var e = $("#wpsp_locationginal").val() + "/admin.php?page=sch-class";
             setTimeout(function() {
               window.location.href = e
@@ -111,6 +125,9 @@ $(document).ready(function() {
       },
       Edate: {
         required: (jQuery("input[name='Edate']").data("is_required")) ? true : false,
+      },
+      ClassTeacherID: {
+        required: (jQuery("select[name='ClassTeacherID']").data("is_required")) ? true : false
       }
     },
     messages: {
@@ -120,7 +137,8 @@ $(document).ready(function() {
       },
       capacity: {
         max: "Class Out of capacity"
-      }
+      },
+      ClassTeacherID: "Please enter Class Teacher",
     },
     submitHandler: function(a) {
       var e = $("#ClassEditForm").serializeArray();
@@ -135,8 +153,8 @@ $(document).ready(function() {
           $("#SavingModal").css("display", "block"), $("#c_submit").attr("disabled", "disabled")
         },
         success: function(a) {
-          if ("updated" == a) {
-            $(".wpsp-popup-return-data").html("Class updated successfully !"), $("#SuccessModal").css("display", "block"), $("#SavingModal").css("display", "none"), $("#SuccessModal").addClass("wpsp-popVisible");
+          if ("updated" == jQuery.trim(a)) {
+            $("#SuccessModal .wpsp-success-text").html("Class updated successfully !"), $("#SuccessModal").css("display", "block"), $("#SavingModal").css("display", "none"), $("#SuccessModal").addClass("wpsp-popVisible");
             var e = $("#wpsp_locationginal").val() + "/admin.php?page=sch-class";
             setTimeout(function() {
               window.location.href = e
@@ -151,6 +169,13 @@ $(document).ready(function() {
     var e = $(this).data("id");
     console.log(e), $("#teacherid").val(e), $("#DeleteModal").css("display", "block")
   }), $(document).on("click", ".ClassDeleteBt", function(a) {
+
+    deleteprocess.call(this);
+
+    if(!$("#SuccessModal").hasClass('wpsp-popVisible')){
+    $("#SuccessModal").addClass('wpsp-popVisible');
+    }
+
     var nn = $('#wps_generate_nonce').val();
     var e = $("#teacherid").val(),
       s = [];
@@ -164,7 +189,10 @@ $(document).ready(function() {
       name: "wps_generate_nonce",
       value: nn
     }), jQuery.post(ajax_url, s, function(a) {
-      "success" == a ? location.reload() : ($(".wpsp-popup-return-data").html("Operation failed.Something went wrong!"), $("#SavingModal").css("display", "none"), $("#WarningModal").css("display", "block"), $("#WarningModal").addClass("wpsp-popVisible"))
+      "success" == jQuery.trim(a) ? ($("#DeleteModal").css("display", "none"),$("#SuccessModal").css("display", "block"), $("#SuccessModal .wpsp-success-text").text('Class Deleted Successfully'),
+setTimeout(function() {
+	location.reload();
+}, 2000)) : ($(".wpsp-popup-return-data").html("Operation failed.Something went wrong!"), $("#SavingModal").css("display", "none"), $("#WarningModal").css("display", "block"), $("#WarningModal").addClass("wpsp-popVisible"))
     })
   })
 });

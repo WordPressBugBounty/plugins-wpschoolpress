@@ -2,10 +2,10 @@
 Contributors: jdsofttech,narendraigex
 Donate link: https://www.wpschoolpress.com/contactus
 Tags: student information management, staff information management, attendance management, time table management, exam schedule management
-Requires at least: 6.6
-Tested up to: 6.7
+Requires at least: 6.7
+Tested up to: 6.9
 Requires PHP: 7.4
-Stable tag: 2.2.23
+Stable tag: 2.2.34
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -378,3 +378,41 @@ Please purchase the SMS addon from our website www.wpschoolpress.com/downloads/s
 = 2.2.23 =
 * Fixed   - Fix some pages bugs.
 * Updated - Add new sms gateway termii and make there settings.
+
+= 2.2.24 =
+* Fixed   - make some more validation and display some appropriate message on popup.
+* Updated - Add prepare query for sql injection.
+
+= 2.2.27 =
+* Fixed   - Fixed some more issues 
+
+= 2.2.28 =
+* Fixed   - Fixed some more issues in parent, student and notify page
+
+= 2.2.29 =
+* Fixed   - Remove one alert which comes unnecessary when student edit successfully
+* Updated - display class name in registration requst page which filled from front end register form
+            update classname in student details when that new user request is approved
+
+= 2.2.30 =
+* Fixed   - Fixed minor UI/UX issue
+
+= 2.2.31 =
+* Fixed   - Fixed minor issue
+
+= 2.2.32 =
+* Fixed   - Fixed issue in student attendance module. sent to parent number when parent details are added
+			
+* Fixed   - Fixed issue in notify menu. sent to parent number when parent number is selected, previously
+            it sent to student number
+            
+			
+== 2.2.33 = 
+
+* Fixed   - Fixed issue of default user roles which vanished when plugin activate
+
+== 2.2.34 = 
+
+* Fixed   - teacher not able to edit students info. fixed it
+			
+			

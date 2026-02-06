@@ -22,7 +22,7 @@ jQuery(document).ready(function (p) {
             p("#" + s).addClass("wpsp-popVisible"), p("body").addClass("wpsp-bodyFixed")
         })
     }), p(".wpsp-closePopup, .wpsp-popup-cancel, .wpsp-overlayer").click(function () {
-        p("body").removeClass("wpsp-bodyFixed"), p("#SavingModal").css("display", "none"), p("#WarningModal").css("display", "none"), p("#SuccessModal").css("display", "none"), p("#DeleteModal").css("display", "none"), p(".wpsp-popupMain").removeClass("wpsp-popVisible")
+        p("body").removeClass("wpsp-bodyFixed"), p("#SavingModal").css("display", "none"), p("#WarningModal").css("display", "none"), p("#SuccessModal").hide(), p("#DeleteModal").hide(), p(".wpsp-popupMain").removeClass("wpsp-popVisible")
     }), p("input[type=file]").change(function () {
         var s = this.value.split("\\").pop();
         p(this).closest(".wpsp-btn-file").next(".text").text(s)
@@ -35,3 +35,14 @@ jQuery(document).ready(function (p) {
         $(".wpsp-preLoading").fadeOut()
     })
 })(jQuery);
+
+window.deleteprocess = function() {
+    $(this).text('Processing....');
+    $(this).attr('aria-disabled','true');
+    $(this).attr('disabled','disabled');
+    $(this).off('click');
+    $(this).next().attr('aria-disabled','true');
+    $(this).next().off('click');
+    $(this).next().attr('disabled','disabled');
+}
+

@@ -5,7 +5,8 @@ function wpsp_ViewTimetable($class_id){
         $tt_table = $wpdb->prefix . "wpsp_timetable";
         $subject_table = $wpdb->prefix . "wpsp_subject";
         $wpsp_hours_table = $wpdb->prefix . "wpsp_workinghours";
-        $get_heading = $wpdb->get_row("SELECT * from $tt_table where class_id='".esc_sql($class_id)."' and heading != ' ' ");
+      //  $get_heading = $wpdb->get_row("SELECT * from $tt_table where class_id='".esc_sql($class_id)."' and heading != ' ' ");
+        $get_heading = $wpdb->get_row($wpdb->prepare("SELECT * FROM $tt_table WHERE class_id = %d and heading != %s",$class_id,''));
         $response   =   array();
         ob_start();
         if ($get_heading == null) {
@@ -16,7 +17,8 @@ function wpsp_ViewTimetable($class_id){
         } else {
             $response['status'] =   2;
             $session = unserialize($get_heading->heading);
-            $tt_days=$wpdb->get_results("select * from $tt_table where class_id='".esc_sql($class_id)."'",ARRAY_A);
+            $tt_query = $wpdb->prepare("SELECT * FROM $tt_table WHERE class_id = %d",$class_id);
+            $tt_days=$wpdb->get_results($tt_query,ARRAY_A);
             foreach($tt_days as $ttd){
                 $timetable[$ttd['day']][$ttd['time_id']]=$ttd['subject_id'];
             }
@@ -46,7 +48,8 @@ function wpsp_ViewTimetable($class_id){
                             <?php
                             $week_days=array('1'=>'Monday','2'=>'Tuesday','3'=>'Wednesday','4'=>'Thursday','5'=>'Friday','6'=>'Saturday','7'=>'Sunday');
                             $leave_table = $wpdb->prefix . "wpsp_leavedays";
-                            $check      =   $wpdb->get_row("select description from $leave_table where class_id='" . esc_sql($class_id) . "'");
+                          //  $check      =   $wpdb->get_row("select description from $leave_table where class_id='" . esc_sql($class_id) . "'");
+                            $check = $wpdb->get_row($wpdb->prepare("SELECT description FROM $leave_table WHERE class_id = %s",$class_id));
                             $wd = explode(',', $check->description);
                             for ($j = 1; $j <= 7; $j++) {
                                  /* Sat-sun Off */
@@ -71,23 +74,22 @@ function wpsp_ViewTimetable($class_id){
                                     $subida1 = array();
                                     $subtimesloat = array();
 
-                                    $get_heading = $wpdb->get_results("SELECT * from $tt_table where class_id='".esc_sql($class_id)."' and day = '$j' ORDER BY session_id ASC");
+                                   // $get_heading = $wpdb->get_results("SELECT * from $tt_table where class_id='".esc_sql($class_id)."' and day = '$j' ORDER BY session_id ASC");
+                                    $get_heading = $wpdb->get_results($wpdb->prepare("SELECT * FROM $tt_table WHERE class_id = %s and day = %s ORDER BY session_id ASC",$class_id,$j));
 
-
-                                    foreach ($get_heading as $subid)
-                                    {
-                                         $subida[] = $subid->subject_id;
-                                          $subtimesloat[] = $subid->time_id;
+                                    foreach ($get_heading as $subid){
+                                        $subida[] = $subid->subject_id;
+                                        $subtimesloat[] = $subid->time_id;
                                         $subida1[] = $subid->is_active;
-                                         reset($subida);
-                                         reset($subida1);
-                                         reset($subtimesloat);
+                                        reset($subida);
+                                        reset($subida1);
+                                        reset($subtimesloat);
                                     }
-                                        $pa = 0;
-
-                                        foreach($session as $ses){
-                                            if($ses != $subtimesloat[$pa]){
-                                                $hour_det	=	$wpdb->get_row("Select * from $wpsp_hours_table where id='$ses'");
+                                    $pa = 0;
+                                    foreach($session as $ses){
+                                        if($ses != $subtimesloat[$pa]){
+                                         //   $hour_det	=	$wpdb->get_row("Select * from $wpsp_hours_table where id='$ses'");
+                                            $hour_det = $wpdb->get_row($wpdb->prepare("SELECT * FROM $wpsp_hours_table WHERE id = %s ",$ses));
                                                 $brk	=	$hour_det->type == "0" ? "Break" : "";
                                                 ?>
                                                 <td class = "<?php echo esc_attr($ses); ?> " tid="<?php echo esc_attr($subida[$pa]); ?>" data-sessionid="<?php echo esc_attr($key); ?>"> 
@@ -107,7 +109,8 @@ function wpsp_ViewTimetable($class_id){
                                                 else
                                                     $sub_name='-';
                                             } else {
-                                                $sub_name_f = $wpdb->get_results("SELECT sub_name from $subject_table where id=$subida[$pa]");
+                                             //   $sub_name_f = $wpdb->get_results("SELECT sub_name from $subject_table where id=$subida[$pa]");
+                                                $sub_name_f = $wpdb->get_results($wpdb->prepare("SELECT sub_name FROM $subject_table WHERE id = %s ",$subida[$pa]));
                                                 if($subida1[$pa] == 1){
                                                 $sub_name = '-';
                                                     } else {

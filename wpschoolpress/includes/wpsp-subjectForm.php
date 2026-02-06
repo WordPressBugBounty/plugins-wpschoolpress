@@ -4,7 +4,8 @@ $subjectclassid =	intval($_GET['classid']);
 $teacher_table=	$wpdb->prefix."wpsp_teacher";
 $teacher_data = $wpdb->get_results("select * from $teacher_table");
 $class_table	=	$wpdb->prefix."wpsp_class";
-$classQuery		=	$wpdb->get_results("select * from $class_table where cid='".esc_sql($subjectclassid)."'");
+//$classQuery		=	$wpdb->get_results("select * from $class_table where cid='".esc_sql($subjectclassid)."'");
+$classQuery = $wpdb->get_results($wpdb->prepare("SELECT * FROM $class_table WHERE cid = %d",$subjectclassid));
 foreach($classQuery as $classdata){
 	$cid= intval($classdata->cid);
 }

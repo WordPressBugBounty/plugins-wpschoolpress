@@ -4,38 +4,32 @@ $class_table = $wpdb->prefix . "wpsp_class";
 $users_table = $wpdb->prefix . "users";
 $tid = intval($_GET['id']);
 $msg = '';
-if (isset($_GET['edit']) && sanitize_text_field($_GET['edit']) == 'true')
-{
-    if ($current_user_role == 'administrator' || ($current_user_role == 'teacher' && sanitize_text_field($current_user->ID) == $tid))
-    {
-        $edit = true;
-    }
-    else
-    {
-        $edit = false;
-    }
-    if (isset($_POST['tedit_nonce']) && wp_verify_nonce(sanitize_text_field($_POST['tedit_nonce']) , 'TeacherEdit'))
-    {
-        ob_start();
-        wpsp_UpdateTeacher();
-        $msg = ob_get_clean();
-    }
-}
-else
-{
+if (isset($_GET['edit']) && sanitize_text_field($_GET['edit']) == 'true'){
+  if ($current_user_role == 'administrator' || ($current_user_role == 'teacher' && sanitize_text_field($current_user->ID) == $tid)){
+    $edit = true;
+  }else{
     $edit = false;
+  }
+  if (isset($_POST['tedit_nonce']) && wp_verify_nonce(sanitize_text_field($_POST['tedit_nonce']) , 'TeacherEdit')){
+    ob_start();
+    wpsp_UpdateTeacher();
+    $msg = ob_get_clean();
+  }
+}else{
+  $edit = false;
 }
-$tinfo = $wpdb->get_row("select teacher.*,user.user_email from $teacher_table teacher LEFT JOIN $users_table user ON user.ID=teacher.wp_usr_id where teacher.wp_usr_id='".esc_sql($tid)."'");
-if (!empty($tinfo))
-{ ?> <div id="formresponse"> <?php echo esc_html($msg); ?> </div>
-<div class="wpsp-row"> <?php if ($edit)
-    { ?> <form name="TeacherEditForm" id="TeacherEditForm" method="POST" enctype="multipart/form-data"> <?php
-    } ?> <div class="wpsp-col-xs-12">
+//$tinfo = $wpdb->get_row("select teacher.*,user.user_email from $teacher_table teacher LEFT JOIN $users_table user ON user.ID=teacher.wp_usr_id where teacher.wp_usr_id='".esc_sql($tid)."'");
+$tinfo = $wpdb->get_row($wpdb->prepare("SELECT teacher.*,user.user_email from $teacher_table teacher LEFT JOIN $users_table user ON user.ID=teacher.wp_usr_id WHERE teacher.wp_usr_id = %d",$tid));
+if (!empty($tinfo)){ ?>
+  <div id="formresponse"> <?php echo esc_html($msg); ?> </div>
+  <div class="wpsp-row"> 
+    <?php if ($edit){ ?> 
+      <form name="TeacherEditForm" id="TeacherEditForm" method="POST" enctype="multipart/form-data"> <?php
+    } ?>
+    <div class="wpsp-col-xs-12">
       <div class="wpsp-card">
         <div class="wpsp-card-head">
           <h3 class="wpsp-card-title"><?php esc_html_e( 'Personal Details', 'wpschoolpress' ); ?></h3>
-            <?php /*
-			<h5 class="wpsp-card-subtitle"><?php echo esc_html($tinfo->first_name.' '.$tinfo->middle_name.' '.$tinfo->last_name);?> </h5> */ ?>
         </div>
         <div class="wpsp-card-body">
           <div class="wpsp-row">
@@ -43,11 +37,11 @@ if (!empty($tinfo))
               <div class="wpsp-form-group">
                 <label class="wpsp-label"><?php esc_html_e( 'Profile Image', 'wpschoolpress' ); ?></label>
                 <div class="wpsp-profileUp">
-                <?php $loc_avatar = get_user_meta($tid, 'simple_local_avatar', true);
-                $img_url = $loc_avatar ? $loc_avatar['full'] : WPSP_PLUGIN_URL . 'img/default_avtar.jpg'; ?>
-                <img class="wpsp-upAvatar" id="img_preview_teacher" src="<?php echo esc_url($img_url); ?>">
-                <div class="wpsp-upload-button"> <?php if ($edit){ ?> <i class="fa fa-camera"></i>
-                <input type="file" name="displaypicture" class="wpsp-file-upload" id="displaypicture"> <?php } ?>
+                  <?php $loc_avatar = get_user_meta($tid, 'simple_local_avatar', true);
+                  $img_url = $loc_avatar ? $loc_avatar['full'] : WPSP_PLUGIN_URL . 'img/default_avtar.jpg'; ?>
+                  <img class="wpsp-upAvatar" id="img_preview_teacher" src="<?php echo esc_url($img_url); ?>">
+                  <div class="wpsp-upload-button"> <?php if ($edit){ ?> <i class="fa fa-camera"></i>
+                    <input type="file" name="displaypicture" class="wpsp-file-upload" id="displaypicture"> <?php } ?>
                   </div>
                 </div>
                 <p class="wpsp-form-notes">*<?php esc_html_e( 'Only JPEG and JPG supported, * Max 3 MB Upload', 'wpschoolpress' ); ?></p>
@@ -58,27 +52,32 @@ if (!empty($tinfo))
             <div class="wpsp-col-lg-9 wpsp-col-md-8 wpsp-col-sm-12 wpsp-col-xs-12">
               <div class="wpsp-form-group">
                 <label class="wpsp-label" for="gender"><?php esc_html_e( 'Gender', 'wpschoolpress' ); ?></label>
-                <div class="wpsp-radio-inline"> <?php if ($edit){ ?> <div class="wpsp-radio">
-                    <input type="radio" name="Gender" <?php if ($tinfo->gender == 'Male') echo "checked"; ?> value="Male">
-                    <label for="Male"><?php esc_html_e( 'Male', 'wpschoolpress' ); ?></label>
-                  </div>
-                  <div class="wpsp-radio">
-                    <input type="radio" name="Gender" <?php if ($tinfo->gender == 'Female') echo "checked"; ?> value="Female">
-                    <label for="Female"><?php esc_html_e( 'Female', 'wpschoolpress' ); ?></label>
-                  </div>
-                  <div class="wpsp-radio">
-                    <input type="radio" name="Gender" <?php if ($tinfo->gender == 'other') echo "checked"; ?> value="other">
-                    <label for="other"><?php esc_html_e( 'Other', 'wpschoolpress' ); ?></label>
-                  </div> <?php } else { echo esc_html($tinfo->gender); } ?>
+                <div class="wpsp-radio-inline"> 
+                  <?php if ($edit){ ?> 
+                    <div class="wpsp-radio">
+                      <input type="radio" name="Gender" <?php if ($tinfo->gender == 'Male') echo "checked"; ?> value="Male">
+                      <label for="Male"><?php esc_html_e( 'Male', 'wpschoolpress' ); ?></label>
+                    </div>
+                    <div class="wpsp-radio">
+                      <input type="radio" name="Gender" <?php if ($tinfo->gender == 'Female') echo "checked"; ?> value="Female">
+                      <label for="Female"><?php esc_html_e( 'Female', 'wpschoolpress' ); ?></label>
+                    </div>
+                    <div class="wpsp-radio">
+                      <input type="radio" name="Gender" <?php if ($tinfo->gender == 'other') echo "checked"; ?> value="other">
+                      <label for="other"><?php esc_html_e( 'Other', 'wpschoolpress' ); ?></label>
+                    </div> 
+                  <?php } else { echo esc_html($tinfo->gender); } ?>
                 </div>
               </div>
-            </div> <?php wp_nonce_field('TeacherRegister', 'tregister_nonce', '', true) ?> <div class="clearfix wpsp-ipad-show"></div>
+            </div>
+            <?php wp_nonce_field('TeacherRegister', 'tregister_nonce', '', true) ?>
+            <div class="clearfix wpsp-ipad-show"></div>
             <div class="wpsp-col-lg-3 wpsp-col-md-4 wpsp-col-sm-4 wpsp-col-xs-12">
               <div class="wpsp-form-group">
                 <label class="wpsp-label" for="firstname"><?php esc_html_e( 'First Name', 'wpschoolpress' ); ?>
-                <span class="wpsp-required">*</span>
+                  <span class="wpsp-required">*</span>
                 </label>
-                <input type="text" class="wpsp-form-control" value="<?php echo esc_attr($tinfo->first_name); ?>" id="firstname" name="firstname" placeholder="First Name">
+                <input type="text" onkeypress="return (event.charCode > 64 && event.charCode < 91) || (event.charCode > 96 && event.charCode < 123)" data-is_required="<?php echo esc_attr($is_required); ?>" class="wpsp-form-control" value="<?php echo esc_attr($tinfo->first_name); ?>" id="firstname" name="firstname" placeholder="First Name">
                 <input type="hidden" id="wpsp_locationginal" value="<?php echo esc_url(admin_url()); ?>" />
                 <input type="hidden" id="UserID" name="UserID" value="<?php echo esc_attr($tinfo->wp_usr_id); ?>">
               </div>
@@ -86,15 +85,15 @@ if (!empty($tinfo))
             <div class="wpsp-col-lg-3 wpsp-col-md-4 wpsp-col-sm-4 wpsp-col-xs-12">
               <div class="wpsp-form-group">
                 <label class="wpsp-label" for="middlename"><?php esc_html_e( 'Middle Name', 'wpschoolpress' ); ?></label>
-                <input type="text" class="wpsp-form-control" id="name" name="middlename" value="<?php echo esc_attr($tinfo->middle_name); ?>" placeholder="Middle Name">
+                <input onkeypress="return (event.charCode > 64 && event.charCode < 91) || (event.charCode > 96 && event.charCode < 123)" data-is_required="<?php echo esc_attr($is_required); ?>" type="text" class="wpsp-form-control" id="name" name="middlename" value="<?php echo esc_attr($tinfo->middle_name); ?>" placeholder="Middle Name">
               </div>
             </div>
             <div class="wpsp-col-lg-3 wpsp-col-md-4 wpsp-col-sm-4 wpsp-col-xs-12">
               <div class="wpsp-form-group">
                 <label class="wpsp-label" for="lastname"><?php esc_html_e( 'Last Name', 'wpschoolpress' ); ?>
-                <?php if ($edit){ ?> <span class="wpsp-required">*</span> <?php } ?> </span>
+                  <?php if ($edit){ ?> <span class="wpsp-required">*</span> <?php } ?> </span>
                 </label>
-                <input type="text" class="wpsp-form-control" id="name" name="lastname" value="<?php echo esc_attr($tinfo->last_name); ?>" placeholder="Last Name">
+                <input type="text" onkeypress="return (event.charCode > 64 && event.charCode < 91) || (event.charCode > 96 && event.charCode < 123)" data-is_required="<?php echo esc_attr($is_required); ?>" class="wpsp-form-control" id="name" name="lastname" value="<?php echo esc_attr($tinfo->last_name); ?>" placeholder="Last Name">
               </div>
             </div>
             <div class="clearfix"></div>
@@ -107,7 +106,7 @@ if (!empty($tinfo))
             <div class="wpsp-col-lg-3 wpsp-col-md-4 wpsp-col-sm-4 wpsp-col-xs-12">
               <div class="wpsp-form-group">
                 <label class="wpsp-label" for="Email"><?php esc_html_e( 'Email Address', 'wpschoolpress' ); ?>
-                <span class="wpsp-required"> *</span>
+                  <span class="wpsp-required"> *</span>
                 </label> <?php if ($edit) { ?>
                 <input type="email" class="wpsp-form-control" id="Email" name="Email" value="<?php echo esc_attr($tinfo->user_email); ?>" placeholder="Teacher Email">
                 <?php } else echo esc_html($tinfo->user_email); ?>
@@ -125,7 +124,7 @@ if (!empty($tinfo))
             <div class="wpsp-form-group">
             <label class="wpsp-label" for="CityName"><?php esc_html_e( 'City Name', 'wpschoolpress' ); ?></label>
             <?php if ($edit) { ?>
-            <input type="text" class="wpsp-form-control" id="CityName" name="city" placeholder="City Name" value="<?php echo esc_attr($tinfo->city); ?>"> <?php } else echo esc_html($tinfo->city); ?>
+            <input type="text" onkeypress="return (event.charCode > 64 && event.charCode < 91) || (event.charCode > 96 && event.charCode < 123)" data-is_required="<?php echo esc_attr($is_required); ?>" class="wpsp-form-control" id="CityName" name="city" placeholder="City Name" value="<?php echo esc_attr($tinfo->city); ?>"> <?php } else echo esc_html($tinfo->city); ?>
               </div>
             </div>
             <div class="wpsp-col-lg-3 wpsp-col-md-4 wpsp-col-sm-4 wpsp-col-xs-12">

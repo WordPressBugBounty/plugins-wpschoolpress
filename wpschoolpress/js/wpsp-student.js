@@ -12,6 +12,14 @@ $(document).ready(function() {
       $('.multiselect').closest(".wpsp-col-md-12").find('.date-input-block table').append("<tr><td style='border:1px solid;padding:5px;'><strong id='" + val['text'] + "'>" + val['text'] + "</strong></td><td style='border:1px solid;padding:5px;'><input type='text' class='someclass datepicker' name='Classdata[]' placeholder='yyyy-mm-dd'></td></tr>");
     });
   });
+
+  $(document).on('click', '#ViewModal .wpsp-closePopup', function(e) {
+    if($('body').hasClass('modal-open')){
+      $('body').removeClass('modal-open');
+    }
+  });
+
+
   jQuery(document).on('change', '.multiselect.student-profile', function() {
     // wp_usr_id
     var student_id = jQuery("input[name='UID']").val();
@@ -255,9 +263,9 @@ $(document).ready(function() {
         },
         success: function(rdata) {
           $('#studentform').removeAttr('disabled');
-          if (rdata == 'success') {
-            $(".wpsp-popup-return-data").html('Student added successfully !');
+          if (jQuery.trim(rdata) === 'success') {  
             $("#SuccessModal").css("display", "block");
+            $("#SuccessModal .wpsp-success-text").text('Student added successfully !');
             $("#SavingModal").css("display", "none");
             $("#SuccessModal").addClass("wpsp-popVisible");
             var wpsp_pageURL = $('#wpsp_locationginal1').val();
@@ -359,9 +367,9 @@ $(document).ready(function() {
         },
         success: function(rdata) {
           $('#studentform').removeAttr('disabled');
-          if (rdata == 'success0') {
+          if (jQuery.trim(rdata) === 'success0') {
             //$.fn.notify('success', {'desc': 'Student added successfully', autoHide: true, clickToHide: true});
-            $(".wpsp-popup-return-data").html('Student added successfully !');
+            $("#SuccessModal .wpsp-success-text").text('Student info updated successfully !');
             $("#SuccessModal").css("display", "block");
             $("#SavingModal").css("display", "none");
             $("#SuccessModal").addClass("wpsp-popVisible");
@@ -403,6 +411,11 @@ $(document).ready(function() {
     e.preventDefault();
     var data = [];
     var sid = $(this).data('id');
+
+
+    $("#ViewModalContent").addClass('loader');    
+    $("#ViewModalContent").html("Loading....");    
+
     data.push({
       name: 'action',
       value: 'StudentPublicProfile'
@@ -479,6 +492,13 @@ $(document).ready(function() {
     $("#DeleteModal").attr('data-id', cid);
   });
   $(document).on('click', '.ClassDeleteBt', function(e) {
+  
+    deleteprocess.call(this);
+
+    if(!$("#SuccessModal").hasClass('wpsp-popVisible')){
+    $("#SuccessModal").addClass('wpsp-popVisible');
+    }
+
 
     var cid = [];
     var singledata = $("#DeleteModal").attr("data-single-delete");
@@ -498,8 +518,14 @@ $(document).ready(function() {
       });
       //cid = '0';
       jQuery.post(ajax_url, data, function(cddata) {
-        if (cddata == 'success') {
-          location.reload();
+        if (jQuery.trim(cddata) === "success") {
+          $("#DeleteModal").css("display", "none");
+          $("#SuccessModal").css("display", "block");
+          $("#SuccessModal .wpsp-success-text").text('Student Deleted Successfully');
+            setTimeout(function() {
+              location.reload();
+            }, 2000);
+          
         } else {
           $(".wpsp-popup-return-data").html('Operation failed.Something went wrong!');
           $("#SavingModal").css("display", "none");
@@ -523,6 +549,21 @@ $(document).ready(function() {
   //   }
   // });
   
+  $(document).on('click', '#DeleteModal .wpsp-popup-cancel', function(e) {
+    $("#bulkaction").val('').attr('selected');
+  });
+  
+  $(document).on('click', '#DeleteModal .wpsp-closePopup', function(e) {
+    $("#bulkaction").val('').attr('selected');
+  });
+
+  $(document).on('click', '#WarningModal .wpsp-popup-cancel', function(e) {
+        $("#bulkaction").val('').attr('selected');
+    });
+    $(document).on('click', '#WarningModal .wpsp-closePopup', function(e) {
+        $("#bulkaction").val('').attr('selected');
+    });
+
   $('#bulkaction').change(function() {
     var op = $(this).val();
     if (op == 'bulkUsersDelete') {
@@ -560,8 +601,13 @@ $(document).ready(function() {
             value: nn
           });
           jQuery.post(ajax_url, data, function(cddata) {
-            if (cddata == 'success') {
-              location.reload();
+            if (jQuery.trim(cddata) === 'success') {
+              $("#DeleteModal").css("display", "none");
+              $("#SuccessModal").css("display", "block");
+              $("#SuccessModal .wpsp-success-text").text('Students Deleted Successfully');
+              setTimeout(function() {
+	              location.reload();
+              }, 2000);			
             } else {
               $(".wpsp-popup-return-data").html('Operation failed.Something went wrong!');
               $("#SavingModal").css("display", "none");
@@ -580,6 +626,11 @@ $(document).ready(function() {
     $(this).removeAttr("href");
     var stid = $(this).attr('data-id');
     var data = [];
+
+    $("#ViewModalContent").addClass('loader');    
+    $("#ViewModalContent").html("Loading....");    
+
+
     data.push({
       name: 'action',
       value: 'getAttReport'
@@ -592,9 +643,6 @@ $(document).ready(function() {
       type: "POST",
       url: ajax_url,
       data: data,
-      beforeSend: function() {
-        //   $.fn.notify('loader', {'desc': 'Loading attendance report'});
-      },
       success: function(data) {
         $('#ViewModalContent').html(data);
         $('#ViewModal').modal('show');

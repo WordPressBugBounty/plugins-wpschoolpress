@@ -151,6 +151,16 @@ $(document).ready(function() {
     $("#TimetableClass").submit()
   }), $(".wp-delete-timetable").click(function() {
     if (1 == confirm("Are you sure want to delete class Timetable?")) {
+
+      $('.wp-delete-timetable').attr('aria-disabled','true');
+      $('.wp-delete-timetable').attr('disabled','disabled');
+      $('.wp-delete-timetable').off('click');
+
+      $('.wp-edit-timetable').attr('aria-disabled','true');
+      $('.wp-edit-timetable').attr('disabled','disabled');
+      $('.wp-edit-timetable').off('click');
+
+
       var e = $(this).data("id"),
         a = [];
       a.push({
@@ -165,7 +175,9 @@ $(document).ready(function() {
         data: a,
         beforeSend: function() {},
         success: function(e) {
-          "deleted" == e ? ($(".wpsp-popup-return-data").html("Time Table Deleted Successfully"), $("#SuccessModal").css("display", "block"), $("#SavingModal").css("display", "none"), $("#SuccessModal").addClass("wpsp-popVisible")) : ($(".wpsp-popup-return-data").html("Try Again Later"), $("#SavingModal").css("display", "none"), $("#WarningModal").css("display", "block"), $("#WarningModal").addClass("wpsp-popVisible"))
+          "deleted" === jQuery.trim(e) ? ($("#SuccessModal .wpsp-success-text").html("Time Table Deleted Successfully"), $("#SuccessModal").css("display", "block"), $("#SavingModal").css("display", "none"), $("#SuccessModal").addClass("wpsp-popVisible"),setTimeout(function() {
+	location.reload();
+}, 2000)) : ($(".wpsp-popup-return-data").html("Try Again Later"), $("#SavingModal").css("display", "none"), $("#WarningModal").css("display", "block"), $("#WarningModal").addClass("wpsp-popVisible"))
         },
         complete: function() {
           $(".pnloader").remove()

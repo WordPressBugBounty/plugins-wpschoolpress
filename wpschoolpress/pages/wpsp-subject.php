@@ -178,7 +178,8 @@ wpsp_header();
 			$student_table=$wpdb->prefix."wpsp_student";
 			$class_table=$wpdb->prefix."wpsp_class";
 			$subject_table=$wpdb->prefix."wpsp_subject";
-			$students=$wpdb->get_results("select st.wp_usr_id, st.class_id, st.s_fname, st.sid, CONCAT_WS(' ', st.s_fname, st.s_mname, st.s_lname ) AS full_name,cl.c_name from $student_table st LEFT JOIN $class_table cl ON cl.cid='".esc_sql($class_id)."'  where st.parent_wp_usr_id='".esc_sql($parent_id)."'");
+		//	$students=$wpdb->get_results("select st.wp_usr_id, st.class_id, st.s_fname, st.sid, CONCAT_WS(' ', st.s_fname, st.s_mname, st.s_lname ) AS full_name,cl.c_name from $student_table st LEFT JOIN $class_table cl ON cl.cid='".esc_sql($class_id)."'  where st.parent_wp_usr_id='".esc_sql($parent_id)."'");
+			$students = $wpdb->get_results($wpdb->prepare("SELECT st.wp_usr_id, st.class_id, st.s_fname, st.sid, CONCAT_WS(' ', st.s_fname, st.s_mname, st.s_lname ) AS full_name,cl.c_name FROM $student_table st LEFT JOIN $class_table cl ON cl.cid = %d WHERE st.parent_wp_usr_id = %d ",$class_id,$parent_id));
 			$child=array();
 			foreach($students as $childinfo){
 				$child[]=array('student_id'=>$childinfo->wp_usr_id,'fname'=>$childinfo->s_fname,'name'=>$childinfo->full_name,'class_id'=>$childinfo->class_id,'class_name'=>$childinfo->c_name, 'sid'=>$childinfo->sid);
@@ -226,7 +227,8 @@ wpsp_header();
 													<tbody>
 													<?php
                                                     $class_id = sanitize_text_field($class_id);
-													$cl_subjects=$wpdb->get_results("select * from $subject_table where class_id='".esc_sql($class_id)."'");
+													//$cl_subjects=$wpdb->get_results("select * from $subject_table where class_id='".esc_sql($class_id)."'");
+													$cl_subjects = $wpdb->get_results($wpdb->prepare("SELECT * FROM $subject_table WHERE class_id = %d ",$class_id));
 													$sno=1;
 													foreach($cl_subjects as $cl_sub){
 													$teach_id= (int)$cl_sub->sub_teach_id;
@@ -235,7 +237,7 @@ wpsp_header();
 													<tr id="<?php echo esc_attr(intval($cl_sub->id));?>" class="pointer">
 														<td><?php echo esc_html($sno);?></td>
 														<td><?php echo !empty( $cl_sub->sub_code ) ? esc_html($cl_sub->sub_code) : '-' ; ?></td>
-														<td><?php echo  esc_html($cl_sub->sub_name);?></td>
+														<td><?php echo esc_html($cl_sub->sub_name);?></td>
 														<td><?php echo isset( $teacherlist[$teach_id] ) ? esc_html($teacherlist[$teach_id]) : '';?></td>
 														<td><?php echo esc_html($cl_sub->book_name);?></td>
 													</tr>
@@ -267,7 +269,8 @@ wpsp_header();
 			$student_table=$wpdb->prefix."wpsp_student";
 			$class_table=$wpdb->prefix."wpsp_class";
 			$subject_table=$wpdb->prefix."wpsp_subject";
-			$cl_subjects = $wpdb->get_results("select st.class_id,su.* from $student_table st LEFT JOIN $subject_table su ON su.class_id='".esc_sql($class_id)."' where st.wp_usr_id='".esc_sql($student_id)."'");
+			// $cl_subjects = $wpdb->get_results("select st.class_id,su.* from $student_table st LEFT JOIN $subject_table su ON su.class_id='".esc_sql($class_id)."' where st.wp_usr_id='".esc_sql($student_id)."'");
+			$cl_subjects = $wpdb->get_results($wpdb->prepare("SELECT st.class_id,su.* FROM $student_table st LEFT JOIN $subject_table su ON su.class_id = %d WHERE st.wp_usr_id = %d ",$class_id,$student_id));
 			?>
 			<section class="wpsp-card">
 				<div class="wpsp-card-head">

@@ -11,6 +11,16 @@ $(document).ready(function() {
     changeYear: !0,
     endDate: "today"
   }), $("#AttendanceEnter").click(function() {
+
+    
+    $(this).text('Processing....');
+    $(this).attr('aria-disabled','true');
+    $(this).attr('disabled','disabled');
+    $("#AttendanceView").attr('aria-disabled', 'true');
+    $("#AttendanceView").attr('disabled','disabled');
+    
+
+
     $("#AddModalContent").html("");
     var e = $("#AttendanceDate").val();
     if ("" == e && $("#AttendanceDate").parent().parent().find("label").addClass("error"), "" != e) {
@@ -27,6 +37,15 @@ $(document).ready(function() {
         data: a,
         beforeSend: function() {},
         success: function(e) {
+
+          $("#AttendanceEnter").text('Add'); // Or any other desired text
+          $("#AttendanceEnter").attr('aria-disabled', 'false');
+          $("#AttendanceEnter").prop('disabled', false);
+          $("#AttendanceView").attr('aria-disabled', 'false');
+          $("#AttendanceView").attr('disabled',false);
+          
+
+
           $(".AttendanceContent").html(e)
         },
         error: function() {
@@ -37,14 +56,19 @@ $(document).ready(function() {
     }
   }), $(document).on("click", "#AttendanceSubmit", function(e) {
     if (e.preventDefault(), $('input[type="checkbox"]:checked').length > 0) {
+
+      $(this).text('Processing....');
+    $(this).attr('aria-disabled','true');
+    $(this).attr('disabled','disabled');
+
       var a = $("#AttendanceEntryForm").serializeArray();
       a.push({
         name: "action",
         value: "TeacherAttendanceEntry"
       }), jQuery.post(ajax_url, a, function(e) {
-        "success1" == e ? ($(".wpsp-popup-return-data").html("Attendance entered successfully!"), $("#SuccessModal").css("display", "block"), $("#SavingModal").css("display", "none"), $("#SuccessModal").addClass("wpsp-popVisible"), $("#AttendanceEntryForm").trigger("reset"), setTimeout(function() {
+        "success1" == jQuery.trim(e) ? ($("#SuccessModal .wpsp-success-text").html("Attendance entered successfully!"), $("#SuccessModal").css("display", "block"), $("#SavingModal").css("display", "none"), $("#SuccessModal").addClass("wpsp-popVisible"), $("#AttendanceEntryForm").trigger("reset"), setTimeout(function() {
           $(".alert").remove(), $("#SuccessModal").css("display", "none"), $("#AttendanceView").click()
-        }, 2e3)) : "updated" == e ? ($(".wpsp-popup-return-data").html("Attendance updated successfully!"), $("#SuccessModal").css("display", "block"), $("#SavingModal").css("display", "none"), $("#SuccessModal").addClass("wpsp-popVisible"), setTimeout(function() {
+        }, 2e3)) : "updated" == jQuery.trim(e) ? ($("#SuccessModal .wpsp-success-text").html("Attendance updated successfully!"), $("#SuccessModal").css("display", "block"), $("#SavingModal").css("display", "none"), $("#SuccessModal").addClass("wpsp-popVisible"), setTimeout(function() {
           $(".alert").remove(), $("#SavingModal").modal("hide"), $("#AttendanceView").click()
         }, 1500)) : ($(".wpsp-popup-return-data").html("Operation failed.Something went wrong!"), $("#SavingModal").css("display", "none"), $("#WarningModal").css("display", "block"), $("#WarningModal").addClass("wpsp-popVisible"))
       })
@@ -79,6 +103,14 @@ $(document).ready(function() {
       }
     }
   }), $("#AttendanceView").click(function() {
+
+    $(this).text('Processing....');
+    $(this).attr('aria-disabled','true');
+    $(this).attr('disabled','disabled');
+    $("#AttendanceEnter").attr('aria-disabled', 'true');
+    $("#AttendanceEnter").attr('disabled','disabled');
+
+
     var e = $("#AttendanceDate").val();
     if ("" != e) {
       var a = [];
@@ -94,6 +126,13 @@ $(document).ready(function() {
         data: a,
         beforeSend: function() {},
         success: function(e) {
+
+          $("#AttendanceView").text('View'); // Or any other desired text
+          $("#AttendanceView").attr('aria-disabled', 'false');
+          $("#AttendanceView").prop('disabled', false);
+          $("#AttendanceEnter").attr('aria-disabled', 'false');
+          $("#AttendanceEnter").attr('disabled',false);
+
           $(".AttendanceContent").html(e)
         },
         error: function() {

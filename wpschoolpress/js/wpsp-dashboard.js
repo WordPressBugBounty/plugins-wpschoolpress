@@ -41,9 +41,17 @@ $(document).ready(function() {
     },
     eventClick: function(event, jsEvent, view) {
       $('#viewEventTitle').html(event.title);
-      $("#eventStart").html(moment(event.start).format('MMM Do h:mm A'));
-      if (moment(event.end).format('MMM Do h:mm A') == "Invalid date") {
+      var start = moment(event.start, 'YYYY-MM-DD HH:mm:ss');
+      var end = moment(event.end, 'YYYY-MM-DD HH:mm:ss');
+      if(start.format('HH:mm:ss') === '00:00:00'){
+        $("#eventStart").html(moment(event.start).format('MMM Do'));
+      }else{
+        $("#eventStart").html(moment(event.start).format('MMM Do h:mm A'));
+      }
+      if (moment(event.end).format('MMM Do h:mm A') == "Invalid date")  {
         $("#eventEnd").html(moment(event.start).format('MMM Do'));
+      }else if(start.format('HH:mm:ss') === '00:00:00' && end.format('HH:mm:ss') === '18:30:00'){
+        $("#eventEnd").html(moment(event.end).format('MMM Do'));
       } else {
         $("#eventEnd").html(moment(event.end).format('MMM Do h:mm A'));
       }
@@ -78,6 +86,18 @@ $(document).ready(function() {
     },
     eventDrop: function(event) {
       event.preventDefault();
+    },
+    eventDataTransform: function(eventData) {
+      if (eventData.end) {
+        var start = moment(eventData.start, 'YYYY-MM-DD HH:mm:ss');
+        var end = moment(eventData.end, 'YYYY-MM-DD HH:mm:ss');
+        var isAllDay = start.format('HH:mm:ss') === '00:00:00' && end.format('HH:mm:ss') === '00:00:00';
+        if (isAllDay) {
+          end.add(1, 'days');  // Add one day as before
+          eventData.end = end.toISOString();  // Convert back to ISO string
+        }
+      }
+      return eventData;
     },
     eventLimit: true,
     events: {

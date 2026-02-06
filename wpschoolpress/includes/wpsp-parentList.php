@@ -17,11 +17,6 @@ if (!defined( 'ABSPATH' ) )exit('No Such File');
 		$sel_classid	=	isset( $_POST['ClassID'] ) ? sanitize_text_field($_POST['ClassID']) : '';
 		$class_table	=	$wpdb->prefix."wpsp_class";
 		$classQuery		=	"select cid,c_name from $class_table Order By cid ASC";
-		// if( $current_user_role=='teacher' ) {
-		// 	$cuserId	=	intval($current_user->ID);
-		// 	$classQuery	=	"select cid,c_name from $class_table where teacher_id=$cuserId";
-		// 	$msg		=	'Please Ask Principal To Assign Class';
-		// }
 	$sel_class		=	$wpdb->get_results( $classQuery );
 	global $current_user;
 	$role		=	 $current_user->roles;
@@ -147,61 +142,59 @@ if (!defined( 'ABSPATH' ) )exit('No Such File');
 			if( isset($_POST['ClassID'] ) && $_POST['ClassID'] != 'all' ) {
 				$class_id=intval($_POST['ClassID']);
 				$stl = [];
-				$parentlist	=	$wpdb->get_results("select class_id, sid from $student_table WHERE parent_wp_usr_id!='0'");
-					foreach ($parentlist as $stu) {
-						if(is_numeric($stu->class_id) ){
-							if($stu->class_id == $class_id){
-								$stl[] = $stu->sid;
-							}
+			//	$parentlist	=	$wpdb->get_results("select class_id, sid from $student_table WHERE parent_wp_usr_id!='0'");
+        $parentlist = $wpdb->get_results($wpdb->prepare("SELECT class_id, sid FROM $student_table WHERE parent_wp_usr_id != %d",0));
+				foreach ($parentlist as $stu) {
+					if(is_numeric($stu->class_id) ){
+						if($stu->class_id == $class_id){
+							$stl[] = $stu->sid;
 						}
-						else{
-								$class_id_array = unserialize( $stu->class_id );
-								if(in_array($class_id, $class_id_array)){
-									$stl[] = $stu->sid;
-								}
-						}
+					}else{
+						$class_id_array = unserialize( $stu->class_id );
+            if(is_array($class_id_array)){
+						  if(in_array($class_id, $class_id_array)){
+							  $stl[] = $stu->sid;
+						  }
+            }
 					}
-			}
-      else if(!isset($_POST['ClassID']) || $_POST['ClassID'] == 'all' ){
+				}
+			}else if(!isset($_POST['ClassID']) || $_POST['ClassID'] == 'all' ){
         if($current_user_role =='administrator'){
-              $studentlists	=	$wpdb->get_results("select sid from $student_table WHERE parent_wp_usr_id!='0'");
-              foreach ($studentlists as $stu) {
+        //  $studentlists	=	$wpdb->get_results("select sid from $student_table WHERE parent_wp_usr_id!='0'");
+          $studentlists = $wpdb->get_results($wpdb->prepare("SELECT sid FROM $student_table WHERE parent_wp_usr_id != %d",0));
+          foreach ($studentlists as $stu) {
+            $stl[] = $stu->sid;
+          }
+        }else if($current_user_role =='teacher'){
+          // print_r($sel_class);
+          $stl = [];
+          foreach ($sel_class as $key => $value) {
+            //$studentlists	=	$wpdb->get_results("select class_id, sid from $student_table WHERE parent_wp_usr_id!='0'");
+            $studentlists = $wpdb->get_results($wpdb->prepare("SELECT class_id, sid FROM $student_table WHERE parent_wp_usr_id != %d",0));
+            foreach ($studentlists as $stu) {
+              if(is_numeric($stu->class_id) ){
+                if($stu->class_id == $value->cid){
                   $stl[] = $stu->sid;
+                }
+              }else{
+                $class_id_array = unserialize( $stu->class_id );
+                if(is_array($class_id_array)){
+                  if(in_array($value->cid, $class_id_array)){
+                    $stl[] = $stu->sid;
+                  }
+                }
               }
             }
-            else if($current_user_role =='teacher'){
-                // print_r($sel_class);
-                  $stl = [];
-                foreach ($sel_class as $key => $value) {
-                  $studentlists	=	$wpdb->get_results("select class_id, sid from $student_table WHERE parent_wp_usr_id!='0'");
-                    foreach ($studentlists as $stu) {
-                      if(is_numeric($stu->class_id) ){
-                        if($stu->class_id == $value->cid){
-                        $stl[] = $stu->sid;
-                      }
-                      }
-                      else{
-                        $class_id_array = unserialize( $stu->class_id );
-                        if(in_array($value->cid, $class_id_array)){
-                          $stl[] = $stu->sid;
-                        }
-                      }
-                    }
-
-                }
-            }
+          }
+        }
       }
       $parent_ids=array();
 			foreach($stl as $plist){
-
-				$parent_ids[]= $wpdb->get_row("SELECT DISTINCT  u.user_email, CONCAT_WS(' ', p_fname, p_mname, p_lname ) AS full_name, p.s_fname,p.s_lname, p.wp_usr_id, p.parent_wp_usr_id from $student_table p LEFT JOIN $users_table u ON  u.ID = p.parent_wp_usr_id  WHERE	 p.sid = $plist ");
-			}
-				foreach($parent_ids as $key=>$pinfo)
-				{
-
-
-				?> <tr>
-              <td><?php echo esc_html($pinfo->full_name);?></td>
+				$parent_ids[]= $wpdb->get_row("SELECT DISTINCT u.user_email, CONCAT_WS(' ', p_fname, p_mname, p_lname ) AS full_name, p.s_fname,p.s_lname, p.wp_usr_id, p.parent_wp_usr_id from $student_table p LEFT JOIN $users_table u ON  u.ID = p.parent_wp_usr_id  WHERE	 p.sid = $plist ");
+  		}
+			foreach($parent_ids as $key=>$pinfo){
+  			?> <tr>
+          <td><?php echo esc_html($pinfo->full_name);?></td>
               <td><?php echo esc_html($pinfo->s_fname." ".$pinfo->s_lname); ?> </td>
               <td><?php echo esc_html($pinfo->user_email);?></td>
               <td align="center">
@@ -212,8 +205,8 @@ if (!defined( 'ABSPATH' ) )exit('No Such File');
                 </div>
               </td>
             </tr> <?php
-				}
-				?> </tbody>
+			}
+			?> </tbody>
           <tfoot>
             <tr>
               <th><?php echo esc_html__( 'Parent Name', 'wpschoolpress' ); ?></th>

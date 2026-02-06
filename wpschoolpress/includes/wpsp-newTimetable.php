@@ -2,201 +2,187 @@
 if ( !defined( 'ABSPATH' ) ) { exit; }
 $skip_hours=False;
 if('POST' == $_SERVER['REQUEST_METHOD'] && isset($_POST['noh']) && $_POST['noh'] != ''){
-    $tt_table=$wpdb->prefix . "wpsp_timetable";
-    $wh_table = $wpdb->prefix . "wpsp_workinghours";
-    $wpsp_class_id = sanitize_text_field($_POST['wpsp_class_name']);
-    $noh = sanitize_text_field($_POST['noh']);
-    $sess_template = sanitize_text_field($_POST['sessions_template']);
-    $check_tt = $wpdb->get_row("Select heading from $tt_table where class_id='".esc_sql($wpsp_class_id)."' and heading!=''");
-    if (count($check_tt) > 0) {
-        $_POST['sessions_template']='available';
-        $skip_hours=TRUE;
-    }
-    else{
-        $sessions = $wpdb->get_results("SELECT * from $wh_table");
-        if(empty($sessions)){
-            echo "<div class='wpsp-text-red'>No Working Hours added. Please add at <a href='".esc_url('sch-settings/?sc=WrkHours')."'>Settings</a></div>";
-            return false;
-        }?>
-<div class="wpsp-card">
-  <div class="wpsp-card-head">
-    <h3 class="wpsp-card-title"><?php echo esc_html("Select time for Sessions","wpschoolpress");?> </h3>
-  </div>
-  <div class="wpsp-card-body">
-    <form name="gen_table" method="post" class="wpsp-form-horizontal">
-      <input type="hidden" name="wpsp_class_name" value="<?php echo esc_attr($wpsp_class_id); ?>">
-      <input type="hidden" name="sessions_template" value="<?php echo esc_attr($sess_template); ?>">
-      <?php for($i = 1; $i <= $noh; $i++) { ?>
-      <div class="wpsp-form-group">
-        <label class="wpsp-label"><?php echo esc_html("Session","wpschoolpress");?><?php echo esc_html($i); ?></label>
-        <div class="wpsp-col-md-4">
-          <select name="session[]" class="wpsp-form-control">
-            <?php
-                        foreach ($sessions as $ses) { ?>
-            <option value="<?php echo esc_attr($ses->id); ?>"><?php echo esc_html($ses->begintime); ?>-<?php echo esc_html($ses->endtime); ?></option>
-            <?php } ?>
-          </select>
-        </div>
+  $tt_table=$wpdb->prefix . "wpsp_timetable";
+  $wh_table = $wpdb->prefix . "wpsp_workinghours";
+  $wpsp_class_id = sanitize_text_field($_POST['wpsp_class_name']);
+  $noh = sanitize_text_field($_POST['noh']);
+  $sess_template = sanitize_text_field($_POST['sessions_template']);
+  //  $check_tt = $wpdb->get_row("Select heading from $tt_table where class_id='".esc_sql($wpsp_class_id)."' and heading!=''");
+  $check_tt = $wpdb->get_row($wpdb->prepare("SELECT heading FROM $tt_table WHERE class_id = %d and heading!= %s",$wpsp_class_id,''));
+  if (count($check_tt) > 0) {
+    $_POST['sessions_template']='available';
+    $skip_hours=TRUE;
+  }else{
+    $sessions = $wpdb->get_results("SELECT * from $wh_table");
+    if(empty($sessions)){
+      echo "<div class='wpsp-text-red'>No Working Hours added. Please add at <a href='".esc_url('sch-settings/?sc=WrkHours')."'>Settings</a></div>";
+      return false;
+    }?>
+    <div class="wpsp-card">
+      <div class="wpsp-card-head">
+        <h3 class="wpsp-card-title"><?php echo esc_html("Select time for Sessions","wpschoolpress");?> </h3>
       </div>
-      <?php } ?>
-      <div class="wpsp-form-group">
-        <div class="wpsp-col-md-offset-4">
-          <input type="submit" name="last-step" value="submit" class="wpsp-btn wpsp-btn-primary">
-        </div>
+      <div class="wpsp-card-body">
+        <form name="gen_table" method="post" class="wpsp-form-horizontal">
+          <input type="hidden" name="wpsp_class_name" value="<?php echo esc_attr($wpsp_class_id); ?>">
+          <input type="hidden" name="sessions_template" value="<?php echo esc_attr($sess_template); ?>">
+          <?php for($i = 1; $i <= $noh; $i++) { ?>
+            <div class="wpsp-form-group">
+              <label class="wpsp-label"><?php echo esc_html("Session","wpschoolpress");?><?php echo esc_html($i); ?></label>
+              <div class="wpsp-col-md-4">
+                <select name="session[]" class="wpsp-form-control">
+                  <?php
+                  foreach ($sessions as $ses) { ?>
+                  <option value="<?php echo esc_attr($ses->id); ?>"><?php echo esc_html($ses->begintime); ?>-<?php echo esc_html($ses->endtime); ?></option>
+                  <?php } ?>
+                </select>
+              </div>
+            </div>
+          <?php } ?>
+          <div class="wpsp-form-group">
+            <div class="wpsp-col-md-offset-4">
+              <input type="submit" name="last-step" value="submit" class="wpsp-btn wpsp-btn-primary">
+            </div>
+          </div>
+        </form>
       </div>
-    </form>
-  </div>
-</div>
-<?php } }
-if (($skip_hours===TRUE)||('POST' == $_SERVER['REQUEST_METHOD'] && sanitize_text_field($_POST['sessions_template']) == 'available' && sanitize_text_field($_POST['template_class']) != '') || ('POST' == $_SERVER['REQUEST_METHOD'] && isset($_POST['last-step']) && sanitize_text_field($_POST['last-step']) == 'submit'))
-    {
+    </div>
+    <?php } 
+  }
+  if (($skip_hours===TRUE)||('POST' == $_SERVER['REQUEST_METHOD'] && sanitize_text_field($_POST['sessions_template']) == 'available' && sanitize_text_field($_POST['template_class']) != '') || ('POST' == $_SERVER['REQUEST_METHOD'] && isset($_POST['last-step']) && sanitize_text_field($_POST['last-step']) == 'submit')){
     $tt_table = $wpdb->prefix . "wpsp_timetable";
     $subject_table = $wpdb->prefix . "wpsp_subject";
     $h_table = $wpdb->prefix . "wpsp_workinghours";
     $class_id = sanitize_text_field($_POST['wpsp_class_name']);
     $sess_template = sanitize_text_field($_POST['sessions_template']);  ?>
-<div class="wpsp-card">
-  <div class="wpsp-card-head">
-    <h3 class="wpsp-card-title"><?php esc_html_e("Drag and Drop Subjects","wpschoolpress");?></h3>
-  </div>
-  <div class="wpsp-card-body">
-    <?php
-        if ($sess_template == 'new')
-        {
-        $session = sanitize_text_field($_POST['session']);
-        }
-        else if ($sess_template == 'available' || $skip_hours===TRUE)
-        {
-            if($skip_hours==TRUE){
+    <div class="wpsp-card">
+      <div class="wpsp-card-head">
+        <h3 class="wpsp-card-title"><?php esc_html_e("Drag and Drop Subjects","wpschoolpress");?></h3>
+      </div>
+      <div class="wpsp-card-body">
+        <?php
+        if ($sess_template == 'new'){
+          $session = sanitize_text_field($_POST['session']);
+        }else if ($sess_template == 'available' || $skip_hours===TRUE){
+          if($skip_hours==TRUE){
             $template_class_id=$class_id;
-            }
-            else
-            {
+          }else{
             $template_class_id = sanitize_text_field($_POST['template_class']);
+          }
+          //  $check_tt = $wpdb->get_row("Select heading from $tt_table where class_id='".esc_sql($template_class_id)."' and heading!=''");
+          $check_tt = $wpdb->get_row($wpdb->prepare("SELECT heading FROM $tt_table WHERE class_id = %d and heading!= %s",$template_class_id,''));
+          if (count($check_tt) > 0) {
+            $get_sessions = unserialize($check_tt->heading);
+            foreach ($get_sessions as $sesio){
+              $session[] = $sesio;
             }
-            $check_tt = $wpdb->get_row("Select heading from $tt_table where class_id='".esc_sql($template_class_id)."' and heading!=''");
-                if (count($check_tt) > 0) {
-                    $get_sessions = unserialize($check_tt->heading);
-                    foreach ($get_sessions as $sesio)
-                    {
-                    $session[] = $sesio;
-                }
-                } else
-                {
-                    $error = 1;
-                    echo "<div class='wpsp-text-red'>Can't fetch template from the selected class</div>";
-                }
+          }else{
+            $error = 1;
+            echo "<div class='wpsp-text-red'>Can't fetch template from the selected class</div>";
+          }
         }
         if (count($session) > 0) {
-            $chck_hd = $wpdb->get_row("SELECT * from $tt_table where class_id='".esc_sql($class_id)."' and time_id='0' and day='0' and heading!=''");
-            if(count($chck_hd) == null)
-            {
-                $ins = $wpdb->insert($tt_table, array('class_id' => $class_id,'heading' => serialize($session)));
-            }
-            else
-            {
-                echo "<span class='red'>*Sessions already available in order to edit session delete and regenerate timetable.</span>";
-            }
-        }
-        else
-        {
-        $error = 1;
-        echo "<div class='wpsp-text-red'>No Sessions Retrieved</div>";         }
-        $wpsp_hours_table = $wpdb->prefix . "wpsp_workinghours";
-        $wpsp_subjects_table = $wpdb->prefix . "wpsp_subject";
-         $clt = $wpdb->get_results("SELECT * FROM $wpsp_subjects_table WHERE class_id='".esc_sql($class_id)."' or class_id=0 order by class_id desc");
-            if(count($clt)==0) {
-                $error = 1;
-                echo "<div class='wpsp-text-red'>No Subjects retrieved, Check you have subject for this class at <a href='".esc_url(site_url())."/sch-subject'>Subjects</a></div>";
-            }
-            if ($error == 0) {
-                   $timetable=array();
-                   $tt_days=$wpdb->get_results("select * from $tt_table where class_id='".esc_sql($class_id)."' and time_id !='0' ",ARRAY_A);
-                foreach($tt_days as $ttd){
-                    $timetable[$ttd['day']][$ttd['time_id']]=$ttd['subject_id'];
-                }  ?>
-    <div class="wpsp-col-md-6 text-blue"><?php esc_html_e("Class","wpschoolpress");?> :<span class="text-black"> <?php echo esc_html(wpsp_GetClassName(sanitize_text_field($_POST['wpsp_class_name'])),'wpschoolpress'); ?></span></div>
-    <div style="width: 100%;">
-      <!-- <table align="center" class="table">
-                    <tbody>
-                        <tr>    -->
-      <?php
-                        foreach ($clt as $id) {
-                            /*echo '<td class="removesubject"><div class="item" id="' . $id->id . '" style="width:80px">' . $id->sub_name . '</div>   </td>'; */
-                            echo '<div class="removesubject"><div class="item" id="' . esc_attr($id->id) . '" style="width:auto; color:#5cb85c; font-weight:500;">' . esc_html($id->sub_name) . '</div>   </div>';
-                        }?>
-      <!-- </tr>
-                    </tbody>
-                </table> -->
-    </div>
-    <div class="bg-yellow text-right" id="ajax_response_exist" style="background-color: #f39c12 !important;width: auto;float: right;text-align: center;"></div>
-    <div class="right wpsp-table-responsive" id="TimetableContainer">
-      <table class="wpsp-table table-bordered">
-        <thead>
-          <tr>
-            <th>
-              <select class="daytype">
-                <option value="0"><?php echo esc_html("Days","wpschoolpress");?></option>
-                <option value="1"><?php echo esc_html("Week","wpschoolpress");?></option>
-              </select>
-            </th>
-            <?php
+          //  $chck_hd = $wpdb->get_row("SELECT * from $tt_table where class_id='".esc_sql($class_id)."' and time_id='0' and day='0' and heading!=''");
+          $chck_hd = $wpdb->get_row($wpdb->prepare("SELECT * FROM $tt_table WHERE class_id = %d and time_id=%s and day=%s and heading!= %s",$class_id,'0','0',''));
+          if(count($chck_hd) == null){
+            $ins = $wpdb->insert($tt_table, array('class_id' => $class_id,'heading' => serialize($session)));
+          }else{
+            echo "<span class='red'>*Sessions already available in order to edit session delete and regenerate timetable.</span>";
+          }
+        }else{
+          $error = 1;
+          echo "<div class='wpsp-text-red'>No Sessions Retrieved</div>";         }
+          $wpsp_hours_table = $wpdb->prefix . "wpsp_workinghours";
+          $wpsp_subjects_table = $wpdb->prefix . "wpsp_subject";
+          //  $clt = $wpdb->get_results("SELECT * FROM $wpsp_subjects_table WHERE class_id='".esc_sql($class_id)."' or class_id=0 order by class_id desc");
+          $clt = $wpdb->get_row($wpdb->prepare("SELECT * FROM $wpsp_subjects_table WHERE class_id = %d or class_id=%d order by class_id desc",$class_id,0));
+          if(count($clt)==0) {
+            $error = 1;
+            echo "<div class='wpsp-text-red'>No Subjects retrieved, Check you have subject for this class at <a href='".esc_url(site_url())."/sch-subject'>Subjects</a></div>";
+          }
+          if ($error == 0) {
+            $timetable=array();
+            //$tt_days=$wpdb->get_results("select * from $tt_table where class_id='".esc_sql($class_id)."' and time_id !='0' ",ARRAY_A);
+            $tt_query = $wpdb->prepare("SELECT * FROM $tt_table WHERE class_id = %d and time_id != '%s' order by class_id desc",$class_id,0);
+            $tt_days = $wpdb->get_results($tt_query,$ARRAY_A);
+            foreach($tt_days as $ttd){
+              $timetable[$ttd['day']][$ttd['time_id']]=$ttd['subject_id'];
+            } ?>
+            <div class="wpsp-col-md-6 text-blue"><?php esc_html_e("Class","wpschoolpress");?> :<span class="text-black"> <?php echo esc_html(wpsp_GetClassName(sanitize_text_field($_POST['wpsp_class_name'])),'wpschoolpress'); ?></span></div>
+              <div style="width: 100%;">
+              </div>
+              <div class="bg-yellow text-right" id="ajax_response_exist" style="background-color: #f39c12 !important;width: auto;float: right;text-align: center;"></div>
+              <div class="right wpsp-table-responsive" id="TimetableContainer">
+                <table class="wpsp-table table-bordered">
+                  <thead>
+                    <tr>
+                      <th>
+                        <select class="daytype">
+                          <option value="0"><?php echo esc_html("Days","wpschoolpress");?></option>
+                          <option value="1"><?php echo esc_html("Week","wpschoolpress");?></option>
+                        </select>
+                      </th>
+                      <?php
                         foreach ($session as $sess) { ?>
-            <th>
-              <?php $sess = esc_sql($sess);$ses_info = $wpdb->get_row("Select * from $wpsp_hours_table where id='$sess'");
-                                echo esc_html($ses_info->begintime . " to " . $ses_info->endtime) ?>
-            </th>
-            <?php }?>
-          </tr>
-        </thead>
-        <tbody>
-          <?php
+                          <th>
+                          <?php $sess = esc_sql($sess);
+                         // $ses_info = $wpdb->get_row("Select * from $wpsp_hours_table where id='$sess'");
+                          $ses_info = $wpdb->get_row($wpdb->prepare("SELECT * FROM $wpsp_hours_table WHERE ID = %s",$sess));
+                            echo esc_html($ses_info->begintime . " to " . $ses_info->endtime) ?>
+                          </th>
+                        <?php }?>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <?php
                     $dayname = array("Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday");
                     for ($j = 1; $j <= 7; $j++) {?>
-          <tr id="<?php echo esc_attr($j); ?>">
-            <td><span class="dayval"><?php echo esc_html("Day","wpschoolpress");?><?php echo esc_html($j); ?></span>
-              <span class="daynam" style="display:none">
-                <?php echo esc_html($dayname[$j - 1]); ?></span>
-            </td>
-            <?php
-                        foreach ($session as $ses) {
-                        $ses = esc_sql($ses);
-                        $hour_det = $wpdb->get_row("Select * from $wpsp_hours_table where id='$ses'");
-                        if ($hour_det->type == "1") {
-                            $td_class = "drop";
-                        }else {
-                            $td_class = "break";  }
-                             $sub_id='';
-                             $sub_name='';
-                             if(isset($timetable[$j][$ses]))
-                             $sub_id=$timetable[$j][$ses];
-                             if($sub_id >0){
-                                 $sub_name_f = $wpdb->get_row("SELECT sub_name from $subject_table where id='$sub_id'");
+                      <tr id="<?php echo esc_attr($j); ?>">
+                        <td><span class="dayval"><?php echo esc_html("Day","wpschoolpress");?><?php echo esc_html($j); ?></span>
+                          <span class="daynam" style="display:none">
+                          <?php echo esc_html($dayname[$j - 1]); ?></span>
+                        </td>
+                        <?php
+                          foreach ($session as $ses) {
+                            $ses = esc_sql($ses);
+                          //  $hour_det = $wpdb->get_row("Select * from $wpsp_hours_table where id='$ses'");
+                            $hour_det = $wpdb->get_row($wpdb->prepare("SELECT * FROM $wpsp_hours_table WHERE ID = %s",$ses));
+                            if ($hour_det->type == "1") {
+                              $td_class = "drop";
+                            }else {
+                              $td_class = "break";  }
+                              $sub_id='';
+                              $sub_name='';
+                              if(isset($timetable[$j][$ses]))
+                              $sub_id=$timetable[$j][$ses];
+                              if($sub_id >0){
+                                // $sub_name_f = $wpdb->get_row("SELECT sub_name from $subject_table where id='$sub_id'");
+                                 $sub_name_f = $wpdb->get_row($wpdb->prepare("SELECT sub_name FROM $subject_table WHERE id = %s",$sub_id));
                                  $sub_name = $sub_name_f->sub_name;
-                                  }
-                                  if($sub_name!=''){
-                                      $sub_name='<div class="item assigned">'. esc_html($sub_name).'</div>'; }else{       $sub_name='';                                   }                                   ?>
-            <td class="<?php echo esc_attr($td_class); ?>" tid="<?php echo esc_attr($ses); ?>">
-              <?php echo esc_html($sub_name); ?> </td>
-            <?php } ?>
-          </tr>
-          <?php } ?>
-        </tbody>
-      </table>
-      <div class="wpsp-form-group">
-        <div class="wpsp-col-md-offset-10">
-          <input type="hidden" name="class_id" id="class_id" value="<?php echo esc_attr($class_id); ?>">
-          <div class="bg-green" id="ajax_response"></div>
+                              }
+                              if($sub_name!=''){
+                                $sub_name='<div class="item assigned">'. esc_html($sub_name).'</div>'; }else{       $sub_name='';                                   }                                   ?>
+                                <td class="<?php echo esc_attr($td_class); ?>" tid="<?php echo esc_attr($ses); ?>">
+                                <?php echo esc_html($sub_name); ?> </td>
+                          <?php } ?>
+                        </tr>
+                      <?php } ?>
+                  </tbody>
+                </table>
+                <div class="wpsp-form-group">
+                  <div class="wpsp-col-md-offset-10">
+                    <input type="hidden" name="class_id" id="class_id" value="<?php echo esc_attr($class_id); ?>">
+                    <div class="bg-green" id="ajax_response"></div>
+                  </div>
+                </div>
+                <div class="wpsp-col-md-12 wpsp-col-lg-12">
+                  <span class="pull-right"><a href="javascript:;" id="deleteTimetable" data-id="<?php echo esc_attr($class_id); ?>"><?php echo esc_html("Delete","wpschoolpress");?></a></span>
+                </div>
+              </div>
+            <?php  } ?>
+          </div>
         </div>
-      </div>
-      <div class="wpsp-col-md-12 wpsp-col-lg-12">
-        <span class="pull-right"><a href="javascript:;" id="deleteTimetable" data-id="<?php echo esc_attr($class_id); ?>"><?php echo esc_html("Delete","wpschoolpress");?></a></span>
-      </div>
-    </div>
-    <?php  } ?>
-  </div>
-</div>
-<?php   }
+        <?php   }
 if( 'POST' != $_SERVER['REQUEST_METHOD'] ) {
 $tt_table = $wpdb->prefix . "wpsp_timetable";
 $class_table = $wpdb->prefix . "wpsp_class";?>
@@ -229,7 +215,9 @@ $class_table = $wpdb->prefix . "wpsp_class";?>
           </select>
         </div>
       </div>
-      <?php $avail_sess = $wpdb->get_results("SELECT t.class_id from $tt_table t, $class_table c where heading!='' and day=0 and c.cid=t.class_id"); ?>
+      <?php //$avail_sess = $wpdb->get_results("SELECT t.class_id from $tt_table t, $class_table c where heading!='' and day=0 and c.cid=t.class_id"); 
+        $avail_sess = $wpdb->get_results($wpdb->prepare("SELECT t.class_id from $tt_table t, $class_table c WHERE heading!= %s and day = %d c.cid=t.class_id",$sub_id,0));
+      ?>
       <div class="wpsp-form-group" id="select_template" style="display:none">
         <label class="wpsp-col-md-4 wpsp-label "><?php esc_html_e("Select Session","wpschoolpress");?><span class="wpsp-required">*</span></label>
         <div class="wpsp-col-md-3">

@@ -23,6 +23,14 @@ $(document).ready(function () {
         var e = $(this).attr("data-id");
         $("#teacherid").val(e)
     }), $(document).on("click", ".ClassDeleteBt", function () {
+
+        deleteprocess.call(this);
+
+        if(!$("#SuccessModal").hasClass('wpsp-popVisible')){
+            $("#SuccessModal").addClass('wpsp-popVisible');
+        }
+
+
         var e = $("#teacherid").val();
         var nn = $('#wps_generate_nonce').val();
         if ("" == e);
@@ -42,10 +50,17 @@ $(document).ready(function () {
                 url: ajax_url,
                 data: t,
                 beforeSend: function () {
-                    $("#DeleteModal").css("display", "none")
+                 //   $("#DeleteModal").css("display", "none")
                 },
                 success: function (e) {
-                    location.reload(), $(this).closest("tr").remove()
+                    $("#DeleteModal").css("display", "none");
+                    $("#SuccessModal").css("display", "block");
+                    $("#SuccessModal .wpsp-success-text").text('Notification Deleted Successfully');
+                    setTimeout(function() {
+                        location.reload();
+                        $(this).closest("tr").remove();
+                    }, 2000);
+                     
                 },
                 error: function () {
                     $("#WarningModal").html("Something went wrong. Try after refreshing page..")
@@ -119,8 +134,8 @@ $(document).ready(function () {
                     },
                     success: function(rdata) {
                         $('#notifySubmit').removeAttr('disabled');
-                        if (rdata == 'success') {
-                            $(".wpsp-popup-return-data").html('Notification Send Successfully !');
+                        if (jQuery.trim(rdata) == 'success') {
+                            $("#SuccessModal .wpsp-success-text").html('Notification Send Successfully !');
                             $("#SuccessModal").css("display", "block");
                             $("#SavingModal").css("display", "none");
                             $("#SuccessModal").addClass("wpsp-popVisible");

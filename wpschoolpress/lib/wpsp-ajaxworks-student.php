@@ -2,9 +2,7 @@
 
 if (!defined('ABSPATH')) exit('No Such File');
 
-function get_student_date()
-{
-
+function get_student_date(){
 	// wpsp_Authenticate();
 	$catids = array_map('intval', $_POST['data']);
 	$student_id = sanitize_text_field($_POST['student_id']);
@@ -14,7 +12,8 @@ function get_student_date()
 	$class_mapping_table = $wpdb->prefix . "wpsp_class_mapping";
 	$student_table = $wpdb->prefix . "wpsp_student";
 
-	$stinfo  =  $wpdb->get_row("select * from $student_table where wp_usr_id='" . esc_sql($student_id) . "'");
+//	$stinfo  =  $wpdb->get_row("select * from $student_table where wp_usr_id='" . esc_sql($student_id) . "'");
+	$stinfo = $wpdb->get_row($wpdb->prepare("SELECT * FROM $student_table WHERE wp_usr_id = %d",$student_id));
 	if (!empty($stinfo)) {
 		$student_index = sanitize_text_field($stinfo->sid);
 	}
@@ -22,8 +21,10 @@ function get_student_date()
 	// echo $student_id;
 	foreach ($catids[0]['val'] as $catid) {
 		$catid = intval($catid);
-		$class_data = $wpdb->get_results("select * from $class_mapping_table where sid='" . esc_sql($student_index) . "' AND cid= '" . esc_sql($catid) . "'");
-		$classes = $wpdb->get_results("select c_name from $class_table where cid = '" . esc_sql($catid) . "'");
+		//$class_data = $wpdb->get_results("select * from $class_mapping_table where sid='" . esc_sql($student_index) . "' AND cid= '" . esc_sql($catid) . "'");
+		$class_data = $wpdb->get_results($wpdb->prepare("SELECT * FROM $class_mapping_table WHERE sid = %d and cid = %d",$student_index,$catid));
+		//$classes = $wpdb->get_results("select c_name from $class_table where cid = '" . esc_sql($catid) . "'");
+		$classes = $wpdb->get_results($wpdb->prepare("SELECT c_name FROM $class_table WHERE cid = %d",$catid));
 
 		$html .= "<tr>
 			<td style='border:1px solid;padding:5px;'><strong>" . esc_html($classes[0]->c_name) . "</strong></td>
@@ -99,8 +100,10 @@ function wpsp_AddStudent()
 		$messages = '';
 		foreach ($classarray as $id) {
 			$c = esc_sql($id);
-			$capacity = $wpdb->get_var("SELECT c_capacity FROM $wpsp_class_table where cid='$c'");
-			$class_array = $wpdb->get_results("SELECT c_name, cid FROM $wpsp_class_table where cid='$c'");
+		//	$capacity = $wpdb->get_var("SELECT c_capacity FROM $wpsp_class_table where cid='$c'");
+			$capacity = $wpdb->get_var($wpdb->prepare("SELECT c_capacity FROM $wpsp_class_table WHERE cid = %d",$c));
+		//	$class_array = $wpdb->get_results("SELECT c_name, cid FROM $wpsp_class_table where cid='$c'");
+			$class_array = $wpdb->get_results($wpdb->prepare("SELECT c_name, cid FROM $wpsp_class_table WHERE cid = %d",$c));
 			$classname = $class_array[0]->c_name;
 			foreach ($class_array as $value) {
 				$class_id_array = $value->cid;
@@ -407,7 +410,8 @@ function getparentInfo($parentEmail)
 		$student_table = $wpdb->prefix . "wpsp_student";
 		$roles = $parentInfo->roles;
 		$parentID = esc_sql($parentInfo->ID);
-		$chck_parent = $wpdb->get_row("SELECT p_fname,p_mname,p_lname,p_gender,p_edu,s_phone,p_profession,p_bloodgrp from $student_table where parent_wp_usr_id='$parentID'");
+	//	$chck_parent = $wpdb->get_row("SELECT p_fname,p_mname,p_lname,p_gender,p_edu,s_phone,p_profession,p_bloodgrp from $student_table where parent_wp_usr_id='$parentID'");
+		$chck_parent = $wpdb->get_row($wpdb->prepare("SELECT p_fname,p_mname,p_lname,p_gender,p_edu,s_phone,p_profession,p_bloodgrp FROM $student_table WHERE parent_wp_usr_id = %d",$parentID));
 		$response['parentID'] = $parentID;
 
 		if (!empty($chck_parent)) {
@@ -427,10 +431,12 @@ function getparentInfo($parentEmail)
 
 function uploadImage($file)
 {
+	
 	if (!empty($_FILES[$file]['name'])) {
 		$mimes = array(
 
 			'jpg|jpeg|jpe' => 'image/jpeg',
+			'jpg|jpeg|jpe' => 'image/pjpeg',
 
 			'gif' => 'image/gif',
 
@@ -447,7 +453,6 @@ function uploadImage($file)
 			'mimes' => $mimes,
 			'test_form' => false
 		));
-
 		if (empty($avatar['file'])) {
 
 			switch ($avatar['error']) {
@@ -513,8 +518,10 @@ function wpsp_UpdateStudent()
 		$messages = '';
 		foreach ($classarray as $id) {
 			$c = esc_sql($id);
-			$capacity = $wpdb->get_var("SELECT c_capacity FROM $wpsp_class_table where cid='$c'");
-			$class_array = $wpdb->get_results("SELECT c_name, cid FROM $wpsp_class_table where cid='$c'");
+		//	$capacity = $wpdb->get_var("SELECT c_capacity FROM $wpsp_class_table where cid='$c'");
+			$capacity = $wpdb->get_var($wpdb->prepare("SELECT c_capacity FROM $wpsp_class_table WHERE cid = %d",$c));
+		//	$class_array = $wpdb->get_results("SELECT c_name, cid FROM $wpsp_class_table where cid='$c'");
+			$class_array = $wpdb->get_results($wpdb->prepare("SELECT c_name, cid FROM $wpsp_class_table WHERE cid = %d",$c));
 			$classname = $class_array[0]->c_name;
 			foreach ($class_array as $value) {
 				$class_id_array = $value->cid;
@@ -852,15 +859,18 @@ function wpsp_UpdateStudent()
 			if ($proversion1['status']) {
 				$wpsp_c_table = $wpdb->prefix . "wpsp_class";
 				$wpsp_u_table = $wpdb->prefix . "users";
-				$useremail    = $wpdb->get_var("SELECT user_email FROM $wpsp_u_table where ID = '" . esc_sql($user_id) . "'");
-				$parentemail  = $wpdb->get_var("SELECT user_email FROM $wpsp_u_table where ID = '" . esc_sql($parent_id) . "'");
+			//	$useremail    = $wpdb->get_var("SELECT user_email FROM $wpsp_u_table where ID = '" . esc_sql($user_id) . "'");
+				$useremail = $wpdb->get_var($wpdb->prepare("SELECT user_email FROM $wpsp_u_table WHERE ID = %d",$user_id));
+			//	$parentemail  = $wpdb->get_var("SELECT user_email FROM $wpsp_u_table where ID = '" . esc_sql($parent_id) . "'");
+				$parentemail = $wpdb->get_var($wpdb->prepare("SELECT user_email FROM $wpsp_u_table WHERE ID = %d",$parent_id));
 				$uname = sanitize_text_field($_POST['s_fname']);
 				$upname = sanitize_text_field($_POST['p_fname']);
 				$classid_array =  array_map('intval', $_POST['Class']);
 				$classIDArray = array();
 				foreach ($classIDArray as $id) {
 					$c = esc_sql($id);
-					$clasname = $wpdb->get_var("SELECT c_name FROM $wpsp_c_table where cid='$c'");
+				//	$clasname = $wpdb->get_var("SELECT c_name FROM $wpsp_c_table where cid='$c'");
+					$clasname = $wpdb->get_var($wpdb->prepare("SELECT c_name FROM $wpsp_c_table WHERE cid = %d",$c));
 					$classIDArray[] = $clasname;
 				}
 
@@ -886,6 +896,7 @@ function wpsp_UpdateStudent()
 	if ($stu_upd) {
 		do_action('wpsp_UpdateStudent', $user_id, $studenttable);
 	}
+	
 	if (!empty($_FILES['displaypicture']['name'])) {
 		$avatar = uploadImage('displaypicture');
 		if (isset($avatar['url'])) {
@@ -897,9 +908,12 @@ function wpsp_UpdateStudent()
 			));
 		}
 	}
+	
 	// Update Parents Profile Picture
+	
 	if (!empty($_FILES['p_displaypicture']['name'])) {
 		$p_avatar = uploadImage('p_displaypicture');
+		echo $p_avatar;exit;
 		$parentid_img = intval($_POST['parentid']);
 		if (isset($p_avatar['url'])) {
 			update_user_meta($parentid_img, 'displaypicture', array(
@@ -910,8 +924,10 @@ function wpsp_UpdateStudent()
 			));
 		}
 	}
+	
 	if (is_wp_error($stu_upd)) {
-		$msg =  $stu_upd->get_error_message();
+		//$msg =  $stu_upd->get_error_message();
+		$msg = "image upload error";
 	} else {
 		$msg = esc_html("success", "wpschoolpress");
 	}
@@ -927,7 +943,8 @@ function wpsp_StudentPublicProfile()
 	$class_table = $wpdb->prefix . "wpsp_class";
 	$users_table = $wpdb->prefix . "users";
 	$sid = intval($_POST['id']);
-	$stinfo = $wpdb->get_row("select a.*,b.c_name,d.user_email from $student_table a LEFT JOIN $class_table b ON a.class_id=b.cid LEFT JOIN $users_table d ON d.ID=a.wp_usr_id where a.wp_usr_id='" . esc_sql($sid) . "'");
+//	$stinfo = $wpdb->get_row("select a.*,b.c_name,d.user_email from $student_table a LEFT JOIN $class_table b ON a.class_id=b.cid LEFT JOIN $users_table d ON d.ID=a.wp_usr_id where a.wp_usr_id='" . esc_sql($sid) . "'");
+	$stinfo = $wpdb->get_row($wpdb->prepare("SELECT a.*,b.c_name,d.user_email FROM $student_table a LEFT JOIN $class_table b ON a.class_id=b.cid LEFT JOIN $users_table d ON d.ID=a.wp_usr_id WHERE a.wp_usr_id = %d",$sid));
 	if (!empty($stinfo)) {
 		if (is_numeric($stinfo->class_id)) {
 			$classIDArray[] = sanitize_text_field($stinfo->class_id);
@@ -938,7 +955,8 @@ function wpsp_StudentPublicProfile()
 
 		foreach ($classIDArray as $id) {
 			$id = esc_sql($id);
-			$clasname = $wpdb->get_var("SELECT c_name FROM $class_table where cid='$id'");
+		//	$clasname = $wpdb->get_var("SELECT c_name FROM $class_table where cid='$id'");
+			$clasname = $wpdb->get_var($wpdb->prepare("SELECT c_name FROM $class_table WHERE cid = %d",$id));
 			$classname_array[] = $clasname;
 		}
 		$loc_avatar = get_user_meta($stinfo->wp_usr_id, 'simple_local_avatar', true);
@@ -1017,6 +1035,7 @@ function updateStudentClassDate($user_id)
 		echo esc_html("Unauthorized Submission or nonce!!", "wpschoolpress");
 		exit;
 	}
+	
 	$user_id = intval($user_id);
 	// Update date Details onclass mapping table
 	global $wpdb;
@@ -1036,13 +1055,13 @@ function updateStudentClassDate($user_id)
 			$classidc_sdate[] = $value;
 		}
 	}
-
 	if (count($classidlist) == count($classidc_sdate)) {
 		$c = array_combine($classidlist, $classidc_sdate);
 	}
 
 
-	$stinfo  =  $wpdb->get_row("select * from $student_table where wp_usr_id='" . esc_sql($user_id) . "'");
+	//$stinfo  =  $wpdb->get_row("select * from $student_table where wp_usr_id='" . esc_sql($user_id) . "'");
+	$stinfo = $wpdb->get_row($wpdb->prepare("SELECT * FROM $student_table WHERE wp_usr_id = %d",$user_id));
 	if (!empty($stinfo)) {
 		$student_index = $stinfo->sid;
 	}

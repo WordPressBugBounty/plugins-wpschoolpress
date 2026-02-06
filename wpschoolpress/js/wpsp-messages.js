@@ -4,8 +4,6 @@ $(document).ready(function($) {
     $('#receiverParents').hide();
     $('#receiverStudents').hide();
     $("#showGroup").click(function() {
-        // $('.r_id').multiselect("clearSelection");
-        // $('.r_id').multiselect('refresh');
         $('.r_id').selectpicker();
         $(this).closest('ul').find('li').removeClass('active');
         $(this).closest('li').addClass('active');
@@ -15,8 +13,6 @@ $(document).ready(function($) {
         $('#receiverStudents').hide();
     });
     $("#showTeachers").click(function() {
-        // $('.r_id').multiselect("clearSelection");
-        // $('.r_id').multiselect('refresh');
         $('.r_id').selectpicker();
         $(this).closest('ul').find('li').removeClass('active');
         $(this).closest('li').addClass('active');
@@ -26,8 +22,6 @@ $(document).ready(function($) {
         $('#receiverStudents').hide();
     });
     $("#showStudents").click(function() {
-        // $('.r_id').multiselect("clearSelection");
-        // $('.r_id').multiselect('refresh');
         $('.r_id').selectpicker();
         $(this).closest('ul').find('li').removeClass('active');
         $(this).closest('li').addClass('active');
@@ -37,8 +31,6 @@ $(document).ready(function($) {
         $('#receiverStudents').show();
     });
     $("#showParents").click(function() {
-        // $('.r_id').multiselect("clearSelection");
-        // $('.r_id').multiselect('refresh');
         $('.r_id').selectpicker();
         $(this).closest('ul').find('li').removeClass('active');
         $(this).closest('li').addClass('active');
@@ -82,9 +74,23 @@ $(document).ready(function($) {
         }
     });
     $(document).on("click", "#createMessage", function() {
+        var subject = $('#subject').val();
+        if(subject != ''){
+            $('#subject').val('');
+        }
+        var message = $('#message').val();
+        if(message != ''){
+            $('#message').val('');
+        }
+        var group = $('#group').val();
+        if(group != ''){
+            $('#group').val('');
+        }
+        
         var linkAttrib = $(this).attr('data-pop');
         $('#' + linkAttrib).addClass("wpsp-popVisible");
-        $('body').addClass('wpsp-bodyFixed')
+        $('body').addClass('wpsp-bodyFixed');
+        
     });
     $("#checkAll").click(function() {
         $(".mid_checkbox").prop('checked', $(this).prop('checked'));
@@ -111,23 +117,6 @@ $(document).ready(function($) {
         responsive: true,
         pageLength: 25,
     });
-
-    // $('.teacher_multi_select').multiselect({
-    //     columns: 1,
-    //     placeholder: 'Select teacher(s)',
-    //     search: true
-    // });
-    // $('.student_multi_select').multiselect({
-    //     columns: 1,
-    //     placeholder: 'Select student(s)',
-    //     search: true
-    // });
-
-    // $('.parent_multi_select').multiselect({
-    //     columns: 1,
-    //     placeholder: 'Select parent(s)',
-    //     search: true
-    // });
     $("#newMessageForm").validate({
         onkeyup: false,
         rules: {
@@ -167,13 +156,13 @@ $(document).ready(function($) {
                 url: ajax_url,
                 data: data,
                 success: function(mres) {
-                    if (mres == 'Message sent successfully') {
-                        $('#message-resposive').html('').removeClass('errormessage').addClass('successmessage').html(mres);
+                    if (jQuery.trim(mres) === '1') {
+                        $('#message-resposive').html('').removeClass('errormessage').addClass('successmessage').html('Message sent successfully!');
                         var delay = 1000;
                         setTimeout(function() {
+                        //    $('#newMessageForm').trigger("reset");
                             location.reload(true);
                         }, delay);
-                        $('#newMessageForm').trigger("reset");
                     } else {
                         $('#message-resposive').html('').removeClass('successmessage').addClass('errormessage').html(mres);
                     }
@@ -238,6 +227,7 @@ $(document).ready(function($) {
     });
     $(document).on('click', '.delete_messages', function(e) {
         $("#DeleteModal").css("display", "block");
+        $("#DeleteModal").addClass("wpsp-popVisible");
         var mid = $(this).data('id');
         var tid = $(this).data('trash');
         $("#DeleteModal").attr('data-id', mid);
@@ -245,12 +235,17 @@ $(document).ready(function($) {
         $("#DeleteModal").attr('data-multidetele', 0);
     });
     $(document).on('click', '.ClassDeleteBt', function(e) {
+
+        deleteprocess.call(this);
+        if(!$("#SuccessModal").hasClass('wpsp-popVisible')){
+            $("#SuccessModal").addClass('wpsp-popVisible');
+        }
+
         jQuery(this).attr("disabled", true);
         var trashid = $(this).closest('#DeleteModal').data('trash');
         var multidetele = $(this).closest('#DeleteModal').data('multidetele');
         var mid = [];
         if (multidetele == 1) {
-
             jQuery("input[name='mid[]']:checked").each(function() {
                 mid.push(jQuery(this).val());
             });
@@ -273,10 +268,13 @@ $(document).ready(function($) {
         });
         //cid = '0';
         jQuery.post(ajax_url, data, function(cddata) {
-            if (cddata == 'true') {
+            if (jQuery.trim(cddata) === 'true') {
                 $("#DeleteModal").css("display", "none");
                 $("#SuccessModal").css("display", "block");
-                location.reload();
+                $("#SuccessModal .wpsp-success-text").text('Message Deleted Successfully');
+                setTimeout(function() {
+	                location.reload();
+                }, 2000);
             } else {
                 $(".wpsp-popup-return-data").html('Operation failed.Something went wrong!');
                 $("#SuccessModal").css("display", "block");
@@ -287,8 +285,33 @@ $(document).ready(function($) {
             jQuery('.ClassDeleteBt').attr("disabled", false);
         });
     });
+
+    $(document).on('click', '#DeleteModal .wpsp-popup-cancel', function(e) {
+        $("#bulkaction").val('selectAction').attr('selected');
+    });
+    $(document).on('click', '#DeleteModal .wpsp-closePopup', function(e) {
+        $("#bulkaction").val('selectAction').attr('selected');
+    });
+
+    $(document).on('click', '#WarningModal .wpsp-popup-cancel', function(e) {
+        $("#bulkaction").val('selectAction').attr('selected');
+    });
+    $(document).on('click', '#WarningModal .wpsp-closePopup', function(e) {
+        $("#bulkaction").val('selectAction').attr('selected');
+    });
+
     $(document).on('change', '#bulkaction', function(e) {
-        $("#DeleteModal").css("display", "block");
+        var value = $("#bulkaction").val();
+        if(value == 'bulkUsersDelete'){
+            if(!$(".ccheckbox").is(':checked')){
+                $("#WarningModal").addClass("wpsp-popVisible");
+                $("#WarningModal .wpsp-popup-return-data").text("No message selected!");
+                $("#WarningModal").css("display", "block");
+            }else{
+                $("#DeleteModal").css("display", "block");
+                $("#DeleteModal").addClass("wpsp-popVisible");
+            }
+        }
         var tid = $(this).data('trash');
         var mid = $(this).data('id');
         $("#DeleteModal").attr('data-multidetele', 1);

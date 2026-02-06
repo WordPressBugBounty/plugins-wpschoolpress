@@ -61,26 +61,32 @@ $(document).ready(function() {
       ExStart: {
         required: (jQuery("input[name='ExStart']").data("is_required")) ? true : false,
       },
-      ExStart: {
-        required: (jQuery("input[name='ExStart']").data("is_required")) ? true : false,
+      ExEnd: {
+        required: (jQuery("input[name='ExEnd']").data("is_required")) ? true : false,
       }
     },
     messages: {
-      ExamName: {
+      ExName: {
         required: "Please enter Exam Name",
         minlength: "Exam name must consist of at least 2 characters"
       },
       class_name: {
         required: "Please select class name"
-      }
+      },
+      ExStart: {
+        required: "Please enter exam start date"
+      },
+      ExEnd: {
+        required: "Please enter exam end date"
+      },
     },
+
     submitHandler: function(a) {
       
       var uids = $('input[name^="subjectid"]').map(function() {
         if ($(this).prop('checked') == true)
           return this.value;
       }).get();
-
       if (uids.length == 0) {
         $(".wpsp-popup-return-data").html('Please select any of subject!');
         $("#SavingModal").css("display", "none");
@@ -88,7 +94,15 @@ $(document).ready(function() {
         $("#WarningModal").addClass("wpsp-popVisible");
         return false;
       }else{
-    
+
+        $('#e_submit').text('Processing....');
+        $('#e_submit').attr('aria-disabled','true');
+        $('#e_submit').attr('disabled','disabled');
+        $('#e_submit').off('click');
+        $('.wpsp-dark-btn').attr('aria-disabled','true');
+        $('.wpsp-dark-btn').off('click');
+        $('.wpsp-dark-btn').attr('disabled','disabled'); 
+
         var e = $("#ExamEntryForm").serializeArray();
         e.push({
           name: "action",
@@ -98,8 +112,8 @@ $(document).ready(function() {
           url: ajax_url,
           data: e,
           success: function(a) {
-            if ("success" == a) {
-              $(".wpsp-popup-return-data").html("Exam Created Successfully !"), $("#SuccessModal").css("display", "block"), $("#SavingModal").css("display", "none"), $("#SuccessModal").addClass("wpsp-popVisible");
+            if ("success" === jQuery.trim(a)) {
+              $("#SuccessModal .wpsp-success-text").html("Exam Created Successfully !"), $("#SuccessModal").css("display", "block"), $("#SavingModal").css("display", "none"), $("#SuccessModal").addClass("wpsp-popVisible");
               var e = $("#wpsp_locationginal").val() + "/admin.php?page=sch-exams";
               setTimeout(function() {
                 window.location.href = e
@@ -141,6 +155,15 @@ $(document).ready(function() {
       }
     },
     submitHandler: function(a) {
+
+      $('#e_submit').text('Processing....');
+      $('#e_submit').attr('aria-disabled','true');
+      $('#e_submit').attr('disabled','disabled');
+      $('#e_submit').off('click');
+      $('.wpsp-dark-btn').attr('aria-disabled','true');
+      $('.wpsp-dark-btn').off('click');
+      $('.wpsp-dark-btn').attr('disabled','disabled'); 
+
       var e = $("#ExamEditForm").serializeArray();
       e.push({
         name: "action",
@@ -150,8 +173,8 @@ $(document).ready(function() {
         url: ajax_url,
         data: e,
         success: function(a) {
-          if ("updated" == a) {
-            $(".wpsp-popup-return-data").html("Exam information updated Successfully !"), $("#SuccessModal").css("display", "block"), $("#SavingModal").css("display", "none"), $("#SuccessModal").addClass("wpsp-popVisible");
+          if ("updated" === jQuery.trim(a)) {
+            $("#SuccessModal .wpsp-success-text").html("Exam information updated Successfully !"), $("#SuccessModal").css("display", "block"), $("#SavingModal").css("display", "none"), $("#SuccessModal").addClass("wpsp-popVisible");
             var e = $("#wpsp_locationginal").val() + "/admin.php?page=sch-exams";
             setTimeout(function() {
               window.location.href = e
@@ -165,6 +188,13 @@ $(document).ready(function() {
     var e = $(this).data("id");
     console.log(e), $("#teacherid").val(e), $("#DeleteModal").css("display", "block")
   }), $(document).on("click", ".ClassDeleteBt", function(a) {
+
+    deleteprocess.call(this);
+    if(!$("#SuccessModal").hasClass('wpsp-popVisible')){
+    $("#SuccessModal").addClass('wpsp-popVisible');
+}
+
+
     var nn = $('#wps_generate_nonce').val();
     var e = $("#teacherid").val(),
       t = [];
@@ -178,7 +208,11 @@ $(document).ready(function() {
       name: "wps_generate_nonce",
       value: nn
     }), jQuery.post(ajax_url, t, function(a) {
-      "deleted" == a ? location.reload() : ($("#WarningModal").css("display", "block"), $("#WarningModal").addClass("wpsp-popVisible"))
+      "deleted" == jQuery.trim(a) ? ($("#DeleteModal").css("display", "none"),$("#SuccessModal").css("display", "block"),
+$("#SuccessModal .wpsp-success-text").text('Exam Deleted Successfully'),
+setTimeout(function() {
+	location.reload();
+}, 2000)) : ($("#WarningModal").css("display", "block"), $("#WarningModal").addClass("wpsp-popVisible"))
     })
   }), $(document).on("change", "#class_name,#edit_class_name", function(a) {
     var e = [];

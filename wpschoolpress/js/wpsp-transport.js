@@ -85,6 +85,7 @@ $(document).ready(function() {
     })
   }), $(document).on("click", "#TransSubmit", function(a) {
     a.preventDefault();
+    deleteprocess.call(this);
     var n = $("#TransEntryForm").serializeArray();
     n.push({
       name: "action",
@@ -95,12 +96,12 @@ $(document).ready(function() {
       data: n,
       beforeSend: function() {},
       success: function(a) {
-        if ("success" == a) {
-          $(".wpsp-popup-return-data").html("Transport details saved successfully."), $("#SuccessModal").css("display", "block"), $("#SavingModal").css("display", "none"), $("#SuccessModal").addClass("wpsp-popVisible"), $("#TransModalBody").html(""), $("#TransModal").modal("hide");
+        if ("success" === jQuery.trim(a)) {
+          $("#SuccessModal").css("display", "block"),$("#SuccessModal .wpsp-success-text").text('Transport details saved successfully'), $("#SavingModal").css("display", "none"), $("#SuccessModal").addClass("wpsp-popVisible"), $("#TransModalBody").html(""), $("#TransModal").modal("hide");
           setTimeout(function() {
             location.reload(!0)
-          }, 1e3)
-        } else $(".wpsp-popup-return-data").html(a), $("#SavingModal").css("display", "none"), $("#WarningModal").css("display", "block"), $("#WarningModal").addClass("wpsp-popVisible")
+          }, 2000)
+        } else $(".wpsp-popup-return-data").html(a), $("#TransSubmit").text('Submit'),$("#TransSubmit").attr('aria-disabled','false'),$("#TransSubmit").prop("disabled", false),$("#TransSubmit").on('click'), $("#SavingModal").css("display", "none"), $("#WarningModal").css("display", "block"), $("#WarningModal").addClass("wpsp-popVisible")
       },
       complete: function() {
         $(".pnloader").remove()
@@ -110,6 +111,12 @@ $(document).ready(function() {
       }
     })
   }), $(document).on("click", "#TransUpdate", function(a) {
+    deleteprocess.call(this);
+
+    if(!$("#SuccessModal").hasClass('wpsp-popVisible')){
+      $("#SuccessModal").addClass('wpsp-popVisible');
+    }
+
     a.preventDefault();
     var n = $("#TransEditForm").serializeArray();
     n.push({
@@ -120,12 +127,12 @@ $(document).ready(function() {
       url: ajax_url,
       data: n,
       success: function(a) {
-        if ("success" == a) {
-          $(".wpsp-popup-return-data").html("Transport details saved successfully."), $("#SuccessModal").css("display", "block"), $("#SavingModal").css("display", "none"), $("#SuccessModal").addClass("wpsp-popVisible"), $("#TransModalBody").html(""), $("#TransModal").modal("hide");
+        if ("success" === jQuery.trim(a)) {
+          $("#SuccessModal .wpsp-success-text").html("Transport details updated successfully."), $("#SuccessModal").css("display", "block"), $("#SavingModal").css("display", "none"), $("#SuccessModal").addClass("wpsp-popVisible"), $("#TransModalBody").html(""), $("#TransModal").modal("hide");
           setTimeout(function() {
             location.reload(!0)
           }, 1e3)
-        } else $(".wpsp-popup-return-data").html(a), $("#SavingModal").css("display", "none"), $("#WarningModal").css("display", "block"), $("#WarningModal").addClass("wpsp-popVisible")
+        } else $(".wpsp-popup-return-data").html(a),$("#TransSubmit").text('Submit'),$("#TransSubmit").attr('aria-disabled','false'),$("#TransSubmit").prop("disabled", false),$("#TransSubmit").on('click'), $("#SavingModal").css("display", "none"), $("#WarningModal").css("display", "block"), $("#WarningModal").addClass("wpsp-popVisible")
       },
       complete: function() {
         $(".pnloader").remove()
@@ -138,6 +145,14 @@ $(document).ready(function() {
     var n = $(this).data("id");
     console.log(n), $("#teacherid").val(n), $("#DeleteModal").css("display", "block")
   }), $(document).on("click", ".ClassDeleteBt", function() {
+
+    deleteprocess.call(this);
+
+    if(!$("#SuccessModal").hasClass('wpsp-popVisible')){
+    $("#SuccessModal").addClass('wpsp-popVisible');
+}
+
+
     var nn = $('#wps_generate_nonce').val();
     var a = $("#teacherid").val(),
       n = new Array;
@@ -155,9 +170,15 @@ $(document).ready(function() {
       url: ajax_url,
       data: n,
       success: function(a) {
-        "success" == a ? location.reload() : ($(".wpsp-popup-return-data").html("Somethng went wrong.."), $("#SavingModal").css("display", "none"), $("#WarningModal").css("display", "block"), $("#WarningModal").addClass("wpsp-popVisible"))
-      },
-      complete: function() {
+        if ("success" === jQuery.trim(a)) {
+          $("#SuccessModal").css("display", "block"), $("#DeleteModal").css("display", "none"), $("#SuccessModal .wpsp-success-text").text('Vehicle Deleted Successfully'),
+          setTimeout(function() {
+	          location.reload();
+          }, 2000);
+        }else{
+          $(".wpsp-popup-return-data").html("Somethng went wrong.."), $("#SavingModal").css("display", "none"), $("#WarningModal").css("display", "block"), $("#WarningModal").addClass("wpsp-popVisible");
+        }
+      },complete: function() {
         $(".pnloader").remove()
       },
       error: function() {

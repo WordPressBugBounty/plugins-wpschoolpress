@@ -71,7 +71,8 @@
 				$classQuery		=	"select cid,c_name from $class_table";
 				if( $current_user_role=='teacher' ) {
 					$cuserId	=	intval($current_user->ID);
-					$classQuery	=	"select cid,c_name from $class_table where teacher_id='".esc_sql($cuserId)."'";
+				//	$classQuery	=	"select cid,c_name from $class_table where teacher_id='".esc_sql($cuserId)."'";
+          $classQuery = $wpdb->prepare("SELECT cid,c_name FROM $class_table WHERE teacher_id = %d",$cuserId);
 				}
 				$classList		=	$wpdb->get_results( $classQuery );
 				?>
@@ -80,7 +81,8 @@
             <optgroup label="Class Name:<?php echo esc_attr($classvalue->c_name); ?>">
               <?php
 								$student_table		=	$wpdb->prefix."wpsp_student";
-								$studentList		=	$wpdb->get_results("select wp_usr_id,s_fname from $student_table where class_id='$classvalue->cid'");
+							//	$studentList		=	$wpdb->get_results("select wp_usr_id,s_fname from $student_table where class_id='$classvalue->cid'");
+                $studentList		=	$wpdb->get_results($wpdb->prepare("SELECT wp_usr_id,s_fname FROM $student_table WHERE class_id = %s",$classvalue->cid));
 								foreach( $studentList as $studentkey=> $studentvalue ) {
 							?>
               <option value="<?php echo esc_attr(intval($studentvalue->wp_usr_id)); ?>"><?php echo esc_html($studentvalue->s_fname); ?></option>

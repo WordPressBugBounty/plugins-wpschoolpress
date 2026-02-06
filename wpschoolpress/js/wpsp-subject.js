@@ -71,6 +71,19 @@ $(document).ready(function() {
     },
     submitHandler: function(a) {
       var e = $("#SubjectEntryForm").serializeArray();
+
+      
+
+      $('#s_submit').text('Processing....');
+      $('#s_submit').attr('aria-disabled','true');
+      $('#s_submit').attr('disabled','disabled');
+      $('#s_submit').off('click');
+      $('.wpsp-dark-btn').attr('aria-disabled','true');
+      $('.wpsp-dark-btn').off('click');
+      $('.wpsp-dark-btn').attr('disabled','disabled');
+
+      
+
       e.push({
         name: "action",
         value: "AddSubject"
@@ -79,12 +92,12 @@ $(document).ready(function() {
         url: ajax_url,
         data: e,
         success: function(a) {
-          if ("success" == a) {
-            $(".wpsp-popup-return-data").html("Subject created successfully !"), $("#SuccessModal").css("display", "block"), $("#SavingModal").css("display", "none"), $("#SuccessModal").addClass("wpsp-popVisible");
+          if ("success" === jQuery.trim(a)) {
+            $("#SuccessModal .wpsp-success-text").html("Subject created successfully !"), $("#SuccessModal").css("display", "block"), $("#SavingModal").css("display", "none"), $("#SuccessModal").addClass("wpsp-popVisible");
             var e = $("#wpsp_locationginal1").val() + "admin.php?page=sch-subject";
             setTimeout(function() {
               window.location.href = e
-            }, 1e3);
+            }, 2000);
             $("#s_submit").attr("disabled", "disabled"), $("#SubjectEntryForm").trigger("reset")
           } else $(".wpsp-popup-return-data").html(a), $("#SavingModal").css("display", "none"), $("#WarningModal").css("display", "block"), $("#WarningModal").addClass("wpsp-popVisible")
         }
@@ -138,6 +151,16 @@ $(document).ready(function() {
       }
     },
     submitHandler: function(a) {
+
+       $('#SEditSave').text('Processing....');
+      $('#SEditSave').attr('aria-disabled','true');
+      $('#SEditSave').attr('disabled','disabled');
+      $('#SEditSave').off('click');
+      $('.wpsp-dark-btn').attr('aria-disabled','true');
+      $('.wpsp-dark-btn').off('click');
+      $('.wpsp-dark-btn').attr('disabled','disabled');
+
+
       var e = $("#SEditForm").serializeArray();
       e.push({
         name: "action",
@@ -147,12 +170,12 @@ $(document).ready(function() {
         url: ajax_url,
         data: e,
         success: function(a) {
-          if ("updated" == a) {
-            $(".wpsp-popup-return-data").html("Subject information updated Successfully !"), $("#SuccessModal").css("display", "block"), $("#SavingModal").css("display", "none"), $("#SuccessModal").addClass("wpsp-popVisible");
+          if ("updated" === jQuery.trim(a)) {
+            $("#SuccessModal .wpsp-success-text").html("Subject information updated Successfully !"), $("#SuccessModal").css("display", "block"), $("#SavingModal").css("display", "none"), $("#SuccessModal").addClass("wpsp-popVisible");
             var e = $("#wpsp_locationginal1").val() + "admin.php?page=sch-subject";
             setTimeout(function() {
               window.location.href = e
-            }, 1e3);
+            }, 2000);
             $("#SEditSave").attr("disabled", "disabled")
           } else $(".wpsp-popup-return-data").html(a), $("#SavingModal").css("display", "none"), $("#WarningModal").css("display", "block"), $("#WarningModal").addClass("wpsp-popVisible"), $("#SEditSave").attr("disabled", !1)
         }
@@ -162,6 +185,7 @@ $(document).ready(function() {
     var e = $(this).data("id");
     $("#teacherid").val(e), $("#DeleteModal").css("display", "block")
   }), $(document).on("click", ".ClassDeleteBt", function(a) {
+    deleteprocess.call(this);
     var nn = $('#wps_generate_nonce').val();
     var e = $("#teacherid").val(),
       t = [];
@@ -175,7 +199,11 @@ $(document).ready(function() {
       name: "wps_generate_nonce",
       value: nn
     }), jQuery.post(ajax_url, t, function(a) {
-      "deleted" == a ? location.reload() : ($(".wpsp-popup-return-data").html("Operation failed.Something went wrong!"), $("#SavingModal").css("display", "none"), $("#WarningModal").css("display", "block"), $("#WarningModal").addClass("wpsp-popVisible"))
+      "deleted" === jQuery.trim(a) ? ($("#SuccessModal").css("display", "block"),$("#DeleteModal").css("display", "none"),
+$("#SuccessModal .wpsp-success-text").text('Subject Deleted Successfully'),
+setTimeout(function() {
+	location.reload();
+}, 2000)) : ($(".wpsp-popup-return-data").html("Operation failed.Something went wrong!"), $("#SavingModal").css("display", "none"), $("#WarningModal").css("display", "block"), $("#WarningModal").addClass("wpsp-popVisible"))
     })
   })
 }), $("#verticalTab").easyResponsiveTabs({
