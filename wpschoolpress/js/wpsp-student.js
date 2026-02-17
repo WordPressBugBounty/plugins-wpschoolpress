@@ -199,6 +199,10 @@ $(document).ready(function() {
         minlength: 5,
         equalTo: "#Password"
       },
+      "Class[]": {
+        required: (jQuery("select[name='Class[]']").data("is_required")) ? true : false,
+        minlength: 1
+      },
 
       s_phone: {
         required: (jQuery("input[name='s_phone']").data("is_required")) ? true : false,
@@ -229,10 +233,13 @@ $(document).ready(function() {
         required: "Please provide a password",
         minlength: "Password must be at least 5 characters long"
       },
-      Confirm_password: {
+      ConfirmPassword: {
         required: "Please provide a password",
         minlength: "Password must be at least 5 characters long",
         equalTo: "Please enter the same password as above"
+      },
+      "Class[]":{
+        required: "Please Select Class Name",
       },
       Email: "Please enter a valid email address",
     },
@@ -331,13 +338,21 @@ $(document).ready(function() {
         required: (jQuery("input[name='s_pzipcode']").data("is_required")) ? true : false,
         number: true
       },
+      "Class[]": {
+        required: (jQuery("select[name='Class[]']").data("is_required")) ? true : false,
+        minlength: 1
+      },
     },
     messages: {
       s_fname: "Please enter first Name",
       s_address: "Please enter current address",
       s_lname: "Please enter last Name",
       //s_mname: "Please enter middle Name",
+      "Class[]":{
+        required: "Please Select Class Name",
+      },
       s_rollno: "Please enter Roll Number",
+
     },
     submitHandler: function(form) {
       var myform = document.getElementById("StudentEditForm");

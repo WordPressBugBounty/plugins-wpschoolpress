@@ -705,7 +705,7 @@
                       if (isset($is_required_school['section']) && $is_required_school['section'] == "school" && isset($is_required_school['Class'])) {
                         $is_required =  esc_html($is_required_school['Class'], "wpschoolpress");
                       } else {
-                        $is_required = false;
+                        $is_required = true;
                       }
                       ?>
                       <span class="wpsp-required"><?php echo esc_html(($is_required)) ? "*" : ""; ?></span>
@@ -716,7 +716,7 @@
                     $prohistory    =    wpsp_check_pro_version('wpsp_mc_version');
                     $prodisablehistory    =    !$prohistory['status'] ? 'notinstalled'    : 'installed';
                     if ($prodisablehistory == 'installed') {
-                      echo '<select class="selectpicker wpsp-form-control data-is_required="' . esc_attr($is_required) . '"multiselect" name="Class[]" data-icon-base="fa" data-tick-icon="fa-check" multiple data-live-search="true">';
+                      echo '<select class="selectpicker wpsp-form-control" data-is_required="' . esc_attr($is_required) . '"multiselect" name="Class[]" data-icon-base="fa" data-tick-icon="fa-check" multiple data-live-search="true">';
                     } else {
                       echo '<select class="wpsp-form-control" data-is_required="' . esc_attr($is_required) . '"  name="Class[]">';
                       echo '<option value="" disabled selected>Select Class</option>';

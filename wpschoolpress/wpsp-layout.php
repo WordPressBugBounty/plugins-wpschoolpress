@@ -61,11 +61,11 @@ function wpsp_topbar(){
   } else if( in_array( 'student', $roles ) ) {
     $table  =   $wpdb->prefix."wpsp_student";
   //  $query  = "SELECT CONCAT_WS(' ', s_fname, s_mname, s_lname ) AS full_name FROM $table WHERE wp_usr_id=$current_user->ID";
-    $query = $wpdb->prepare("SELECT CONCAT_WS(' ', first_name, middle_name, last_name) AS full_name FROM $table WHERE wp_usr_id = %d",$current_user->ID);
+    $query = $wpdb->prepare("SELECT CONCAT_WS(' ', s_fname, s_mname, s_lname) AS full_name FROM $table WHERE wp_usr_id = %d",$current_user->ID);
   } else if( in_array( 'parent', $roles ) ) {
     $table  =   $wpdb->prefix."wpsp_student";
     //$query  = "SELECT CONCAT_WS(' ', p_fname, p_mname, p_lname ) AS full_name FROM $table WHERE parent_wp_usr_id=$current_user->ID";
-    $query = $wpdb->prepare("SELECT CONCAT_WS(' ', first_name, middle_name, last_name) AS full_name FROM $table WHERE wp_usr_id = %d",$current_user->ID);
+    $query = $wpdb->prepare("SELECT CONCAT_WS(' ', p_fname, p_mname, p_lname) AS full_name FROM $table WHERE wp_usr_id = %d",$current_user->ID);
   }
   if( !empty( $query ) ) {
     $full_name = $wpdb->get_var( $query );
@@ -604,9 +604,8 @@ function wpsp_sidebar(){
       global $current_user, $wpdb;
       $ctable= $wpdb->prefix."wpsp_class";
       $stable= $wpdb->prefix."wpsp_student";
-      if(!$user_id){
-        $user_id = get_current_user_id();
-      }
+      $user_id = get_current_user_id();
+      
       $wpsp_classes = $wpdb->get_results($wpdb->prepare("SELECT class_id FROM $stable WHERE wp_usr_id = %d",$user_id));
       // print_r($wpsp_classes);
       echo "<!-- Left side column. contains the logo and sidebar -->

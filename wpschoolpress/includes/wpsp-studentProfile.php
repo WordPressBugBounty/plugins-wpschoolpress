@@ -633,7 +633,7 @@ if( !empty( $stinfo ) ) {
                                 if(isset($is_required_school['section']) && $is_required_school['section'] == "school" && isset($is_required_school['Class'])){
                                     $is_required =  esc_html($is_required_school['Class'],"wpschoolpress");
                                 }else{
-                                    $is_required = false;
+                                    $is_required = true;
                                 }
                                 ?>
                 <span class="wpsp-required"><?php echo esc_html(($is_required))?"*":""; ?></span>

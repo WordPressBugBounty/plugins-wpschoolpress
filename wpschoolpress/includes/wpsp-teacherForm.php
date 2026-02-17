@@ -280,7 +280,7 @@
                               $is_required = true;
                           }
                           ?> <span class="wpsp-required"><?php echo esc_html(($is_required))?"*":""; ?></span></label>
-                        <input type="password" class="wpsp-form-control" id="ConfirmPassword" name="ConfirmPassword" placeholder="Confirm Password">
+                        <input type="password" data-is_required="<?php echo esc_attr($is_required); ?>" class="wpsp-form-control" id="ConfirmPassword" name="ConfirmPassword" placeholder="Confirm Password">
                     </div>
                     <?php do_action('wpsp_after_teacher_account_detail_fields'); ?> 
                     <div class="wpsp-hidden-xs">

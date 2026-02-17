@@ -561,9 +561,11 @@ if( is_user_logged_in() ) {
                         	$clasid[] = $class_id;
 
 						}
-					}
-					  $parentchildcls = explode(',', $parentchildcls); 
-					  $parentchildcls = array_map('intval', $parentchildcls); // sanitize integers
+					}	
+						
+					//  $parentchildcls = explode(',', $clasid); 
+					 
+					  $parentchildcls = array_map('intval', $clasid); // sanitize integers
 					$in_placeholders = implode(',', array_fill(0, count($parentchildcls), '%d'));
 					//  $examinfo  = $wpdb->get_results("select * from $exam_table where classid IN (".$parentchildcls.") order by e_s_date ASC");
 					$query = $wpdb->prepare("SELECT * FROM $exam_table WHERE classid IN ($in_placeholders) ORDER BY e_s_date ASC", ...$parentchildcls);

@@ -42,6 +42,9 @@ add_action('wp_ajax_get_student_date', 'get_student_date');
 /* This function is used for Add Student */
 function wpsp_AddStudent()
 {
+
+	
+
 	wpsp_Authenticate();
 	if (!isset($_POST['sregister_nonce']) ||  ! wp_verify_nonce($_POST['sregister_nonce'], 'StudentRegister')) {
 		echo esc_html("Unauthorized Submission!!", "wpschoolpress");
@@ -75,7 +78,7 @@ function wpsp_AddStudent()
 		exit;
 	}
 
-
+	
 
 	global $wpdb;
 	$wpsp_student_table = $wpdb->prefix . "wpsp_student";
@@ -85,8 +88,12 @@ function wpsp_AddStudent()
 
 	if (isset($_POST['Class']) && !empty($_POST['Class'])) {
 
+		
+	
 		$classID = array_map('intval', $_POST['Class']);
 		$classarray = array();
+
+		
 
 		if (is_numeric($classID)) {
 			$classarray[] = $classID;
@@ -96,7 +103,7 @@ function wpsp_AddStudent()
 				$classarray[] = $id;
 			}
 		}
-
+		
 		$messages = '';
 		foreach ($classarray as $id) {
 			$c = esc_sql($id);
@@ -138,16 +145,19 @@ function wpsp_AddStudent()
 	}
 
 	if (isset($_POST['Class']) && isset($_POST['s_rollno'])) {
+		
+		
 		$classID = array_map('intval', $_POST['Class']);
 		$roll_number = sanitize_text_field($_POST['s_rollno']);
-
 		foreach ($classID as $class) {
+		//	$search = 'i:' . intval($class) . ';';
+			$search = 's:' . strlen($class) . ':"' . $class . '";';
+
 			$existing_roll = $wpdb->get_var($wpdb->prepare(
 				"SELECT COUNT(*) FROM $wpsp_student_table WHERE class_id LIKE %s AND s_rollno = %s",
-				'%' . $wpdb->esc_like(serialize($class)) . '%',
+				'%' . $wpdb->esc_like($search) . '%',
 				$roll_number
 			));
-
 			if ($existing_roll > 0) {
 				echo esc_html("The roll number $roll_number is already assigned to another student in class ID: $class.", "wpschoolpress");
 				exit;
