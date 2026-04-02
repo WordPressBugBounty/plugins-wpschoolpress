@@ -3,7 +3,7 @@
 Plugin Name: 	WPSchoolPress
 Plugin URI: 	http://wpschoolpress.com
 Description:    WPSchoolpress is a school management system plugin that makes school activities transparent to parents. For more information please visit our website.
-Version: 		2.2.35
+Version: 		2.2.36
 Author: 		WPSchoolPress Team
 Author URI: 	wpschoolpress.com
 Text Domain:	wpschoolpress
@@ -16,7 +16,7 @@ if (!defined('ABSPATH')) exit;
  * Basic plugin definitions
  *
  * @package WPSchoolPress
- * @since 2.2.35
+ * @since 2.2.36
  */
 if (!defined('WPSP_PLUGIN_URL'))
 {
@@ -28,7 +28,7 @@ if (!defined('WPSP_PLUGIN_PATH'))
 }
 if (!defined('WPSP_PLUGIN_VERSION'))
 {
-	define('WPSP_PLUGIN_VERSION', '2.2.35'); //Plugin version number
+	define('WPSP_PLUGIN_VERSION', '2.2.36'); //Plugin version number
 }
 define('WPSP_PERMISSION_MSG', 'You don\'t have enough permission to access this page');
 // Call the  required files when plugin activate
@@ -50,12 +50,10 @@ function wpsp_plugins_loaded()
 	$wpsp_lang_dir = dirname(plugin_basename(__FILE__)) . '/languages/';
 	load_plugin_textdomain('wpschoolpress', false, $wpsp_lang_dir);
 	// initialize settings of plugin Open required files for initialization
-	require_once (WPSP_PLUGIN_PATH . 'lib/wpsp-ajaxworks.php');
-	require_once (WPSP_PLUGIN_PATH . 'lib/wpsp-ajaxworks-student.php');
-	require_once (WPSP_PLUGIN_PATH . 'lib/wpsp-ajaxworks-teacher.php');
+	// NOTE: ajaxworks files are loaded on-demand below (DOING_AJAX only)
+	// so they don't parse on every normal page load.
 	require_once (WPSP_PLUGIN_PATH . 'wpsp-layout.php');
 	require_once (WPSP_PLUGIN_PATH . 'includes/wpsp-misc.php');
-	wpsp_get_setting();
 
 	global $wpsp_settings_data;
 	global $wpsp_admin, $wpsp_public, $paytmClass, $paypalClass;
@@ -69,9 +67,68 @@ function wpsp_plugins_loaded()
 	$wpsp_public->add_hooks();
 }
 
+/**
+ * Load settings only when actually needed.
+ *
+ * - Admin screens: always (menu, sidebar, topbar all rely on it).
+ * - Frontend: only on WPSP page slugs (sch-*). Regular visitors on
+ *   posts/pages never trigger the DB query.
+ * - AJAX: handled inside the AJAX block below.
+ */
+add_action( 'init', function() {
+	if ( defined('DOING_AJAX') && DOING_AJAX ) {
+		return; // AJAX path loads settings itself via wpsp-ajaxworks.php
+	}
+	if ( is_admin() ) {
+		if ( function_exists('wpsp_get_setting') ) {
+			wpsp_get_setting();
+		}
+		return;
+	}
+	// Frontend: defer until after the query is resolved so is_page() works.
+	add_action( 'template_redirect', function() {
+		$wpsp_slugs = array(
+			'sch-dashboard','sch-student','sch-transport','sch-parent',
+			'sch-class','sch-teacher','sch-messages','sch-profile',
+			'sch-exams','sch-marks','sch-attendance','sch-timetable',
+			'sch-reminder','sch-events','sch-subject','sch-settings',
+			'sch-calendar','sch-teacherattendance','sch-notify',
+			'sch-payment','sch-importhistory','sch-leavecalendar',
+			'sch-changepassword','sch-editprofile','sch-postsprofile',
+			'sch-posts','sch-posts-notification','sch-reported-posts',
+			'sch-documents','sch-history','sch-request',
+		);
+		if ( is_page( $wpsp_slugs ) && function_exists('wpsp_get_setting') ) {
+			wpsp_get_setting();
+		}
+	}, 1 );
+}, 5 );
 
+/**
+ * AJAX actions — load ajaxworks files and register handlers only when
+ * an actual AJAX request is being processed, not on every page load.
+ * Moved from admin_init (fires on every admin request) to init with
+ * a DOING_AJAX guard so it is completely skipped on normal page loads.
+ */
+add_action( 'init', function() {
 
-add_action('admin_init', 'ajax_actions');
+	//  ALWAYS load files (functions needed everywhere)
+	if ( ! function_exists('wpsp_listdashboardschedule') ) {
+		require_once (WPSP_PLUGIN_PATH . 'lib/wpsp-ajaxworks.php');
+		require_once (WPSP_PLUGIN_PATH . 'lib/wpsp-ajaxworks-student.php');
+		require_once (WPSP_PLUGIN_PATH . 'lib/wpsp-ajaxworks-teacher.php');
+	}
+
+	//  ONLY register AJAX hooks during AJAX
+	if ( defined('DOING_AJAX') && DOING_AJAX ) {
+
+		if ( function_exists('wpsp_get_setting') ) {
+			wpsp_get_setting();
+		}
+
+		ajax_actions();
+	}
+}, 1 );
 function ajax_actions()
 {
 	add_action('wp_ajax_listdashboardschedule', 'wpsp_listdashboardschedule');
@@ -181,10 +238,13 @@ add_filter('plugin_action_links_' . plugin_basename(__FILE__) , 'wpsp_add_plugin
 function wp_wp_login_url() {  return home_url(); }
 add_filter( 'login_headerurl', 'wp_wp_login_url' );
 
-    //
+    // Grant students the edit_posts cap once — check before writing to avoid
+    // a DB update on every page load when the cap is already set.
     function wpsp_std_role(){
-    $role = get_role( 'student' );
-    $role->add_cap( 'edit_posts', true );
+        $role = get_role( 'student' );
+        if ( $role && ! $role->has_cap( 'edit_posts' ) ) {
+            $role->add_cap( 'edit_posts', true );
+        }
     }
     add_action( 'init', 'wpsp_std_role', 11 );
 ?>

@@ -11,11 +11,31 @@ if ( !defined( 'ABSPATH' ) ) exit;
  */
 function wpsp_get_setting() {
 	global $wpsp_settings_data, $wpdb;
-	$wpsp_settings_table	=	$wpdb->prefix."wpsp_settings";
-	$wpsp_settings_edit		=	$wpdb->get_results("SELECT * FROM $wpsp_settings_table" );
-	foreach($wpsp_settings_edit as $sdat) {
-		$wpsp_settings_data[$sdat->option_name]	=	$sdat->option_value;
+
+	// Try transient cache first — avoids a DB query on every page load.
+	$cached = get_transient( 'wpsp_settings_cache' );
+	if ( $cached !== false && is_array( $cached ) ) {
+		$wpsp_settings_data = $cached;
+		return;
 	}
+
+	// Cache miss — hit the DB and store the result for 12 hours.
+	$wpsp_settings_table = $wpdb->prefix . "wpsp_settings";
+	$wpsp_settings_edit  = $wpdb->get_results( "SELECT * FROM $wpsp_settings_table" );
+	$wpsp_settings_data  = array();
+	foreach ( $wpsp_settings_edit as $sdat ) {
+		$wpsp_settings_data[ $sdat->option_name ] = $sdat->option_value;
+	}
+	set_transient( 'wpsp_settings_cache', $wpsp_settings_data, 12 * HOUR_IN_SECONDS );
+}
+
+/**
+ * Clear the settings transient cache.
+ * Called automatically whenever any settings are saved so the next
+ * page load always reads fresh data from the database.
+ */
+function wpsp_clear_settings_cache() {
+	delete_transient( 'wpsp_settings_cache' );
 }
 /*
 * Send mail when new user register
@@ -418,14 +438,25 @@ function wpsp_county_list() {
 }
 /* This Function is Check Pro Version */
 function wpsp_check_pro_version( $class='wpsp_pro_version' ) {
-	$response = array();
-	$response['status']	 =true;
-	if( !empty( $class ) && !class_exists( $class ) ) {
-		$response['status']		=	false;
-		$response['class']		=	'upgrade-to-wpsp-version';
-		$response['message']	=	'Please Purchase This Add-on';
-		return $response;
+	// Static cache: class_exists() is called many times per request with the
+	// same arguments. Cache results for the lifetime of the request so each
+	// class name is checked only once regardless of how many times it is called.
+	static $wpsp_version_cache = array();
+
+	if ( isset( $wpsp_version_cache[ $class ] ) ) {
+		return $wpsp_version_cache[ $class ];
 	}
+
+	$response = array();
+	$response['status'] = true;
+	if ( ! empty( $class ) && ! class_exists( $class ) ) {
+		$response['status']  = false;
+		$response['class']   = 'upgrade-to-wpsp-version';
+		$response['message'] = 'Please Purchase This Add-on';
+	}
+
+	$wpsp_version_cache[ $class ] = $response;
 	return $response;
 }
+
 ?>

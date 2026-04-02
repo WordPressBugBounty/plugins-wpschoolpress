@@ -1207,10 +1207,13 @@ function wpsp_AttendanceEntry(){
 	$previousList = $previoudids = array();
 	if (!empty($check_attend) && isset($check_attend->aid)){
 		$previousList = json_decode($check_attend->absents, true);
+			if (!is_array($previousList)) {
+			    $previousList = array();
+			}
 		$del = $wpdb->delete($att_table, array(
 			'aid' => $check_attend->aid
 		));
-		$previoudids = array_column($previousList, 'sid', 'sid');
+		$previoudids = !empty($previousList) ? array_column($previousList, 'sid', 'sid') : array();
 	}
 	if (isset($_POST['Nil']) && $_POST['Nil'] == 'Nil'){
 		$att_data = array(
@@ -2037,6 +2040,7 @@ function wpsp_GenSetting(){
 	if (empty($optionvalues)){
 		echo esc_html( 'All Fields are blank, Please insert values...', 'wpschoolpress' );
 	}else{
+		wpsp_clear_settings_cache();
 		echo esc_html( 'success', 'wpschoolpress' );
 	}
 	wp_die(); 
@@ -2073,6 +2077,7 @@ function wpsp_GenSettingsocial(){
 	if (empty($optionvalues)){
 		echo esc_html( 'All Fields are blank, Please insert values...', 'wpschoolpress' );
 	}else{
+		wpsp_clear_settings_cache();
 		echo  esc_html( 'success', 'wpschoolpress' );
 	}
 	wp_die();
@@ -2114,6 +2119,7 @@ function wpsp_GenSettinglicensing(){
 	if (empty($optionvalues)){
 		wp_send_json_error('All Fields are blank, Please insert values...');
 	}else{
+		wpsp_clear_settings_cache();
 		wp_send_json_success('success');
 	} 
 	wp_die();
@@ -2162,6 +2168,7 @@ function wpsp_GenSettingsms(){
 	if (empty($optionvalues)){
 		echo  esc_html( 'All Fields are blank, Please insert values...', 'wpschoolpress' );
 	}else{
+		wpsp_clear_settings_cache();
 		echo esc_html( 'success', 'wpschoolpress' );
 	}
 	wp_die();

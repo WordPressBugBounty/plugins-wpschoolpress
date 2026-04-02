@@ -5,7 +5,7 @@ Tags: student information management, staff information management, attendance m
 Requires at least: 6.7
 Tested up to: 6.9
 Requires PHP: 7.4
-Stable tag: 2.2.35
+Stable tag: 2.2.36
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -417,6 +417,11 @@ Please purchase the SMS addon from our website www.wpschoolpress.com/downloads/s
 
 == 2.2.35 =
 
-* Updated - Make Class field mandatory when new student registered or existing studen updated
+* Updated - Make Class field mandatory when new student registered or existing student updated
 * Fixed   - make validation such that same roll no is not used in same class
+
+== 2.2.36 =
+
+*Updated - Improved performance by optimizing AJAX loading, reducing unnecessary DB queries, adding caching.
+
 			

@@ -319,292 +319,159 @@ function wpsp_admin_menu()
 	*/
 	function wpsp_add_admin_scripts($hook)
 	{
+		// ── Only load WPSP assets on WPSP admin screens ──────────────────────────
+		// All sub-pages register under 'wpschoolpress_page_sch-*'.
+		// The top-level entry uses 'toplevel_page_wpschoolpress'.
+		// Every other admin screen (Posts, Pages, Plugins, etc.) bails here.
+		$is_wpsp_page = (
+			$hook === 'toplevel_page_wpschoolpress' ||
+			strpos( $hook, 'wpschoolpress_page_sch-' ) === 0
+		);
 
-		$prohistory    =    wpsp_check_pro_version('wpsp_mc_version');
-    	$prodisablehistory    =    !$prohistory['status'] ? 'notinstalled'    : 'installed';
-		wp_register_style('wpsp_wp_admin_font_awesome', WPSP_PLUGIN_URL . 'css/font-awesome.min.css', false, '1.0.0');
-		wp_enqueue_style('wpsp_wp_admin_font_awesome');
-		wp_register_style('wpsp_wp_admin_ionicons', WPSP_PLUGIN_URL . 'css/ionicons.min.css', false, '1.0.0');
-		wp_enqueue_style('wpsp_wp_admin_ionicons');
-		wp_register_style('wpsp_wp_admin_wpsp-grid', WPSP_PLUGIN_URL . 'css/wpsp-grid.css', false, '1.0.0');
-		wp_enqueue_style('wpsp_wp_admin_wpsp-grid');
-		// wp_register_style('wpsp_wp_admin_pnotify', WPSP_PLUGIN_URL . 'css/pnotify.min.css', false, '1.0.0');
-		// wp_enqueue_style('wpsp_wp_admin_pnotify');
-		if (is_user_logged_in())
-		{
-			wp_register_style('wpsp_wp_admin_dataTablesresp', WPSP_PLUGIN_URL . 'css/datepicker.min.css', false, '1.0.0');
-			wp_enqueue_style('wpsp_wp_admin_dataTablesresp');
-			wp_register_style('wpsp_wp_admin_dataTablesbootresp2', WPSP_PLUGIN_URL . 'plugins/datatables/responsive.bootstrap.min.css', false, '1.0.0');
-			wp_enqueue_style('wpsp_wp_admin_dataTablesbootresp2');
-		}
-		if ($hook == 'wpschoolpress_page_sch-student')
-		{
-			// wp_register_style('wpsp_wp_admin_blueimp-gallery', WPSP_PLUGIN_URL . 'plugins/gallery/blueimp-gallery.min.css', false, '1.0.0');
-			// wp_enqueue_style('wpsp_wp_admin_blueimp-gallery');
-		}
-		if ($hook == 'wpschoolpress_page_sch-dashboard')
-		{
-			wp_register_style('wpsp_wp_admin_fullcalendar', WPSP_PLUGIN_URL . 'plugins/fullcalendar/fullcalendar.min.css', false, '1.0.0');
-			wp_enqueue_style('wpsp_wp_admin_fullcalendar');
-		}
-		if ($hook == 'wpschoolpress_page_sch-events')
-		{
-			wp_register_style('wpsp_wp_admin_fullcalendar', WPSP_PLUGIN_URL . 'plugins/fullcalendar/fullcalendar.min.css', false, '1.0.0');
-			wp_enqueue_style('wpsp_wp_admin_fullcalendar');
-			wp_register_style('wpsp_wp_admin_timepicker', WPSP_PLUGIN_URL . 'plugins/timepicker/bootstrap-timepicker.css', false, '1.0.0');
-			wp_enqueue_style('wpsp_wp_admin_timepicker');
+		if ( ! $is_wpsp_page ) {
+			return;
 		}
 
-		if ($hook == 'wpschoolpress_page_sch-settings' || $hook == 'wpschoolpress_page_sch-teacher')
-		{
-			wp_register_style('wpsp_wp_admin_boottimepicker', WPSP_PLUGIN_URL . 'plugins/timepicker/bootstrap-timepicker.css', false, '1.0.0');
-			wp_enqueue_style('wpsp_wp_admin_boottimepicker');
+		// wpsp_check_pro_version() is already statically cached inside the function
+		// itself so calling it here costs nothing on subsequent calls this request.
+		$prohistory        = wpsp_check_pro_version( 'wpsp_mc_version' );
+		$prodisablehistory = ! $prohistory['status'] ? 'notinstalled' : 'installed';
+
+		// ── Core CSS (every WPSP page) ───────────────────────────────────────────
+		wp_register_style( 'wpsp_wp_admin_font_awesome',          WPSP_PLUGIN_URL . 'css/font-awesome.min.css',        false, '1.0.0' );
+		wp_enqueue_style(  'wpsp_wp_admin_font_awesome' );
+		wp_register_style( 'wpsp_wp_admin_ionicons',              WPSP_PLUGIN_URL . 'css/ionicons.min.css',            false, '1.0.0' );
+		wp_enqueue_style(  'wpsp_wp_admin_ionicons' );
+		wp_register_style( 'wpsp_wp_admin_wpsp-grid',             WPSP_PLUGIN_URL . 'css/wpsp-grid.css',               false, '1.0.0' );
+		wp_enqueue_style(  'wpsp_wp_admin_wpsp-grid' );
+		wp_register_style( 'wpsp_wp_admin_dataTablesresp',        WPSP_PLUGIN_URL . 'css/datepicker.min.css',          false, '1.0.0' );
+		wp_enqueue_style(  'wpsp_wp_admin_dataTablesresp' );
+		wp_register_style( 'wpsp_wp_admin_dataTablesbootresp2',   WPSP_PLUGIN_URL . 'plugins/datatables/responsive.bootstrap.min.css', false, '1.0.0' );
+		wp_enqueue_style(  'wpsp_wp_admin_dataTablesbootresp2' );
+		wp_register_style( 'wpsp_wp_admin_wpsp-icons',            WPSP_PLUGIN_URL . 'css/wpsp-icons.css',              false, '1.0.0' );
+		wp_enqueue_style(  'wpsp_wp_admin_wpsp-icons' );
+		wp_register_style( 'wpsp_wp_admin_wpsp-widget',           WPSP_PLUGIN_URL . 'css/wpsp-widget.css',             false, '1.0.0' );
+		wp_enqueue_style(  'wpsp_wp_admin_wpsp-widget' );
+		wp_register_style( 'wpsp_wp_admin_wpsp-style',            WPSP_PLUGIN_URL . 'css/wpsp-style.css',              false, '1.0.0' );
+		wp_enqueue_style(  'wpsp_wp_admin_wpsp-style' );
+		wp_register_style( 'wpsp_wp_admin_wpsp-style-resposive',  WPSP_PLUGIN_URL . 'css/wpsp-resposive.css',          false, '1.0.0' );
+		wp_enqueue_style(  'wpsp_wp_admin_wpsp-style-resposive' );
+		wp_register_style( 'wpsp_wp_admin_wpsp-style-select',     WPSP_PLUGIN_URL . 'css/bootstrap-select.min.css',    false, '1.0.0' );
+		wp_enqueue_style(  'wpsp_wp_admin_wpsp-style-select' );
+		wp_register_style( 'wpsp_wp_admin_wpsp-style-multiselect', WPSP_PLUGIN_URL . 'css/bootstrap-multiselect.css', false, '1.0.0' );
+		wp_enqueue_style(  'wpsp_wp_admin_wpsp-style-multiselect' );
+
+		// ── Page-specific CSS ────────────────────────────────────────────────────
+		if ( $hook === 'wpschoolpress_page_sch-dashboard' ) {
+			wp_register_style( 'wpsp_wp_admin_fullcalendar', WPSP_PLUGIN_URL . 'plugins/fullcalendar/fullcalendar.min.css', false, '1.0.0' );
+			wp_enqueue_style(  'wpsp_wp_admin_fullcalendar' );
 		}
-        wp_enqueue_script('wpsp_wp_admin_jquery2', WPSP_PLUGIN_URL . 'js/lib/bootstrap.min.js', array(
-			'jquery'
-		) , '1.0.0', true);
-
-		wp_register_style('wpsp_wp_admin_wpsp-icons', WPSP_PLUGIN_URL . 'css/wpsp-icons.css', false, '1.0.0');
-		wp_enqueue_style('wpsp_wp_admin_wpsp-icons');
-		wp_register_style('wpsp_wp_admin_wpsp-widget', WPSP_PLUGIN_URL . 'css/wpsp-widget.css', false, '1.0.0');
-		wp_enqueue_style('wpsp_wp_admin_wpsp-widget');
-		wp_register_style('wpsp_wp_admin_wpsp-style', WPSP_PLUGIN_URL . 'css/wpsp-style.css', false, '1.0.0');
-		wp_enqueue_style('wpsp_wp_admin_wpsp-style');
-		wp_register_style('wpsp_wp_admin_wpsp-style-resposive', WPSP_PLUGIN_URL . 'css/wpsp-resposive.css', false, '1.0.0');
-		wp_enqueue_style('wpsp_wp_admin_wpsp-style-resposive');
-		wp_register_style('wpsp_wp_admin_wpsp-style-select', WPSP_PLUGIN_URL . 'css/bootstrap-select.min.css', false, '1.0.0');
-		wp_enqueue_style('wpsp_wp_admin_wpsp-style-select');
-		wp_register_style('wpsp_wp_admin_wpsp-style-multiselect', WPSP_PLUGIN_URL . 'css/bootstrap-multiselect.css', false, '1.0.0');
-		wp_enqueue_style('wpsp_wp_admin_wpsp-style-multiselect');
-		// wp_enqueue_script('wpsp_wp_admin_jquery302', WPSP_PLUGIN_URL . 'js/bootstrap-select.min.js', array(
-		// 	'jquery'
-		// ) , '1.0.0', true);
-		wp_enqueue_script('wpsp_wp_admin_jquery303', WPSP_PLUGIN_URL . 'js/bootstrap-multiselect.js', array(
-			'jquery'
-		) , '1.0.0', true);
-		wp_enqueue_script('wpsp_wp_admin_jquery1', WPSP_PLUGIN_URL . 'plugins/otherjs/wpsp.validate.min.js', array(
-			'jquery'
-		) , '1.0.0', true);
-		wp_enqueue_script('wpsp_wp_admin_jquery90', WPSP_PLUGIN_URL . 'js/wpsp-wp-admin.js', array(
-				'jquery'
-		) , '1.0.0', true);
-
-		// wp_enqueue_script('wpsp_wp_admin_jquery3', WPSP_PLUGIN_URL . 'plugins/fastclick/fastclick.min.js', array(
-		// 	'jquery'
-		// ) , '1.0.0', true);
-		wp_enqueue_script('wpsp_wp_admin_jquery4', WPSP_PLUGIN_URL . 'js/lib/app.js', array(
-			'jquery'
-		) , '1.0.0', true);
-		// wp_enqueue_script('wpsp_wp_admin_jquery5', WPSP_PLUGIN_URL . 'js/lib/pnotify.min.js', array(
-		// 	'jquery'
-		// ) , '1.0.0', true);
-		wp_enqueue_script('wpsp_wp_admin_jquery6', WPSP_PLUGIN_URL . 'plugins/slimScroll/jquery.slimscroll.min.js', array(
-			'jquery'
-		) , '1.0.0', true);
-		wp_enqueue_script('wpsp_wp_admin_jquery7', WPSP_PLUGIN_URL . 'js/bootstrap-datepicker.min.js', array(
-			'jquery'
-		) , '1.0.0', true);
-		wp_enqueue_script('wpsp_wp_admin_jquery100', WPSP_PLUGIN_URL . 'js/wpsp-settingtab.js', array(
-				'jquery'
-			) , '1.0.0', true);
-		if ($hook == 'toplevel_page_WPSchoolPress'){
-			wp_enqueue_script('wpsp_wp_admin_jquery90', WPSP_PLUGIN_URL . 'js/wpsp-wp-admin.js', array(
-				'jquery'
-			) , '1.0.0', true);
+		if ( $hook === 'wpschoolpress_page_sch-events' ) {
+			wp_register_style( 'wpsp_wp_admin_fullcalendar', WPSP_PLUGIN_URL . 'plugins/fullcalendar/fullcalendar.min.css', false, '1.0.0' );
+			wp_enqueue_style(  'wpsp_wp_admin_fullcalendar' );
+			wp_register_style( 'wpsp_wp_admin_timepicker', WPSP_PLUGIN_URL . 'plugins/timepicker/bootstrap-timepicker.css', false, '1.0.0' );
+			wp_enqueue_style(  'wpsp_wp_admin_timepicker' );
 		}
-		if (is_user_logged_in())
-		{
-			wp_enqueue_script('wpsp_wp_admin_jquery8', WPSP_PLUGIN_URL . 'plugins/datatables/jquery.datatables.js', array(
-				'jquery'
-			) , '1.0.0', true);
-			wp_enqueue_script('wpsp_wp_admin_jquery999', WPSP_PLUGIN_URL . 'js/wpsp-custome.js', array(
-				'jquery'
-			) , '1.0.0', true);
+		if ( $hook === 'wpschoolpress_page_sch-settings' || $hook === 'wpschoolpress_page_sch-teacher' ) {
+			wp_register_style( 'wpsp_wp_admin_boottimepicker', WPSP_PLUGIN_URL . 'plugins/timepicker/bootstrap-timepicker.css', false, '1.0.0' );
+			wp_enqueue_style(  'wpsp_wp_admin_boottimepicker' );
 		}
-		if($hook == 'wpschoolpress_page_sch-request')
-				{
-				wp_enqueue_script('wpsp_wp_admin_jquery1011', WPSP_PLUGIN_URL . 'js/wpsp-sch-request.js', array(
-				'jquery'
-			) , '1.0.0', true);
-			}
-		if ($hook == 'wpschoolpress_page_sch-dashboard')
-		{
-			wp_enqueue_script('wpsp_wp_admin_jquery10', WPSP_PLUGIN_URL . 'plugins/fullcalendar/moment.min.js', array(
-				'jquery'
-			) , '1.0.0', true);
-			wp_enqueue_script('wpsp_wp_admin_jquery11', WPSP_PLUGIN_URL . 'plugins/fullcalendar/fullcalendar.min.js', array(
-				'jquery'
-			) , '1.0.0', true);
-			wp_enqueue_script('wpsp_wp_admin_jquery12', WPSP_PLUGIN_URL . 'plugins/timepicker/bootstrap-timepicker.js', array(
-				'jquery'
-			) , '1.0.0', true);
-			wp_enqueue_script('wpsp_wp_admin_jquery13', WPSP_PLUGIN_URL . 'js/wpsp-dashboard.js', array(
-				'jquery'
-			) , '1.0.0', true);
+		if ( $hook === 'wpschoolpress_page_sch-messages' || $hook === 'wpschoolpress_page_sch-parent' ) {
+			wp_register_style( 'wpsp_wp_admin_multiselect', WPSP_PLUGIN_URL . 'plugins/multiselect/jquery.multiselect.css', false, '1.0.0' );
+			wp_enqueue_style(  'wpsp_wp_admin_multiselect' );
 		}
-		if ($hook == 'wpschoolpress_page_sch-student' )
-		{
-			// wp_enqueue_script('wpsp_wp_admin_jquery15', WPSP_PLUGIN_URL . 'plugins/fileupload/jquery.iframe-transport.js', array(
-			// 	'jquery'
-			// ) , '1.0.0', true);
-			// wp_enqueue_script('wpsp_wp_admin_jquery16', WPSP_PLUGIN_URL . 'plugins/gallery/jquery.blueimp-gallery.min.js', array(
-			// 	'jquery'
-			// ) , '1.0.0', true);
-			wp_enqueue_script('wpsp_wp_admin_jquery171', WPSP_PLUGIN_URL . 'js/wpsp-student.js', array(
-				'jquery'
-			) , '1.0.0', true);
 
-			if($prodisablehistory == 'installed'){
-			 	wp_enqueue_script('wpsp_wp_admin_jquery007', WPSP_PLUGIN_URL . 'js/wpsp-custom-multicls.js', array(
-			 	'jquery'
-			 ) , '1.0.0', true);
+		// ── Core JS (every WPSP page) ────────────────────────────────────────────
+		wp_enqueue_script( 'wpsp_wp_admin_jquery2',   WPSP_PLUGIN_URL . 'js/lib/bootstrap.min.js',                    array( 'jquery' ), '1.0.0', true );
+		wp_enqueue_script( 'wpsp_wp_admin_jquery303', WPSP_PLUGIN_URL . 'js/bootstrap-multiselect.js',                array( 'jquery' ), '1.0.0', true );
+		wp_enqueue_script( 'wpsp_wp_admin_jquery1',   WPSP_PLUGIN_URL . 'plugins/otherjs/wpsp.validate.min.js',       array( 'jquery' ), '1.0.0', true );
+		wp_enqueue_script( 'wpsp_wp_admin_jquery90',  WPSP_PLUGIN_URL . 'js/wpsp-wp-admin.js',                        array( 'jquery' ), '1.0.0', true );
+		wp_enqueue_script( 'wpsp_wp_admin_jquery4',   WPSP_PLUGIN_URL . 'js/lib/app.js',                              array( 'jquery' ), '1.0.0', true );
+		wp_enqueue_script( 'wpsp_wp_admin_jquery6',   WPSP_PLUGIN_URL . 'plugins/slimScroll/jquery.slimscroll.min.js', array( 'jquery' ), '1.0.0', true );
+		wp_enqueue_script( 'wpsp_wp_admin_jquery7',   WPSP_PLUGIN_URL . 'js/bootstrap-datepicker.min.js',             array( 'jquery' ), '1.0.0', true );
+		wp_enqueue_script( 'wpsp_wp_admin_jquery100', WPSP_PLUGIN_URL . 'js/wpsp-settingtab.js',                      array( 'jquery' ), '1.0.0', true );
+		wp_enqueue_script( 'wpsp_wp_admin_jquery8',   WPSP_PLUGIN_URL . 'plugins/datatables/jquery.datatables.js',    array( 'jquery' ), '1.0.0', true );
+		wp_enqueue_script( 'wpsp_wp_admin_jquery999', WPSP_PLUGIN_URL . 'js/wpsp-custome.js',                         array( 'jquery' ), '1.0.0', true );
 
-
+		// ── Page-specific JS ─────────────────────────────────────────────────────
+		if ( $hook === 'wpschoolpress_page_sch-request' ) {
+			wp_enqueue_script( 'wpsp_wp_admin_jquery1011', WPSP_PLUGIN_URL . 'js/wpsp-sch-request.js', array( 'jquery' ), '1.0.0', true );
+		}
+		if ( $hook === 'wpschoolpress_page_sch-dashboard' ) {
+			wp_enqueue_script( 'wpsp_wp_admin_jquery10', WPSP_PLUGIN_URL . 'plugins/fullcalendar/moment.min.js',       array( 'jquery' ), '1.0.0', true );
+			wp_enqueue_script( 'wpsp_wp_admin_jquery11', WPSP_PLUGIN_URL . 'plugins/fullcalendar/fullcalendar.min.js', array( 'jquery' ), '1.0.0', true );
+			wp_enqueue_script( 'wpsp_wp_admin_jquery12', WPSP_PLUGIN_URL . 'plugins/timepicker/bootstrap-timepicker.js', array( 'jquery' ), '1.0.0', true );
+			wp_enqueue_script( 'wpsp_wp_admin_jquery13', WPSP_PLUGIN_URL . 'js/wpsp-dashboard.js',                     array( 'jquery' ), '1.0.0', true );
+		}
+		if ( $hook === 'wpschoolpress_page_sch-student' ) {
+			wp_enqueue_script( 'wpsp_wp_admin_jquery171', WPSP_PLUGIN_URL . 'js/wpsp-student.js', array( 'jquery' ), '1.0.0', true );
+			if ( $prodisablehistory === 'installed' ) {
+				wp_enqueue_script( 'wpsp_wp_admin_jquery007', WPSP_PLUGIN_URL . 'js/wpsp-custom-multicls.js', array( 'jquery' ), '1.0.0', true );
 			}
 		}
-		if ($hook == 'wpschoolpress_page_sch-editprofile' )
-		{
-			wp_enqueue_script('wpsp_wp_admin_jquery17', WPSP_PLUGIN_URL . 'js/wpsp-editprofile.js', array(
-				'jquery'
-			) ,'1.0.0', true);
+		if ( $hook === 'wpschoolpress_page_sch-editprofile' ) {
+			wp_enqueue_script( 'wpsp_wp_admin_jquery17', WPSP_PLUGIN_URL . 'js/wpsp-editprofile.js', array( 'jquery' ), '1.0.0', true );
 		}
-		if ($hook == 'wpschoolpress_page_sch-teacher')
-		{
-			wp_enqueue_script('wpsp_wp_admin_jquery18', WPSP_PLUGIN_URL . 'js/wpsp-teacher.js', array(
-				'jquery'
-			) , '1.0.0', true);
+		if ( $hook === 'wpschoolpress_page_sch-teacher' ) {
+			wp_enqueue_script( 'wpsp_wp_admin_jquery18', WPSP_PLUGIN_URL . 'js/wpsp-teacher.js', array( 'jquery' ), '1.0.0', true );
 		}
-		if ($hook == 'wpschoolpress_page_sch-parent')
-		{
-			wp_enqueue_script('wpsp_wp_admin_jquery19', WPSP_PLUGIN_URL . 'js/wpsp-parent.js', array(
-				'jquery'
-			) , '1.0.0', true);
+		if ( $hook === 'wpschoolpress_page_sch-parent' ) {
+			wp_enqueue_script( 'wpsp_wp_admin_jquery19', WPSP_PLUGIN_URL . 'js/wpsp-parent.js', array( 'jquery' ), '1.0.0', true );
 		}
-		if ($hook == 'wpschoolpress_page_sch-class')
-		{
-			// wp_deregister_script('jquery-ui-datepicker');
-			wp_enqueue_script('wpsp_wp_admin_jquery20', WPSP_PLUGIN_URL . 'js/wpsp-class.js', array(
-				'jquery'
-			) , '1.0.0', true);
+		if ( $hook === 'wpschoolpress_page_sch-class' ) {
+			wp_enqueue_script( 'wpsp_wp_admin_jquery20', WPSP_PLUGIN_URL . 'js/wpsp-class.js', array( 'jquery' ), '1.0.0', true );
 		}
-		if ($hook == 'wpschoolpress_page_sch-attendance')
-		{
-			wp_enqueue_script('wpsp_wp_admin_jquery21', WPSP_PLUGIN_URL . 'js/wpsp-attendance.js', array(
-				'jquery'
-			) , '1.0.0', true);
+		if ( $hook === 'wpschoolpress_page_sch-attendance' ) {
+			wp_enqueue_script( 'wpsp_wp_admin_jquery21', WPSP_PLUGIN_URL . 'js/wpsp-attendance.js', array( 'jquery' ), '1.0.0', true );
 		}
-		if ($hook == 'wpschoolpress_page_sch-subject')
-		{
-			wp_enqueue_script('wpsp_wp_admin_jquery22', WPSP_PLUGIN_URL . 'js/wpsp-subject.js', array(
-				'jquery'
-			) , '1.0.0', true);
+		if ( $hook === 'wpschoolpress_page_sch-subject' ) {
+			wp_enqueue_script( 'wpsp_wp_admin_jquery22', WPSP_PLUGIN_URL . 'js/wpsp-subject.js', array( 'jquery' ), '1.0.0', true );
 		}
-		if ($hook == 'wpschoolpress_page_sch-exams')
-		{
-			wp_enqueue_script('wpsp_wp_admin_jquery23', WPSP_PLUGIN_URL . 'js/wpsp-exam.js', array(
-				'jquery'
-			) , '1.0.0', true);
+		if ( $hook === 'wpschoolpress_page_sch-exams' ) {
+			wp_enqueue_script( 'wpsp_wp_admin_jquery23', WPSP_PLUGIN_URL . 'js/wpsp-exam.js', array( 'jquery' ), '1.0.0', true );
 		}
-		if ($hook == 'wpschoolpress_page_sch-marks')
-		{
-			wp_enqueue_script('wpsp_wp_admin_jquery24', WPSP_PLUGIN_URL . 'js/wpsp-mark.js', array(
-				'jquery'
-			) , '1.0.0', true);
+		if ( $hook === 'wpschoolpress_page_sch-marks' ) {
+			wp_enqueue_script( 'wpsp_wp_admin_jquery24', WPSP_PLUGIN_URL . 'js/wpsp-mark.js', array( 'jquery' ), '1.0.0', true );
 		}
-		if ($hook == 'wpschoolpress_page_sch-timetable')
-		{
+		if ( $hook === 'wpschoolpress_page_sch-timetable' ) {
 			wp_deregister_script( 'jquery-ui-core' );
-			wp_enqueue_script('wpsp_wp_admin_jquery25', WPSP_PLUGIN_URL . 'plugins/otherui/wpsp_easyui.min.js', array(
-				'jquery'
-			) , '1.0.0', true);
-			wp_enqueue_script('wpsp_wp_admin_jquery201', WPSP_PLUGIN_URL . 'js/lib/jquery.draggable.js', array(
-			'jquery'
-		) , '1.0.0', true);
-			wp_enqueue_script('wpsp_wp_admin_jquery26', WPSP_PLUGIN_URL . 'js/wpsp_timetable.js', array(
-				'jquery'
-			) , '1.0.0', true);
+			wp_enqueue_script( 'wpsp_wp_admin_jquery25',  WPSP_PLUGIN_URL . 'plugins/otherui/wpsp_easyui.min.js',  array( 'jquery' ), '1.0.0', true );
+			wp_enqueue_script( 'wpsp_wp_admin_jquery201', WPSP_PLUGIN_URL . 'js/lib/jquery.draggable.js',          array( 'jquery' ), '1.0.0', true );
+			wp_enqueue_script( 'wpsp_wp_admin_jquery26',  WPSP_PLUGIN_URL . 'js/wpsp_timetable.js',                array( 'jquery' ), '1.0.0', true );
 		}
-		if ($hook == 'wpschoolpress_page_sch-settings')
-		{
-			wp_enqueue_script('wpsp_wp_admin_jquery27', WPSP_PLUGIN_URL . 'plugins/timepicker/bootstrap-timepicker.js', array(
-				'jquery'
-			) , '1.0.0', true);
-			wp_enqueue_script('wpsp_wp_admin_jquery28', WPSP_PLUGIN_URL . 'js/wpsp-settings.js', array(
-				'jquery'
-			) , '1.0.0', true);
+		if ( $hook === 'wpschoolpress_page_sch-settings' ) {
+			wp_enqueue_script( 'wpsp_wp_admin_jquery27', WPSP_PLUGIN_URL . 'plugins/timepicker/bootstrap-timepicker.js', array( 'jquery' ), '1.0.0', true );
+			wp_enqueue_script( 'wpsp_wp_admin_jquery28', WPSP_PLUGIN_URL . 'js/wpsp-settings.js',                       array( 'jquery' ), '1.0.0', true );
 		}
-		if ($hook == 'wpschoolpress_page_sch-importhistory')
-		{
-			wp_enqueue_script('wpsp_wp_admin_jquery29', WPSP_PLUGIN_URL . 'js/wpsp-importhistory.js', array(
-				'jquery'
-			) , '1.0.0', true);
+		if ( $hook === 'wpschoolpress_page_sch-importhistory' ) {
+			wp_enqueue_script( 'wpsp_wp_admin_jquery29', WPSP_PLUGIN_URL . 'js/wpsp-importhistory.js', array( 'jquery' ), '1.0.0', true );
 		}
-		if ($hook == 'wpschoolpress_page_sch-transport')
-		{
-			wp_enqueue_script('wpsp_wp_admin_jquery30', WPSP_PLUGIN_URL . 'js/wpsp-transport.js', array(
-				'jquery'
-			) , '1.0.0', true);
+		if ( $hook === 'wpschoolpress_page_sch-transport' ) {
+			wp_enqueue_script( 'wpsp_wp_admin_jquery30', WPSP_PLUGIN_URL . 'js/wpsp-transport.js', array( 'jquery' ), '1.0.0', true );
 		}
-		if ($hook == 'wpschoolpress_page_sch-teacherattendance')
-		{
-			wp_enqueue_script('wpsp_wp_admin_jquery31', WPSP_PLUGIN_URL . 'js/wpsp-teacherattendance.js', array(
-				'jquery'
-			) , '1.0.0', true);
+		if ( $hook === 'wpschoolpress_page_sch-teacherattendance' ) {
+			wp_enqueue_script( 'wpsp_wp_admin_jquery31', WPSP_PLUGIN_URL . 'js/wpsp-teacherattendance.js', array( 'jquery' ), '1.0.0', true );
 		}
-		if ($hook == 'wpschoolpress_page_sch-notify')
-		{
-			wp_enqueue_script('wpsp_wp_admin_jquery32', WPSP_PLUGIN_URL . 'js/wpsp-notify.js', array(
-				'jquery'
-			) , '1.0.0', true);
-
+		if ( $hook === 'wpschoolpress_page_sch-notify' ) {
+			wp_enqueue_script( 'wpsp_wp_admin_jquery32', WPSP_PLUGIN_URL . 'js/wpsp-notify.js', array( 'jquery' ), '1.0.0', true );
 		}
-		if ($hook == 'wpschoolpress_page_sch-events')
-		{
-			wp_enqueue_script('wpsp_wp_admin_jquery33', WPSP_PLUGIN_URL . 'plugins/fullcalendar/moment.min.js', array(
-				'jquery'
-			) , '1.0.0', true);
-			wp_enqueue_script('wpsp_wp_admin_jquery34', WPSP_PLUGIN_URL . 'plugins/fullcalendar/fullcalendar.min.js', array(
-				'jquery'
-			) , '1.0.0', true);
-			wp_enqueue_script('wpsp_wp_admin_jquery35', WPSP_PLUGIN_URL . 'plugins/timepicker/bootstrap-timepicker.js', array(
-				'jquery'
-			) , '1.0.0', true);
-			wp_enqueue_script('wpsp_wp_admin_jquery36', WPSP_PLUGIN_URL . 'js/wpsp-events.js', array(
-				'jquery'
-			) , '1.0.0', true);
+		if ( $hook === 'wpschoolpress_page_sch-events' ) {
+			wp_enqueue_script( 'wpsp_wp_admin_jquery33', WPSP_PLUGIN_URL . 'plugins/fullcalendar/moment.min.js',       array( 'jquery' ), '1.0.0', true );
+			wp_enqueue_script( 'wpsp_wp_admin_jquery34', WPSP_PLUGIN_URL . 'plugins/fullcalendar/fullcalendar.min.js', array( 'jquery' ), '1.0.0', true );
+			wp_enqueue_script( 'wpsp_wp_admin_jquery35', WPSP_PLUGIN_URL . 'plugins/timepicker/bootstrap-timepicker.js', array( 'jquery' ), '1.0.0', true );
+			wp_enqueue_script( 'wpsp_wp_admin_jquery36', WPSP_PLUGIN_URL . 'js/wpsp-events.js',                        array( 'jquery' ), '1.0.0', true );
 		}
-		if ($hook == 'wpschoolpress_page_sch-notify')
-		{
-			// wp_enqueue_script('wpsp_wp_admin_jquery37', WPSP_PLUGIN_URL . 'js/wpsp-leavecalendar.js', array(
-			// 	'jquery'
-			// ) , '1.0.0', true);
-
+		if ( $hook === 'wpschoolpress_page_sch-messages' ) {
+			wp_enqueue_script( 'wpsp_wp_admin_jquery39', WPSP_PLUGIN_URL . 'js/wpsp-messages.js', array( 'jquery' ), '1.0.0', true );
 		}
-		if ($hook == 'wpschoolpress_page_sch-messages' || $hook == 'wpschoolpress_page_sch-parent')
-		{
-			 wp_register_style('wpsp_wp_admin_multiselect', WPSP_PLUGIN_URL . 'plugins/multiselect/jquery.multiselect.css', false, '1.0.0');
-			 wp_enqueue_style('wpsp_wp_admin_multiselect');
-			wp_enqueue_script('wpsp_wp_admin_jquery39', WPSP_PLUGIN_URL . 'js/wpsp-messages.js', array(
-				'jquery'
-			) , '1.0.0', true);
+		if ( $hook === 'wpschoolpress_page_sch-changepassword' ) {
+			wp_enqueue_script( 'wpsp_wp_admin_jquery40', WPSP_PLUGIN_URL . 'js/wpsp-changepassword.js', array( 'jquery' ), '1.0.0', true );
 		}
-		if ($hook == 'wpschoolpress_page_sch-changepassword')
-		{
-			wp_enqueue_script('wpsp_wp_admin_jquery40', WPSP_PLUGIN_URL . 'js/wpsp-changepassword.js', array(
-				'jquery'
-			) , '1.0.0', true);
+		if ( $hook === 'wpschoolpress_page_sch-payment' ) {
+			wp_enqueue_script( 'wpsp_wp_admin_jquery41', WPSP_PLUGIN_URL . 'plugins/multiselect/jquery.multiselect.js', array( 'jquery' ), '1.0.0', true );
 		}
-		if ($hook == 'wpschoolpress_page_sch-payment')
-		{
-			wp_enqueue_script('wpsp_wp_admin_jquery41', WPSP_PLUGIN_URL . 'plugins_url("plugins/multiselect/jquery.multiselect.js', array(
-				'jquery'
-			) , '1.0.0', true);
-		}
-		if ($hook == 'wpschoolpress_page_sch-leavecalendar')
-		{
-			wp_enqueue_script('wpsp_wp_admin_jquery42', WPSP_PLUGIN_URL . 'js/wpsp-leavecalendar.js', array(
-				'jquery'
-			) , '1.0.0', true);
+		if ( $hook === 'wpschoolpress_page_sch-leavecalendar' ) {
+			wp_enqueue_script( 'wpsp_wp_admin_jquery42', WPSP_PLUGIN_URL . 'js/wpsp-leavecalendar.js', array( 'jquery' ), '1.0.0', true );
 		}
 	}
 	/*
