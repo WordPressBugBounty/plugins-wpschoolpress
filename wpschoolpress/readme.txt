@@ -5,7 +5,7 @@ Tags: student information management, staff information management, attendance m
 Requires at least: 6.7
 Tested up to: 6.9
 Requires PHP: 7.4
-Stable tag: 2.2.36
+Stable tag: 2.2.37
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -30,6 +30,8 @@ WPSchoolPress is currently a highly demanding WordPress plugin for the school ma
 * School Transportation Management System: Details regarding Public Transport bus, tram or School Private transport, routes and driver details can be provided on students, parents and teachers dashboards by admin. Also admin can send notifications in form of e-mail (free) or SMS (with use of paid add-on) to parents if there is a replacement in driver, transport bus, change in route, etc.
 
 * Constant feature updates:We are constantly trying to have feature updatesfor you to run the school operations smoothly. These updates are on the bases our customer suggestions and feature requirements. Check our website for any new updates and add-ons
+
+* Enhances the SMS add-on with reusable templates, enabling quick message creation, improved consistency, and reduced manual effort.
 
 == Installation ==
 
@@ -408,20 +410,17 @@ Please purchase the SMS addon from our website www.wpschoolpress.com/downloads/s
             
 			
 == 2.2.33 = 
-
 * Fixed   - Fixed issue of default user roles which vanished when plugin activate
 
 == 2.2.34 = 
-
 * Fixed   - teacher not able to edit students info. fixed it
 
 == 2.2.35 =
-
 * Updated - Make Class field mandatory when new student registered or existing student updated
 * Fixed   - make validation such that same roll no is not used in same class
 
 == 2.2.36 =
-
 *Updated - Improved performance by optimizing AJAX loading, reducing unnecessary DB queries, adding caching.
 
-			
+== 2.2.37 =
+*Updated - Fixed UI issues and ensured full compatibility with the SMS add-on.
