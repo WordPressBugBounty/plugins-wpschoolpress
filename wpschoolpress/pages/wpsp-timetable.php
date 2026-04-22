@@ -5,7 +5,7 @@ wpsp_header();
 if (is_user_logged_in()) {
 	global $current_user, $wp_roles, $wpdb;
 	$current_usr_rle=$current_user->roles[0];
-	if( $current_usr_rle == 'administrator' || $current_usr_rle == 'teacher' ) {
+	if( $current_usr_rle == 'administrator' || $current_usr_rle == 'teacher' || $current_usr_rle == 'parent' ) {
 		wpsp_topbar();
 		wpsp_sidebar();
 		wpsp_body_start();
