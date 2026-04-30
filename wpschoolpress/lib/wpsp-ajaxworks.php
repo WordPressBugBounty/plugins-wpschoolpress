@@ -1918,64 +1918,305 @@ function wpsp_MarkReport($st_id, $c_id){
 	$subject_table = $wpdb->prefix . "wpsp_subject";
 	$extra_marks_table = $wpdb->prefix . "wpsp_mark_extract";
 	$extra_fields = $wpdb->prefix . "wpsp_mark_fields";
+	$st_table = $wpdb->prefix . "wpsp_student";
+	$class_table = $wpdb->prefix . "wpsp_class";
+ 
 	$marks = array();
 	$prev_id = $content = '';
-	//$all_mark = $wpdb->get_results("select m.subject_id, m.student_id, m.exam_id, m.mark,m.remarks, e.e_name, s.sub_name from $mark_table m LEFT JOIN $exam_table e ON e.eid=m.exam_id LEFT JOIN $subject_table s ON s.id=m.subject_id where m.student_id='".esc_sql($st_id)."' and m.class_id='".esc_sql($c_id)."' order by m.exam_id");
-	$all_mark = $wpdb->get_results($wpdb->prepare("SELECT m.subject_id, m.student_id, m.exam_id, m.mark,m.remarks, e.e_name, s.sub_name FROM $mark_table m LEFT JOIN $exam_table e ON e.eid=m.exam_id LEFT JOIN $subject_table s ON s.id=m.subject_id WHERE m.student_id = %d and m.class_id=%d order by m.exam_id",$st_id,$c_id));
-	foreach($all_mark as $mk){
-		$subject_id = sanitize_text_field($mk->subject_id);
-		$exam_id = sanitize_text_field($mk->exam_id);
-		$exam_name = sanitize_text_field($mk->e_name);
-		//$extra_marks = $wpdb->get_results("select ex.mark,ef.field_text from $extra_marks_table ex LEFT JOIN $extra_fields ef ON ef.field_id=ex.field_id where ex.subject_id='".esc_sql($subject_id)."' and ex.exam_id='".esc_sql($exam_id)."' and ex.student_id='".esc_sql($st_id)."'");
-		$extra_marks = $wpdb->get_results($wpdb->prepare("SELECT ex.mark,ef.field_text from $extra_marks_table ex LEFT JOIN $extra_fields ef ON ef.field_id=ex.field_id WHERE ex.subject_id = %d and ex.exam_id=%d order by ex.student_id=%d",$subject_id,$exam_id,$st_id));
-		$extract = array();
-		if (!empty($extra_marks)){
-			foreach($extra_marks as $exm){
-				$extract[$exm->field_text] = $exm->mark;
-			}
-		}
-		$m_data = array(
-			'subject_name' => (($mk->sub_name == '')? 'N/A' : $mk->sub_name),
-			'mark' => (($mk->mark == '')? '0' : $mk->mark),
-			'status' => '',
-			'extrafield' => $extract,
-			'remarks' => (($mk->remarks == '')? '0' : $mk->remarks)
-		);
-		if ($exam_id != $prev_id){
-			$marks[$exam_name] = array();
-		}
-		array_push($marks[$exam_name], $m_data);
-		$prev_id = $exam_id;
-	}
-	if (count($marks) > 0){
-		foreach($marks as $exam_name => $mark){
-			$i = 1;
-			$content.= '<div class="wpsp-table-responsive"><table class="wpsp-table table-striped table-bordered">
-							<thead><span class="label label-info pull-left">' . esc_html($exam_name) . '</span>
-								<tr>
-										<th>#</th>
-										<th>Subject</th>
-										<th>Mark</th>
-										<th>Other</th>
-										<th>Remarks</th>
-								</tr>
-							</thead>
-						<tbody>';
-			foreach($mark as $mrk){
-				$extrafield = '';
-				foreach($mrk['extrafield'] as $key => $value){
-					$extrafield.= '<b>' . esc_html($key) . "</b> - " . esc_html($value) . '<br />';
+ 
+	if ( is_numeric( $c_id ) && intval( $c_id ) > 0 ) {
+		$classIDArray = array( intval( $c_id ) );
+	} else {
+		$raw = @unserialize( $c_id );
+		if ( is_array( $raw ) && ! empty( $raw ) ) {
+			$classIDArray = array_map( 'intval', $raw );
+		} else {
+			$strow = $wpdb->get_row( $wpdb->prepare(
+				"SELECT class_id FROM $st_table WHERE wp_usr_id = %d",
+				intval( $st_id )
+			));
+			if ( $strow ) {
+				if ( is_numeric( $strow->class_id ) ) {
+					$classIDArray = array( intval( $strow->class_id ) );
+				} else {
+					$fallback = @unserialize( $strow->class_id );
+					$classIDArray = is_array( $fallback ) ? array_map( 'intval', $fallback ) : array();
 				}
-				$content.= '<tr><td>' . esc_html($i) . '</td><td>' . esc_html($mrk['subject_name']) . '</td><td>' . esc_html($mrk['mark']) . '</td><td>' . wp_kses_post($extrafield) . '</td><td>' . esc_html($mrk['remarks']) . '</td></tr>';
-				$i++;
+			} else {
+				$classIDArray = array();
 			}
-			$content.= '</tbody></table></div>';
 		}
-	}else{
-		$content = "<label class='wpsp-text-red'>No Marks available to show!</label>";
 	}
-    $allowed_tags = wp_kses_allowed_html('post');
-    echo wp_kses(stripslashes_deep($content), $allowed_tags);
+ 
+	$classIDArray = array_filter( $classIDArray );
+ 
+	$stinfo = $wpdb->get_row( $wpdb->prepare(
+		"SELECT st.class_id, st.s_rollno,
+		        CONCAT_WS(' ', st.s_fname, st.s_mname, st.s_lname) AS full_name,
+		        c.c_name, c.c_sdate, c.c_edate
+		 FROM $st_table st
+		 LEFT JOIN $class_table c ON c.cid = st.class_id
+		 WHERE st.wp_usr_id = %s",
+		$st_id
+	));
+ 
+	// Avatar and student info table hidden by not rendering them
+$content = "<div class='wpsp-panel-body'>
+	<div class='wpsp-userDetails' style='display:none;'>
+		<table class='wpsp-table'>
+			<tbody>";
+ 
+	foreach ( $classIDArray as $id ) {
+ 
+		$clasname = $wpdb->get_row( $wpdb->prepare(
+			"SELECT * FROM $class_table WHERE cid = %d",
+			$id
+		));
+ 
+		if ( ! $clasname ) {
+			continue;
+		}
+ 
+		$att_table = $wpdb->prefix . "wpsp_attendance";
+		$ser = '%' . $st_id . '%';
+ 
+		$att_info = $wpdb->get_row( $wpdb->prepare(
+			"SELECT count(*) as count FROM $att_table WHERE absents LIKE %s AND class_id = %d",
+			$ser,
+			$id
+		));
+ 
+		$attendance_days = $wpdb->get_results( $wpdb->prepare(
+			"SELECT * FROM $att_table WHERE class_id = %d",
+			$id
+		));
+ 
+		$present_days = 0;
+		foreach ( $attendance_days as $days => $attendance ) {
+			if ( $attendance->absents == 'Nil' ) {
+				$present_days++;
+			} else {
+				$absents = json_decode( $attendance->absents, true );
+				if ( is_array( $absents ) && array_search( $st_id, array_column( $absents, 'sid' ) ) === false ) {
+					$present_days++;
+				}
+			}
+		}
+ 
+		$working_days = $present_days + $att_info->count;
+ 
+		$all_mark = $wpdb->get_results( $wpdb->prepare(
+			"SELECT m.subject_id, m.student_id, m.exam_id, m.mark, m.remarks,
+			        e.e_name, s.sub_name
+			 FROM $mark_table m
+			 LEFT JOIN $exam_table e ON e.eid = m.exam_id
+			 LEFT JOIN $subject_table s ON s.id = m.subject_id
+			 WHERE m.student_id = %d
+			   AND m.class_id   = %d
+			 ORDER BY m.exam_id",
+			intval( $st_id ),
+			$id
+		));
+ 
+		if ( empty( $all_mark ) ) {
+			$content .= "<tr><td colspan='2'>
+							<label class='wpsp-text-red'>No Marks available for this class.</label>
+						</td></tr>";
+			continue;
+		}
+ 
+		$marks   = array();
+		$prev_id = '';
+ 
+		foreach ( $all_mark as $mk ) {
+			$subject_id_val = sanitize_text_field( $mk->subject_id );
+			$exam_id_val    = sanitize_text_field( $mk->exam_id );
+			$exam_name      = sanitize_text_field( $mk->e_name );
+ 
+			$extra_marks = $wpdb->get_results( $wpdb->prepare(
+				"SELECT ex.mark, ef.field_text
+				 FROM $extra_marks_table ex
+				 LEFT JOIN $extra_fields ef ON ef.field_id = ex.field_id
+				 WHERE ex.subject_id = %d
+				   AND ex.exam_id    = %d
+				   AND ex.student_id = %d",
+				$subject_id_val,
+				$exam_id_val,
+				intval( $st_id )
+			));
+ 
+			$extract = array();
+			if ( ! empty( $extra_marks ) ) {
+				foreach ( $extra_marks as $exm ) {
+					$extract[$exm->field_text] = $exm->mark;
+				}
+			}
+ 
+			$m_data = array(
+				'subject_name' => ( ($mk->sub_name == '') ? 'N/A' : $mk->sub_name ),
+				'mark'         => ( ($mk->mark == '')     ? '0'   : $mk->mark ),
+				'status'       => '',
+				'extrafield'   => $extract,
+				'remarks'      => ( ($mk->remarks == '')  ? '0'   : $mk->remarks ),
+			);
+ 
+			if ( $exam_id_val != $prev_id ) {
+				$marks[$exam_name] = array();
+			}
+			array_push( $marks[$exam_name], $m_data );
+			$prev_id = $exam_id_val;
+		}
+ 
+		if ( count($marks) > 0 ) {
+			foreach ( $marks as $exam_name => $mark ) {
+				$i = 1;
+    			$content .= '<div class="wpsp-table-responsive"><table class="wpsp-table table-striped table-bordered">
+    				<thead>
+    					<tr>
+											<th>#</th>
+											<th>Subject</th>
+											<th>Mark</th>
+											<th>Other</th>
+											<th>Remarks</th>
+									</tr>
+								</thead>
+							<tbody>';
+				foreach ( $mark as $mrk ) {
+					$extrafield = '';
+					foreach ( $mrk['extrafield'] as $key => $value ) {
+						$extrafield .= '<b>' . esc_html($key) . "</b> - " . esc_html($value) . '<br />';
+					}
+					$content .= '<tr><td>' . esc_html($i) . '</td><td>' . esc_html($mrk['subject_name']) . '</td><td>' . esc_html($mrk['mark']) . '</td><td>' . wp_kses_post($extrafield) . '</td><td>' . esc_html($mrk['remarks']) . '</td></tr>';
+					$i++;
+				}
+				$content .= '</tbody></table></div>';
+			}
+		} else {
+			$content .= "<label class='wpsp-text-red'>No Marks available to show!</label>";
+		}
+ 
+	}
+ 
+	$content .= "</tbody>
+			</table>
+		</div>
+	</div>";
+ 
+	$allowed_tags = wp_kses_allowed_html('post');
+	echo wp_kses(stripslashes_deep($content), $allowed_tags);
+}
+add_action('wp_ajax_wpsp_get_marks_by_exam', 'wpsp_get_marks_by_exam_ajax');
+add_action('wp_ajax_nopriv_wpsp_get_marks_by_exam', 'wpsp_get_marks_by_exam_ajax');
+
+function wpsp_get_marks_by_exam_ajax() {
+    check_ajax_referer('wpsp_marks_nonce', 'nonce');
+    
+    $student_id = intval($_POST['student_id']);
+    $class_id   = intval($_POST['class_id']);
+    $exam_id    = intval($_POST['exam_id']);
+    
+    if (!$student_id || !$class_id || !$exam_id) {
+        wp_send_json_error('Invalid parameters');
+        return;
+    }
+    
+    global $wpdb;
+    $mark_table        = $wpdb->prefix . "wpsp_mark";
+    $exam_table        = $wpdb->prefix . "wpsp_exam";
+    $subject_table     = $wpdb->prefix . "wpsp_subject";
+    $extra_marks_table = $wpdb->prefix . "wpsp_mark_extract";
+    $extra_fields_tbl  = $wpdb->prefix . "wpsp_mark_fields";
+
+    $all_mark = $wpdb->get_results($wpdb->prepare(
+        "SELECT m.subject_id, m.student_id, m.exam_id, m.mark, m.remarks,
+                e.e_name, s.sub_name
+         FROM $mark_table m
+         LEFT JOIN $exam_table e ON e.eid = m.exam_id
+         LEFT JOIN $subject_table s ON s.id = m.subject_id
+         WHERE m.student_id = %d
+           AND m.class_id   = %d
+           AND m.exam_id    = %d
+         ORDER BY m.exam_id",
+        $student_id,
+        $class_id,
+        $exam_id
+    ));
+
+    if (empty($all_mark)) {
+        wp_send_json_success('<p class="wpsp-text-red">No Marks available for this exam.</p>');
+        return;
+    }
+
+    $marks   = array();
+    $prev_id = '';
+
+    foreach ($all_mark as $mk) {
+        $subject_id_val = intval($mk->subject_id);
+        $exam_id_val    = intval($mk->exam_id);
+        $exam_name      = sanitize_text_field($mk->e_name);
+
+        $extra_marks = $wpdb->get_results($wpdb->prepare(
+            "SELECT ex.mark, ef.field_text
+             FROM $extra_marks_table ex
+             LEFT JOIN $extra_fields_tbl ef ON ef.field_id = ex.field_id
+             WHERE ex.subject_id = %d
+               AND ex.exam_id    = %d
+               AND ex.student_id = %d",
+            $subject_id_val,
+            $exam_id_val,
+            $student_id
+        ));
+
+        $extract = array();
+        foreach ($extra_marks as $exm) {
+            $extract[esc_html($exm->field_text)] = esc_html($exm->mark);
+        }
+
+        if ($exam_id_val != $prev_id) {
+            $marks[$exam_name] = array();
+        }
+        $marks[$exam_name][] = array(
+            'subject_name' => $mk->sub_name ?: 'N/A',
+            'mark'         => $mk->mark     ?: '0',
+            'extrafield'   => $extract,
+            'remarks'      => $mk->remarks  ?: '0',
+        );
+        $prev_id = $exam_id_val;
+    }
+
+    $html = '';
+    foreach ($marks as $ename => $rows) {
+        $i = 1;
+        $html .= '<div class="wpsp-table-responsive">
+                    <table class="wpsp-table table-striped table-bordered">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Subject</th>
+                                <th>Mark</th>
+                                <th>Other</th>
+                                <th>Remarks</th>
+                            </tr>
+                        </thead>
+                        <tbody>';
+        foreach ($rows as $mrk) {
+            $extrafield = '';
+            foreach ($mrk['extrafield'] as $key => $val) {
+                $extrafield .= '<b>' . $key . '</b> - ' . $val . '<br/>';
+            }
+            $html .= '<tr>
+                        <td>' . $i . '</td>
+                        <td>' . esc_html($mrk['subject_name']) . '</td>
+                        <td>' . esc_html($mrk['mark']) . '</td>
+                        <td>' . $extrafield . '</td>
+                        <td>' . esc_html($mrk['remarks']) . '</td>
+                      </tr>';
+            $i++;
+        }
+        $html .= '</tbody></table></div>';
+    }
+
+    wp_send_json_success($html);
 }
 /************** Settings *******************/
 

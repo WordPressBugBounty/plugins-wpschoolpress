@@ -363,12 +363,16 @@ if( is_user_logged_in() ) {
 									<ul class="wpsp-resp-tabs-list">
 										<?php $child = sanitize_price_array($child); 
 										$i=0;
-                                        foreach($child as $ch) {
-											if(base64_decode(sanitize_text_field($_GET['sid'])) == $ch['sid']){?>
-												<li class="wpsp-tabing <?php echo ($i==0)?'active':''?>">
-													<?php echo esc_html($ch['name']);?>
-												</li>
-										<?php } 
+										// -------------------------------------------------------
+										// BUG FIX 1: Original code wrapped <li> inside an if()
+										// that checked $_GET['sid'], so only 1 child got a tab.
+										// Removed that if() — now ALL children get a tab.
+										// -------------------------------------------------------
+                                        foreach($child as $ch) {?>
+											<li class="wpsp-tabing <?php echo ($i==0)?'active':''?>">
+												<?php echo esc_html($ch['name']);?>
+											</li>
+										<?php 
 											$i++;
 										} ?>
 									</ul>
@@ -377,14 +381,54 @@ if( is_user_logged_in() ) {
 									<?php
 									$i=0;
 									foreach( $child as $ch ) {
-										$ch_class=$ch['class_id'];
-										?>
-										<div class="tab-pane wpsp-tabMain <?php echo ($i==0)?'active':''?>" id="<?php echo 'student'.esc_attr($i);?>">
-											<?php
-											$student_id =   sanitize_text_field($ch['student_id']);
-											wpsp_MarkReport( $student_id, $class_id );
-											$i++;
-										}
+                                        $ch_class = $ch['class_id'];
+                                        ?>
+                                        <div class="tab-pane wpsp-tabMain <?php echo ($i==0)?'active':''?>" id="<?php echo 'student'.esc_attr($i);?>">
+                                            <?php
+                                            $student_id = intval($ch['student_id']);
+                                    
+                                            if ( is_numeric($ch['class_id']) && intval($ch['class_id']) > 0 ) {
+                                                $resolved_cid = intval($ch['class_id']);
+                                            } else {
+                                                $raw_cid = @unserialize($ch['class_id']);
+                                                $resolved_cid = ( is_array($raw_cid) && !empty($raw_cid) ) ? intval(reset($raw_cid)) : 0;
+                                            }
+                                    
+                                            // Fetch exams for this class
+                                            $exam_table_name = $wpdb->prefix . 'wpsp_exam';
+                                            $exams = $wpdb->get_results($wpdb->prepare(
+                                                "SELECT eid, e_name FROM $exam_table_name WHERE classid = %d",
+                                                $resolved_cid
+                                            ));
+                                            ?>
+                                    
+                                            <?php if (!empty($exams)) : ?>
+                                            <div class="wpsp-form-group" style="margin-bottom:15px;">
+                                                <label><strong>Select Exam:</strong></label>
+                                                <select class="wpsp-form-control wpsp-exam-dropdown"
+                                                        style="max-width:300px;"
+                                                        data-student="<?php echo esc_attr($student_id); ?>"
+                                                        data-class="<?php echo esc_attr($resolved_cid); ?>"
+                                                        data-nonce="<?php echo wp_create_nonce('wpsp_marks_nonce'); ?>">
+                                                    <option value="">-- Select Exam --</option>
+                                                    <?php foreach ($exams as $exam) : ?>
+                                                        <option value="<?php echo esc_attr($exam->eid); ?>">
+                                                            <?php echo esc_html($exam->e_name); ?>
+                                                        </option>
+                                                    <?php endforeach; ?>
+                                                </select>
+                                            </div>
+                                            <div class="wpsp-marks-result" id="marks-result-<?php echo esc_attr($student_id); ?>">
+                                                <!-- Marks load honge yahan -->
+                                            </div>
+                                            <?php else : ?>
+                                                <p class="wpsp-text-red">No exams found for this class.</p>
+                                            <?php endif; ?>
+                                    
+                                            <?php $i++; ?>
+                                        </div>
+                                        <?php
+                                    }
 									?>
 										</div>
 								</div>

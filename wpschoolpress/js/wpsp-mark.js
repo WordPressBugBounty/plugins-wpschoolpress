@@ -191,6 +191,49 @@ jQuery(document).ready(function() {
   $('#rstud_id').change(function() {
     $('#report_sub').submit();
   });
+  // ================== PARENT EXAM MARKS AJAX ==================
+
+jQuery(document).on('change', '.wpsp-exam-dropdown', function() {
+
+    var exam_id    = jQuery(this).val();
+    var student_id = jQuery(this).data('student');
+    var class_id   = jQuery(this).data('class');
+    var nonce      = jQuery(this).data('nonce');
+
+    var resultDiv  = jQuery('#marks-result-' + student_id);
+
+
+    if (!exam_id) {
+        resultDiv.html('');
+        return;
+    }
+
+    resultDiv.html('<p>Loading...</p>');
+
+    jQuery.ajax({
+        url: ajax_url, 
+        type: 'POST',
+        data: {
+            action:     'wpsp_get_marks_by_exam',
+            nonce:      nonce,
+            student_id: student_id,
+            class_id:   class_id,
+            exam_id:    exam_id
+        },
+        success: function(response) {
+
+            if (response.success) {
+                resultDiv.html(response.data);
+            } else {
+                resultDiv.html('<p class="wpsp-text-red">Error loading marks.</p>');
+            }
+        },
+        error: function() {
+            resultDiv.html('<p class="wpsp-text-red">Request failed.</p>');
+        }
+    });
+
+});
 });
 /* Custom Tab Js */
 $('#verticalTab').easyResponsiveTabs({
