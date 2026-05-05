@@ -85,63 +85,50 @@ $(document).ready(function() {
     })
   }), $(document).on("click", "#TransSubmit", function(a) {
     a.preventDefault();
-    deleteprocess.call(this);
-    var n = $("#TransEntryForm").serializeArray();
-    n.push({
-      name: "action",
-      value: "addTransport"
-    }), $.ajax({
-      type: "POST",
-      url: ajax_url,
-      data: n,
-      beforeSend: function() {},
-      success: function(a) {
-        if ("success" === jQuery.trim(a)) {
-          $("#SuccessModal").css("display", "block"),$("#SuccessModal .wpsp-success-text").text('Transport details saved successfully'), $("#SavingModal").css("display", "none"), $("#SuccessModal").addClass("wpsp-popVisible"), $("#TransModalBody").html(""), $("#TransModal").modal("hide");
-          setTimeout(function() {
-            location.reload(!0)
-          }, 2000)
-        } else $(".wpsp-popup-return-data").html(a), $("#TransSubmit").text('Submit'),$("#TransSubmit").attr('aria-disabled','false'),$("#TransSubmit").prop("disabled", false),$("#TransSubmit").on('click'), $("#SavingModal").css("display", "none"), $("#WarningModal").css("display", "block"), $("#WarningModal").addClass("wpsp-popVisible")
-      },
-      complete: function() {
-        $(".pnloader").remove()
-      },
-      error: function() {
-        $(".wpsp-popup-return-data").html("Somethng went wrong.."), $("#SavingModal").css("display", "none"), $("#WarningModal").css("display", "block"), $("#WarningModal").addClass("wpsp-popVisible")
-      }
-    })
-  }), $(document).on("click", "#TransUpdate", function(a) {
-    deleteprocess.call(this);
 
-    if(!$("#SuccessModal").hasClass('wpsp-popVisible')){
-      $("#SuccessModal").addClass('wpsp-popVisible');
+    // Validation
+    var drName  = $.trim($("#DrName").val());
+    var drPhone = $.trim($("#DrPhone").val());
+    var nameRegex  = /^[a-zA-Z\s]+$/;
+    var phoneRegex = /^[0-9]{7,15}$/;
+
+    if (drName !== '' && !nameRegex.test(drName)) {
+        $(".wpsp-popup-return-data").html("Driver Name should contain letters only.");
+        $("#SavingModal").css("display", "none");
+        $("#WarningModal").css("display", "block");
+        $("#WarningModal").addClass("wpsp-popVisible");
+        return false;
+    }
+    if (drPhone !== '' && !phoneRegex.test(drPhone)) {
+        $(".wpsp-popup-return-data").html("Driver Phone should contain only numbers (7-15 digits).");
+        $("#SavingModal").css("display", "none");
+        $("#WarningModal").css("display", "block");
+        $("#WarningModal").addClass("wpsp-popVisible");
+        return false;
     }
 
-    a.preventDefault();
-    var n = $("#TransEditForm").serializeArray();
-    n.push({
-      name: "action",
-      value: "updateTransport"
-    }), $.ajax({
-      type: "POST",
-      url: ajax_url,
-      data: n,
-      success: function(a) {
-        if ("success" === jQuery.trim(a)) {
-          $("#SuccessModal .wpsp-success-text").html("Transport details updated successfully."), $("#SuccessModal").css("display", "block"), $("#SavingModal").css("display", "none"), $("#SuccessModal").addClass("wpsp-popVisible"), $("#TransModalBody").html(""), $("#TransModal").modal("hide");
-          setTimeout(function() {
-            location.reload(!0)
-          }, 1e3)
-        } else $(".wpsp-popup-return-data").html(a),$("#TransSubmit").text('Submit'),$("#TransSubmit").attr('aria-disabled','false'),$("#TransSubmit").prop("disabled", false),$("#TransSubmit").on('click'), $("#SavingModal").css("display", "none"), $("#WarningModal").css("display", "block"), $("#WarningModal").addClass("wpsp-popVisible")
-      },
-      complete: function() {
-        $(".pnloader").remove()
-      },
-      error: function() {
-        $(".wpsp-popup-return-data").html("Somethng went wrong.."), $("#SavingModal").css("display", "none"), $("#WarningModal").css("display", "block"), $("#WarningModal").addClass("wpsp-popVisible")
-      }
+    deleteprocess.call(this);
+    var n = $("#TransEntryForm").serializeArray();
+    n.push({ name: "action", value: "addTransport" });
+    $.ajax({
+        type: "POST",
+        url: ajax_url,
+        data: n,
+        beforeSend: function() {},
+        success: function(a) {
+            if ("success" === jQuery.trim(a)) {
+                $("#SuccessModal").css("display", "block"), $("#SuccessModal .wpsp-success-text").text('Transport details saved successfully'), $("#SavingModal").css("display", "none"), $("#SuccessModal").addClass("wpsp-popVisible"), $("#TransModalBody").html(""), $("#TransModal").modal("hide");
+                setTimeout(function() { location.reload(!0) }, 2000)
+            } else {
+                $(".wpsp-popup-return-data").html(a), $("#TransSubmit").text('Submit'), $("#TransSubmit").attr('aria-disabled', 'false'), $("#TransSubmit").prop("disabled", false), $("#TransSubmit").on('click'), $("#SavingModal").css("display", "none"), $("#WarningModal").css("display", "block"), $("#WarningModal").addClass("wpsp-popVisible")
+            }
+        },
+        complete: function() { $(".pnloader").remove() },
+        error: function() {
+            $(".wpsp-popup-return-data").html("Somethng went wrong.."), $("#SavingModal").css("display", "none"), $("#WarningModal").css("display", "block"), $("#WarningModal").addClass("wpsp-popVisible")
+        }
     })
-  }), $(document).on("click", "#d_teacher", function(a) {
+}),$(document).on("click", "#d_teacher", function(a) {
     var n = $(this).data("id");
     console.log(n), $("#teacherid").val(n), $("#DeleteModal").css("display", "block")
   }), $(document).on("click", ".ClassDeleteBt", function() {
@@ -184,6 +171,26 @@ $(document).ready(function() {
       error: function() {
         $(".wpsp-popup-return-data").html("Somethng went wrong.."), $("#SavingModal").css("display", "none"), $("#WarningModal").css("display", "block"), $("#WarningModal").addClass("wpsp-popVisible")
       }
-    })
+})
+  }), $(document).on("click", "#TransUpdate", function(a) {
+    a.preventDefault();
+    var drName  = $.trim($("input[name='DrName']").val());
+    var drPhone = $.trim($("input[name='DrPhone']").val());
+    var nameRegex  = /^[a-zA-Z\s]+$/;
+    var phoneRegex = /^[0-9]{7,15}$/;
+    if (drName !== '' && !nameRegex.test(drName)) {
+      $(".wpsp-popup-return-data").html("Driver Name should contain letters only.");
+      $("#SavingModal").css("display","none");
+      $("#WarningModal").css("display","block");
+      $("#WarningModal").addClass("wpsp-popVisible");
+      return false;
+    }
+    if (drPhone !== '' && !phoneRegex.test(drPhone)) {
+      $(".wpsp-popup-return-data").html("Driver Phone should contain only numbers (7-15 digits).");
+      $("#SavingModal").css("display","none");
+      $("#WarningModal").css("display","block");
+      $("#WarningModal").addClass("wpsp-popVisible");
+      return false;
+    }
   })
 });

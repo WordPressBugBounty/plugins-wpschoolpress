@@ -2514,20 +2514,36 @@ function wpsp_Notify(){
 }
 /************ Event Functions **********/
 function wpsp_ListEvent(){
-	wpsp_AllAuthenticate();
-	global $wpdb, $current_user;
-	$start = sanitize_text_field($_POST['start']);
-	$end = sanitize_text_field($_POST['end']);
-	$event_table = $wpdb->prefix . "wpsp_events";
-	if ($current_user->roles[0] == 'administrator' || $current_user->roles[0] == 'teacher'){
-	//	$event_list = $wpdb->get_results("select * from $event_table where start >= '".esc_sql($start)."' and end <='".esc_sql($end)."'");
-		$event_list = $wpdb->get_results($wpdb->prepare("SELECT * FROM $event_table WHERE start >= %s and end <= %s ",$start,$end)); 
-	}else{
-		//$event_list = $wpdb->get_results("select * from $event_table where type='0' and (start >= '".esc_sql($start)."' and end <='".esc_sql($end)."')");
-		$event_list = $wpdb->get_results($wpdb->prepare("SELECT * FROM $event_table WHERE type = %s and (start >= %s and end <= %s)",'0',$start,$end)); 
-	}
-	echo wp_json_encode($event_list);
-	wp_die();
+    wpsp_AllAuthenticate();
+    global $wpdb, $current_user;
+    $start = sanitize_text_field($_POST['start']);
+    $end   = sanitize_text_field($_POST['end']);
+    $event_table = $wpdb->prefix . "wpsp_events";
+
+    if ($current_user->roles[0] == 'administrator' || $current_user->roles[0] == 'teacher') {
+        $event_list = $wpdb->get_results($wpdb->prepare(
+            "SELECT * FROM $event_table WHERE start >= %s AND end <= %s", $start, $end
+        ));
+    } else {
+        $event_list = $wpdb->get_results($wpdb->prepare(
+            "SELECT * FROM $event_table WHERE type = %s AND (start >= %s AND end <= %s)", '0', $start, $end
+        ));
+    }
+
+    // FullCalendar uses exclusive end dates for all-day events.
+    // If the stored end time is 00:00:00, add 1 day so the last day is included.
+    foreach ($event_list as &$event) {
+        if (!empty($event->end)) {
+            $end_time = date('H:i:s', strtotime($event->end));
+            if ($end_time === '00:00:00') {
+                $event->end = date('Y-m-d 00:00:00', strtotime($event->end . ' +1 day'));
+            }
+        }
+    }
+    unset($event);
+
+    echo wp_json_encode($event_list);
+    wp_die();
 }
 function wpsp_AddEvent(){
 	if (!isset($_POST['wps_addevents_nonce']) || !wp_verify_nonce(sanitize_text_field($_POST['wps_addevents_nonce']) , 'WPSAddEvents')){
@@ -2747,35 +2763,49 @@ function wpsp_DeleteLeave(){
 	wp_die();
 }
 /**************** Transport Functions ***************/
-function wpsp_FormValidation($pValues, $rFields){
-	$error = TRUE;
-	foreach($rFields as $field)	{
-		if($field != 'route_fees'){
-			if (!isset($pValues[$field]) || trim($pValues[$field]) == ''){
-				$error = esc_html($field . " is missing");
-				break;
-			}
-		}
-		if (isset($pValues[$field])){
-			global $wpdb;
-			$trans_table = $wpdb->prefix . "wpsp_transport";
-			$bus_id = $pValues[$field];
-			$wpdb->get_row($wpdb->prepare("SELECT * FROM $trans_table WHERE bus_no = %s ",$bus_id));
-			if($wpdb->num_rows > 0){
-				$error = esc_html("Bus Number already Exists");	
-				break;
-			} 
-		}
-		if($field == 'route_fees'){
-			if(!empty($pValues[$field])){
-				if (isset($pValues[$field]) && trim($pValues[$field]) < 0){
-					$error = esc_html("Negative value not allow in Route Fees");
-					break;
-				}
-			}
-		}
-	}
-	return $error;
+function wpsp_FormValidation($pValues, $rFields) {
+    $error = TRUE;
+    foreach ($rFields as $field) {
+        if ($field != 'route_fees') {
+            if (!isset($pValues[$field]) || trim($pValues[$field]) == '') {
+                $error = esc_html($field . " is missing");
+                break;
+            }
+        }
+        if ($field == 'VhNumb' && isset($pValues[$field])) {
+            global $wpdb;
+            $trans_table = $wpdb->prefix . "wpsp_transport";
+            $bus_id = $pValues[$field];
+            $wpdb->get_row($wpdb->prepare("SELECT * FROM $trans_table WHERE bus_no = %s", $bus_id));
+            if ($wpdb->num_rows > 0) {
+                $error = esc_html("Bus Number already Exists");
+                break;
+            }
+        }
+        if ($field == 'route_fees') {
+            if (!empty($pValues[$field])) {
+                if (trim($pValues[$field]) < 0) {
+                    $error = esc_html("Negative value not allowed in Route Fees");
+                    break;
+                }
+            }
+        }
+        // Driver Name: letters and spaces only
+        if ($field == 'DrName' && !empty($pValues[$field])) {
+            if (!preg_match('/^[a-zA-Z\s]+$/', trim($pValues[$field]))) {
+                $error = esc_html("Driver Name should contain letters only.");
+                break;
+            }
+        }
+        // Driver Phone: numbers only, 7-15 digits
+        if ($field == 'DrPhone' && !empty($pValues[$field])) {
+            if (!preg_match('/^[0-9]{7,15}$/', trim($pValues[$field]))) {
+                $error = esc_html("Driver Phone should contain only numbers (7-15 digits).");
+                break;
+            }
+        }
+    }
+    return $error;
 }
 function wpsp_AddTransport(){
 	if ($_SERVER['REQUEST_METHOD'] === 'POST'){
@@ -2786,7 +2816,7 @@ function wpsp_AddTransport(){
 		wpsp_AdminAuthenticate();
 		global $wpdb;
 		$trans_table = $wpdb->prefix . "wpsp_transport";
-		$validation = wpsp_FormValidation($_POST, ['VhName', 'VhNumb', 'route_fees']);
+		 $validation = wpsp_FormValidation($_POST, ['VhName', 'VhNumb', 'DrName', 'DrPhone', 'route_fees']);
 		if ($validation === TRUE){
 			$trans_table_data = array(
 				'bus_no' => sanitize_text_field($_POST['VhNumb']) ,
@@ -2861,13 +2891,13 @@ function wpsp_AddTransport(){
 						</div>
 						<div class="wpsp-col-md-6">
 							<div class="wpsp-form-group">
-								<label class="wpsp-label" for="Name">'.$DrName.'</label>
+								<label class="wpsp-label" for="Name">'.$DrName.'<span class="wpsp-required">*</span></label>
 								<input type="text" class="wpsp-form-control" ID="DrName" name="DrName" placeholder="Driver Name">
 							</div>
 						</div>
 						<div class="wpsp-col-md-6">
 							<div class="wpsp-form-group">
-								<label class="wpsp-label" for="Name">'.$DrPhone.'</label>
+								<label class="wpsp-label" for="Name">'.$DrPhone.'<span class="wpsp-required">*</span></label>
 								<input type="text" class="wpsp-form-control" ID="DrPhone" name="DrPhone" placeholder="'.esc_attr($DrPhone).'">
 							</div>
 						</div>
@@ -2908,6 +2938,11 @@ function wpsp_UpdateTransport(){
 			wp_die();
 		}
 		wpsp_Authenticate();
+		$validation = wpsp_FormValidation($_POST, ['VhName', 'VhNumb', 'DrName', 'DrPhone', 'route_fees']);
+		if ($validation !== TRUE) {
+			echo wp_kses_post($validation);
+			wp_die();
+		}
 		$wpdb->update($trans_table, array(
 			'bus_no' => sanitize_text_field($_POST['VhNumb']) ,
 			'bus_name' => sanitize_text_field($_POST['VhName']) ,

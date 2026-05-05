@@ -96,18 +96,18 @@ $(document).ready(function() {
     eventDrop: function(e) {
       e.preventDefault()
     },
-    eventDataTransform: function(eventData) {
-      if (eventData.end) {
-        var start = moment(eventData.start, 'YYYY-MM-DD HH:mm:ss');
-        var end = moment(eventData.end, 'YYYY-MM-DD HH:mm:ss');
-        var isAllDay = start.format('HH:mm:ss') === '00:00:00' && end.format('HH:mm:ss') === '00:00:00';
-        if (isAllDay) {
-          end.add(1, 'days');  // Add one day as before
-          eventData.end = end.toISOString();  // Convert back to ISO string
-        }
-      }
-      return eventData;
-    },    
+    // eventDataTransform: function(eventData) {
+    //   if (eventData.end) {
+    //     var start = moment(eventData.start, 'YYYY-MM-DD HH:mm:ss');
+    //     var end = moment(eventData.end, 'YYYY-MM-DD HH:mm:ss');
+    //     var isAllDay = start.format('HH:mm:ss') === '00:00:00' && end.format('HH:mm:ss') === '00:00:00';
+    //     if (isAllDay) {
+    //       end.add(1, 'days');  // Add one day as before
+    //       eventData.end = end.toISOString();  // Convert back to ISO string
+    //     }
+    //   }
+    //   return eventData;
+    // },    
     eventLimit: !0,
     events: {
       url: ajax_url,

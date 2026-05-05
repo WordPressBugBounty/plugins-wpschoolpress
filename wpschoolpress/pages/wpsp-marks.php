@@ -26,7 +26,6 @@ if( is_user_logged_in() ) {
 		$msg        =   'Please Add Class Before Adding Marks';
 		if( $current_user_role=='teacher' ) {
 			$cuserId    =   intval($current_user->ID);
-		//	$classQuery =   "SELECT DISTINCT c.cid,c.c_name FROM wp_wpsp_class c INNER JOIN wp_wpsp_subject s ON s.class_id= c.cid WHERE s.sub_teach_id ='".esc_sql($cuserId)."'";
 			$classQuery = $wpdb->prepare("SELECT DISTINCT c.cid,c.c_name FROM $ctname c INNER JOIN $sbname s ON s.class_id= c.cid WHERE s.sub_teach_id = %d",$cuserId);
 			$clt    =   $wpdb->get_results( $classQuery );
 			$msg        =   'Please ask Principal to assign class and subject';
@@ -70,7 +69,6 @@ if( is_user_logged_in() ) {
 										<?php
 										if( $exam_id > 0 ) {
 											$examtable  =   $wpdb->prefix.'wpsp_exam';
-										//	$examlist   =   $wpdb->get_results("select eid,e_name from $examtable where classid='$class_id'");
 											$examlist = $wpdb->get_results($wpdb->prepare("SELECT eid,e_name FROM $examtable WHERE classid = %d",$class_id));
 											foreach( $examlist as $exam ) { ?>
 												<option value="<?php echo esc_attr(intval($exam->eid));?>" <?php if($exam->eid==$exam_id) echo esc_html("selected","wpschoolpress");?>><?php echo esc_html($exam->e_name);?></option>
@@ -88,7 +86,6 @@ if( is_user_logged_in() ) {
 									$examtable  =   $wpdb->prefix.'wpsp_exam';
 									if( $exam_id!= '' ) {
                                         $exam_id = esc_sql($exam_id);
-									//	$subjectID =   $wpdb->get_var("select subject_id from $examtable where eid='$exam_id'");
 										$subjectID = $wpdb->get_var($wpdb->prepare("SELECT subject_id FROM $examtable WHERE eid = %d",$exam_id));
 										$subjectlist    =   explode( ",", $subjectID );
 									}
@@ -96,7 +93,6 @@ if( is_user_logged_in() ) {
 									<select name="SubjectID"  id="SubjectID" class="wpsp-form-control" required>
 										<?php if( $subject_id>0 ) {
                                             $sub_tbl    =   $wpdb->prefix."wpsp_subject";
-                                           // $subInfo    =   $wpdb->get_results("select sub_name,id from $sub_tbl where class_id='".esc_sql($class_id)."'");
 											$subInfo = $wpdb->get_results($wpdb->prepare("SELECT sub_name,id FROM $sub_tbl WHERE class_id = %d",$class_id));
                                             foreach( $subInfo as $sub_list ) {
                                                 if( in_array( $sub_list->id, $subjectlist ) ) {
@@ -138,7 +134,6 @@ if( is_user_logged_in() ) {
 						$mark_entered   =   '';
 						//Get Extra Fields
 						$extra_tbl      =   $wpdb->prefix."wpsp_mark_fields";
-					//	$extra_fields   =   $wpdb->get_results("select * from $extra_tbl where subject_id='".esc_sql($subject_id)."'");
 						$extra_fields = $wpdb->get_results($wpdb->prepare("SELECT * FROM $extra_tbl WHERE subject_id = %d",$subject_id));
 						if( wpsp_IsMarkEntered( $class_id,$subject_id,$exam_id ) ) {
 							$wpsp_marks     =   wpsp_GetMarks($class_id,$subject_id,$exam_id);
@@ -205,14 +200,12 @@ if( is_user_logged_in() ) {
 													echo "<tr><td>".esc_html( 'No Students to retrive', 'wpschoolpress')."</td></tr>";
 												}else {
 													foreach ($stl as $id ) {
-                            						//	$getslist  =   $wpdb->get_results("select * from $stable WHERE sid = $id order by CAST('s_rollno' as SIGNED)");
 														$getslist = $wpdb->get_results($wpdb->prepare("SELECT * FROM $stable WHERE sid = %d order by CAST('s_rollno' as SIGNED)",$id));
                             							foreach ($getslist as $student ) {
                             								$usid       =   intval($student->wp_usr_id);
 						    								$stroll     =   $student->s_rollno;
 															$stfullname =   $student->s_fname.' '.$student->s_mname.' '.$student->s_lname;
                     										$marktable  =   $wpdb->prefix."wpsp_mark";
-														//	$getmark    =   $wpdb->get_row("select * from $marktable WHERE class_id='$class_id' AND student_id='".esc_sql($usid)."' AND subject_id='".esc_sql($subject_id)."' AND exam_id='".esc_sql($exam_id)."' ");
 															$getmark = $wpdb->get_row($wpdb->prepare("SELECT * FROM $marktable WHERE class_id = %d AND student_id = %d AND subject_id = %d AND exam_id = %d",$class_id,$usid,$subject_id,$exam_id));
 															$getmarkid      =   isset( $getmark->mid ) ? $getmark->mid : '';
 															if( empty($getmark) ) {
@@ -274,7 +267,6 @@ if( is_user_logged_in() ) {
 												}else {
 													foreach ($stl as $id ) {
                                         				$id = esc_sql($id);
-					 								//	$getslist  =   $wpdb->get_results("select * from $stable WHERE sid = '$id' order by CAST('s_rollno' as SIGNED)");
 														$getslist = $wpdb->get_results($wpdb->prepare("SELECT * FROM $stable WHERE sid = %d order by CAST('s_rollno' as SIGNED)",$id));
 														foreach( $getslist as $slist ) {
 															?>
@@ -332,138 +324,164 @@ if( is_user_logged_in() ) {
 			<?php
 			wpsp_body_end();
 			wpsp_footer();
-		}else if( $current_user_role=='parent' ) {
-			wpsp_topbar();
-			wpsp_sidebar();
-			wpsp_body_start();
-			global $wpdb;
-			$parent_id      =   intval($current_user->ID);
-			$student_table  =   $wpdb->prefix."wpsp_student";
-			$class_table    =   $wpdb->prefix."wpsp_class";$cidd = '';
-            $class_id =   esc_sql(base64_decode(sanitize_text_field($_GET['cid'])));
-		//	$students =   $wpdb->get_results("select st.wp_usr_id, st.class_id, st.sid, CONCAT_WS(' ', st.s_fname, st.s_mname, st.s_lname ) AS full_name,cl.c_name from $student_table st LEFT JOIN $class_table cl ON cl.cid=st.class_id where st.parent_wp_usr_id='".esc_sql($parent_id)."'");
-			$students = $wpdb->get_results($wpdb->prepare("SELECT st.wp_usr_id, st.class_id, st.sid, CONCAT_WS(' ', st.s_fname, st.s_mname, st.s_lname ) AS full_name,cl.c_name FROM $student_table st LEFT JOIN $class_table cl ON cl.cid=st.class_id WHERE st.parent_wp_usr_id = %d",$parent_id));
-			$child          =   array();
-			foreach($students as $childinfo){
-				$child[]=array( 'student_id'    =>  $childinfo->wp_usr_id,
-					'name'          =>  $childinfo->full_name,
-					'class_id'      =>  $childinfo->class_id,
-					'class_name'    =>  $childinfo->c_name,
-					'sid'   =>  $childinfo->sid );
-				}
-				?>
-				<div class="wpsp-card">
-					<div class="wpsp-card-head">
-						<h3 class="wpsp-card-title"><?php echo esc_html(apply_filters( 'wpsp_student_marks_heading_item',"Students Marks"),"wpschoolpress"); ?></h3>
-					</div>
-					<div class="wpsp-card-body">
-						<div class="tabbable-line">
-							<div class="tabSec wpsp-nav-tabs-custom" id="verticalTab">
-								<div class="tabList">
-									<ul class="wpsp-resp-tabs-list">
-										<?php $child = sanitize_price_array($child); 
-										$i=0;
-										// -------------------------------------------------------
-										// BUG FIX 1: Original code wrapped <li> inside an if()
-										// that checked $_GET['sid'], so only 1 child got a tab.
-										// Removed that if() — now ALL children get a tab.
-										// -------------------------------------------------------
-                                        foreach($child as $ch) {?>
-											<li class="wpsp-tabing <?php echo ($i==0)?'active':''?>">
-												<?php echo esc_html($ch['name']);?>
-											</li>
-										<?php 
-											$i++;
-										} ?>
-									</ul>
-								</div>
-								<div class="wpsp-tabBody wpsp-resp-tabs-container">
-									<?php
-									$i=0;
-									foreach( $child as $ch ) {
-                                        $ch_class = $ch['class_id'];
-                                        ?>
-                                        <div class="tab-pane wpsp-tabMain <?php echo ($i==0)?'active':''?>" id="<?php echo 'student'.esc_attr($i);?>">
-                                            <?php
-                                            $student_id = intval($ch['student_id']);
-                                    
-                                            if ( is_numeric($ch['class_id']) && intval($ch['class_id']) > 0 ) {
-                                                $resolved_cid = intval($ch['class_id']);
-                                            } else {
-                                                $raw_cid = @unserialize($ch['class_id']);
-                                                $resolved_cid = ( is_array($raw_cid) && !empty($raw_cid) ) ? intval(reset($raw_cid)) : 0;
-                                            }
-                                    
-                                            // Fetch exams for this class
-                                            $exam_table_name = $wpdb->prefix . 'wpsp_exam';
-                                            $exams = $wpdb->get_results($wpdb->prepare(
-                                                "SELECT eid, e_name FROM $exam_table_name WHERE classid = %d",
-                                                $resolved_cid
-                                            ));
-                                            ?>
-                                    
-                                            <?php if (!empty($exams)) : ?>
-                                            <div class="wpsp-form-group" style="margin-bottom:15px;">
-                                                <label><strong>Select Exam:</strong></label>
-                                                <select class="wpsp-form-control wpsp-exam-dropdown"
-                                                        style="max-width:300px;"
-                                                        data-student="<?php echo esc_attr($student_id); ?>"
-                                                        data-class="<?php echo esc_attr($resolved_cid); ?>"
-                                                        data-nonce="<?php echo wp_create_nonce('wpsp_marks_nonce'); ?>">
-                                                    <option value="">-- Select Exam --</option>
-                                                    <?php foreach ($exams as $exam) : ?>
-                                                        <option value="<?php echo esc_attr($exam->eid); ?>">
-                                                            <?php echo esc_html($exam->e_name); ?>
-                                                        </option>
-                                                    <?php endforeach; ?>
-                                                </select>
-                                            </div>
-                                            <div class="wpsp-marks-result" id="marks-result-<?php echo esc_attr($student_id); ?>">
-                                                <!-- Marks load honge yahan -->
-                                            </div>
-                                            <?php else : ?>
-                                                <p class="wpsp-text-red">No exams found for this class.</p>
-                                            <?php endif; ?>
-                                    
-                                            <?php $i++; ?>
-                                        </div>
-                                        <?php
-                                    }
-									?>
-										</div>
-								</div>
-							</div>
+
+	/* ============================================================
+	   PARENT ROLE
+	   ============================================================ */
+	} else if( $current_user_role == 'parent' ) {
+		wpsp_topbar();
+		wpsp_sidebar();
+		wpsp_body_start();
+
+		$parent_id     = intval( $current_user->ID );
+		$student_table = $wpdb->prefix . "wpsp_student";
+		$class_table   = $wpdb->prefix . "wpsp_class";
+		$exam_table_name = $wpdb->prefix . 'wpsp_exam';
+
+		/*
+		 * Read URL params: sid = student wp_usr_id (base64), cid = class id (base64)
+		 * These are set by the sidebar links for each child+course.
+		 */
+		/*
+		 * The sidebar passes sid = student plugin row `sid` (base64),
+		 * and cid = class id (base64).
+		 */
+		$url_sid      = isset( $_GET['sid'] ) ? intval( base64_decode( sanitize_text_field( $_GET['sid'] ) ) ) : 0;
+		$url_class_id = isset( $_GET['cid'] ) ? intval( base64_decode( sanitize_text_field( $_GET['cid'] ) ) ) : 0;
+
+		/*
+		 * SINGLE VIEW: a specific student + class was clicked in the sidebar.
+		 */
+		if ( $url_sid > 0 && $url_class_id > 0 ) :
+
+			/*
+			 * Match on `sid` (plugin student row ID) and verify parent ownership.
+			 * Also fetch wp_usr_id — that is what the marks table stores.
+			 */
+			$student_row = $wpdb->get_row( $wpdb->prepare(
+				"SELECT sid, wp_usr_id, CONCAT_WS(' ', s_fname, s_mname, s_lname) AS full_name
+				 FROM $student_table
+				 WHERE sid = %d AND parent_wp_usr_id = %d",
+				$url_sid,
+				$parent_id
+			) );
+
+			/* wp_usr_id is what the AJAX marks handler expects */
+			$url_student_id = $student_row ? intval( $student_row->wp_usr_id ) : 0;
+
+			$class_row = $wpdb->get_row( $wpdb->prepare(
+				"SELECT c_name FROM $class_table WHERE cid = %d",
+				$url_class_id
+			) );
+
+			$exams = $wpdb->get_results( $wpdb->prepare(
+				"SELECT eid, e_name FROM $exam_table_name WHERE classid = %d",
+				$url_class_id
+			) );
+
+			$result_div_id = 'marks-result-' . $url_student_id . '-' . $url_class_id;
+			?>
+
+			<div class="wpsp-card">
+				<div class="wpsp-card-head">
+					<h3 class="wpsp-card-title">
+						<?php echo esc_html( apply_filters( 'wpsp_student_marks_heading_item', 'Students Marks' ), 'wpschoolpress' ); ?>
+					</h3>
+				</div>
+				<div class="wpsp-card-body">
+
+					<?php if ( ! $student_row || ! $url_student_id ) : ?>
+						<p class="wpsp-text-red"><?php esc_html_e( 'Access denied.', 'wpschoolpress' ); ?></p>
+
+					<?php elseif ( empty( $exams ) ) : ?>
+						<p class="wpsp-text-red"><?php esc_html_e( 'No exams found for this class.', 'wpschoolpress' ); ?></p>
+
+					<?php else : ?>
+						<div class="wpsp-form-group" style="margin-bottom: 10px;">
+							<label><strong><?php esc_html_e( 'Select Exam:', 'wpschoolpress' ); ?></strong></label>
+							<select class="wpsp-form-control wpsp-exam-dropdown"
+							        style="max-width: 300px;"
+							        data-student="<?php echo esc_attr( $url_student_id ); ?>"
+							        data-class="<?php echo esc_attr( $url_class_id ); ?>"
+							        data-nonce="<?php echo esc_attr( wp_create_nonce( 'wpsp_marks_nonce' ) ); ?>">
+								<option value="">-- <?php esc_html_e( 'Select Exam', 'wpschoolpress' ); ?> --</option>
+								<?php foreach ( $exams as $exam ) : ?>
+									<option value="<?php echo esc_attr( $exam->eid ); ?>">
+										<?php echo esc_html( $exam->e_name ); ?>
+									</option>
+								<?php endforeach; ?>
+							</select>
 						</div>
-					</div>
+
+						<div class="wpsp-marks-result" id="<?php echo esc_attr( $result_div_id ); ?>"></div>
+					<?php endif; ?>
+
 				</div>
 			</div>
-			<?php
-			wpsp_body_end();
-			wpsp_footer();
-		}else if( $current_user_role=='student' ) {
-			wpsp_topbar();
-			wpsp_sidebar();
-			wpsp_body_start();
-			$student_id=intval($current_user->ID);
-            $ciid = sanitize_text_field(stripslashes($_GET['cid']));
-			$class_id = intval(base64_decode($ciid));
+
+		<?php
+		/*
+		 * FALLBACK: no specific student/class in URL — this shouldn't normally
+		 * happen with a proper sidebar, but keep a safe fallback just in case.
+		 */
+		else :
+
+			$students = $wpdb->get_results( $wpdb->prepare(
+				"SELECT st.wp_usr_id, st.class_id, st.sid,
+				        CONCAT_WS(' ', st.s_fname, st.s_mname, st.s_lname) AS full_name,
+				        cl.c_name
+				 FROM $student_table st
+				 LEFT JOIN $class_table cl ON cl.cid = st.class_id
+				 WHERE st.parent_wp_usr_id = %d",
+				$parent_id
+			) );
 			?>
 			<div class="wpsp-card">
 				<div class="wpsp-card-head">
-				    <h3 class="wpsp-card-title"><?php esc_html_e( 'Your Marks', 'wpschoolpress' );?></h3>
+					<h3 class="wpsp-card-title">
+						<?php echo esc_html( apply_filters( 'wpsp_student_marks_heading_item', 'Students Marks' ), 'wpschoolpress' ); ?>
+					</h3>
 				</div>
 				<div class="wpsp-card-body">
-					<div class="gap-top-bottom">
-						<?php wpsp_MarkReport($student_id, $class_id); ?>
-					</div>
+					<p><?php esc_html_e( 'Please select a student and course from the sidebar to view marks.', 'wpschoolpress' ); ?></p>
 				</div>
 			</div>
-			<?php
-				wpsp_body_end();
-				wpsp_footer();
-		}
-	}else{
-		//Include Login Section
-		include_once( WPSP_PLUGIN_PATH .'/includes/wpsp-login.php');
+
+		<?php endif; ?>
+
+		<?php
+		wpsp_body_end();
+		wpsp_footer();
+
+	/* ============================================================
+	   STUDENT ROLE
+	   ============================================================ */
+	} else if( $current_user_role == 'student' ) {
+		wpsp_topbar();
+		wpsp_sidebar();
+		wpsp_body_start();
+
+		$student_id = intval( $current_user->ID );
+		$ciid       = sanitize_text_field( stripslashes( $_GET['cid'] ) );
+		$class_id   = intval( base64_decode( $ciid ) );
+		?>
+		<div class="wpsp-card">
+			<div class="wpsp-card-head">
+				<h3 class="wpsp-card-title"><?php esc_html_e( 'Your Marks', 'wpschoolpress' ); ?></h3>
+			</div>
+			<div class="wpsp-card-body">
+				<div class="gap-top-bottom">
+					<?php wpsp_MarkReport( $student_id, $class_id ); ?>
+				</div>
+			</div>
+		</div>
+		<?php
+		wpsp_body_end();
+		wpsp_footer();
 	}
+
+} else {
+	// Include Login Section
+	include_once( WPSP_PLUGIN_PATH . '/includes/wpsp-login.php' );
+}
 ?>
