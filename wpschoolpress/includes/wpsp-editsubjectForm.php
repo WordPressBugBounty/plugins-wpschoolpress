@@ -80,6 +80,7 @@ foreach ($wpsp_subjects as $subject_data) {
 						<?php do_action('wpsp_after_subject_detail_fields'); ?>
 					</div>
 				</div>
+				<?php do_action( 'wpsp_after_subject_edit_form', $subid, $classid ); ?>
 				<div class="wpsp-col-md-12">
 					<input type="submit" id="SEditSave" class="wpsp-btn wpsp-btn-success" value="Update">
                     <a href="<?php echo esc_url(wpsp_admin_url().'sch-subject')?>" class="wpsp-btn wpsp-dark-btn" ><?php echo esc_html("Back","wpschoolpress");?></a>

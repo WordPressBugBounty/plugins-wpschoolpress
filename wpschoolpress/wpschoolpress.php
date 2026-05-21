@@ -3,7 +3,7 @@
 Plugin Name: 	WPSchoolPress
 Plugin URI: 	http://wpschoolpress.com
 Description:    WPSchoolpress is a school management system plugin that makes school activities transparent to parents. For more information please visit our website.
-Version: 		2.2.40
+Version: 		2.2.41
 Author: 		WPSchoolPress Team
 Author URI: 	wpschoolpress.com
 Text Domain:	wpschoolpress
@@ -16,7 +16,7 @@ if (!defined('ABSPATH')) exit;
  * Basic plugin definitions
  *
  * @package WPSchoolPress
- * @since 2.2.40
+ * @since 2.2.41
  */
 if (!defined('WPSP_PLUGIN_URL'))
 {
@@ -28,7 +28,7 @@ if (!defined('WPSP_PLUGIN_PATH'))
 }
 if (!defined('WPSP_PLUGIN_VERSION'))
 {
-	define('WPSP_PLUGIN_VERSION', '2.2.40'); //Plugin version number
+	define('WPSP_PLUGIN_VERSION', '2.2.41'); //Plugin version number
 }
 define('WPSP_PERMISSION_MSG', 'You don\'t have enough permission to access this page');
 // Call the  required files when plugin activate
@@ -89,14 +89,14 @@ add_action( 'init', function() {
 	add_action( 'template_redirect', function() {
 		$wpsp_slugs = array(
 			'sch-dashboard','sch-student','sch-transport','sch-parent',
-			'sch-class','sch-teacher','sch-messages','sch-profile',
+			'sch-class','sch-teacher','sch-profile',
 			'sch-exams','sch-marks','sch-attendance','sch-timetable',
 			'sch-reminder','sch-events','sch-subject','sch-settings',
 			'sch-calendar','sch-teacherattendance','sch-notify',
 			'sch-payment','sch-importhistory','sch-leavecalendar',
 			'sch-changepassword','sch-editprofile','sch-postsprofile',
 			'sch-posts','sch-posts-notification','sch-reported-posts',
-			'sch-documents','sch-history','sch-request',
+			'sch-documents','sch-request',
 		);
 		if ( is_page( $wpsp_slugs ) && function_exists('wpsp_get_setting') ) {
 			wpsp_get_setting();
@@ -192,10 +192,6 @@ function ajax_actions()
 	add_action('wp_ajax_updateTransport', 'wpsp_UpdateTransport');
 	add_action('wp_ajax_viewTransport', 'wpsp_ViewTransport');
 	add_action('wp_ajax_deleteTransport', 'wpsp_DeleteTransport');
-	add_action('wp_ajax_sendMessage', 'wpsp_SendMessage');
-	add_action('wp_ajax_sendSubMessage', 'wpsp_sendSubMessage');
-	add_action('wp_ajax_viewMessage', 'wpsp_ViewMessage');
-	add_action('wp_ajax_deleteMessage', 'wpsp_DeleteMessage');
 	add_action('wp_ajax_photoUpload', 'wpsp_UploadPhoto');
 	add_action('wp_ajax_deletePhoto', 'wpsp_DeletePhoto');
 	add_action('wp_ajax_DeleteStudent', 'wpsp_DeleteStudent');

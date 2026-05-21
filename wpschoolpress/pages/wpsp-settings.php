@@ -372,6 +372,7 @@ if (!defined( 'ABSPATH' ) )exit('No Such File');
                                     <li class="wpsp-tabing" title="Info"><?php echo esc_html(apply_filters( 'wpsp_settings_tab_info_heading',  'Info'), 'wpschoolpress' ); ?></li>
                                     <li class="wpsp-tabing <?php echo esc_attr($proclass); ?>" title="<?php echo esc_attr($protitle);?>" <?php echo esc_html($prodisable); ?> title="An overdose in each drop"><?php echo esc_html(apply_filters( 'wpsp_settings_tab_sms_', 'SMS'), 'wpschoolpress' ); ?></li>
                                     <li class="wpsp-tabing"  title="Licensing"><?php echo esc_html(apply_filters( 'wpsp_settings_tab_info_heading', 'Licensing'), 'wpschoolpress' ); ?></li>
+                                    <?php do_action('wpsp_settings_tabs'); ?>
                                 </ul>
                             </div>
                             <div class="wpsp-tabBody wpsp-resp-tabs-container">
@@ -526,6 +527,7 @@ if (!defined( 'ABSPATH' ) )exit('No Such File');
                                     ?>
                                 </form>
                             </div>
+                            
                             <div class="wpsp-tabMain">
                                 <?php
                                 if( isset( $proversion['status'] ) && $proversion['status'] ) {
@@ -535,6 +537,7 @@ if (!defined( 'ABSPATH' ) )exit('No Such File');
                                 }
                                 ?>
                             </div>
+
                             <div class="wpsp-tabMain">
                                 <form name="Settingslicensing" id="Settingslicensing" class="wpsp-form-horizontal" method="post">
                                     <?php wp_nonce_field( 'SettingsLisence', 'wps_setlisence_nonce', '', true ) ?>
@@ -613,6 +616,7 @@ if (!defined( 'ABSPATH' ) )exit('No Such File');
                                     </div>
                                 </form>
                             </div>
+                            <?php do_action( 'wpsp_settings_tab_content' ); ?>
                         </div>
                     </div>
                 </div>
