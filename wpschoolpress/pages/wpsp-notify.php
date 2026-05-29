@@ -100,14 +100,14 @@ $usersList1	=	array_merge( $student_ids1,$teacher_ids1);
 										?></option>
 									<?php } } ?> 
                             	</select> 
-								<select name="receiver" class="wpsp-form-control">
+								<!-- <select name="receiver" class="wpsp-form-control">
 										<option value=""><?php esc_html_e( 'Whom to notify?', 'wpschoolpress'); ?></option>
 										<?php
 										foreach( $receiverTypeList as $key => $value ) {
 											echo '<option value="'.esc_attr($key).'">'.esc_html($value).'</option>';
 										}
 										?>
-								</select>
+								</select> -->
 							</div>
 						</div>
 						<div class="wpsp-col-md-4">

@@ -5,7 +5,7 @@ Tags: student information management, staff information management, attendance m
 Requires at least: 6.7
 Tested up to: 6.9
 Requires PHP: 7.4
-Stable tag: 2.2.41
+Stable tag: 2.2.42
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -13,6 +13,8 @@ Comprehensive school management plugin with attendance, classes, timetables, exa
 
 == Description ==
 WPSchoolPress is currently a highly demanding WordPress plugin for the school management system in 2025-26. WPSchoolPress is a No.#1 School Management WordPress Plugin allows you to manage entities such as classes, students, sections, exams, timetables, results, ID Cards, teachers, staff, fee management, parent control, invoices, noticeboards, and more.
+
+Upgrade your experience with premium add-ons that bring advanced features, automation, and enhanced control to your school management system.
 
 
 = Features =
@@ -436,3 +438,6 @@ Please purchase the SMS addon from our website www.wpschoolpress.com/downloads/s
 
 == 2.2.41 =
 *Updated - Created Hooks and made addon related chnages.
+
+== 2.2.42 =
+*Updated - FIxed bug and Created hooks for Live addon.

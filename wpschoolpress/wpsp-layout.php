@@ -381,6 +381,7 @@ function wpsp_sidebar(){
               <span>".$sch_subject."</span>
             </a>
           </li>";
+          do_action('wpsp_register_addon_menus');
 
           if($current_user_role=='administrator'){
             echo "<li class='".esc_attr($settings_subfield_page)."'>
@@ -717,10 +718,11 @@ function wpsp_sidebar(){
                               </li>
                               <li class='".esc_attr($subject_page)."'>
                                 <a href='".esc_url(site_url('wp-admin/admin.php?page=sch-subject&cid=').esc_attr($id))."'>
-                                  <span>".$sch_subject."</span>
+                                    <span>".$sch_subject."</span>
                                 </a>
-                              </li>
-                              <li class='".esc_attr($exam_page)."'>
+                            </li>";
+                            do_action('wpsp_register_addon_menus', $id);
+                            echo "<li class='".esc_attr($exam_page)."'>
                                 <a href='".esc_url(site_url('wp-admin/admin.php?page=sch-exams&cid=').esc_attr($id))."'>
                                 <span>".$sch_exams."</span>
                                 </a>
@@ -1041,12 +1043,13 @@ function wpsp_sidebar(){
                     <span>".$sch_teacher."</span>
                   </a>
                 </li>
-                <li class='".esc_attr($subject_page)."'>
-                  <a href='".esc_url(site_url('wp-admin/admin.php?page=sch-subject&cid='.esc_attr($id).'&sid=').esc_attr($sid))."'>
-                    <span>".$sch_subject."</span>
+               <li class='".esc_attr($subject_page)."'>
+                  <a href='".esc_url(site_url('wp-admin/admin.php?page=sch-subject&cid=').esc_attr($id))."'>
+                      <span>".$sch_subject."</span>
                   </a>
-                </li>
-                <li class='".esc_attr($exam_page)."'>
+              </li>";
+              do_action('wpsp_register_addon_menus', $id);
+              echo "<li class='".esc_attr($exam_page)."'>
                   <a href='".esc_url(site_url('wp-admin/admin.php?page=sch-exams&cid='.esc_attr($id).'&sid=').esc_attr($sid))."'>
                     <span>".$sch_exams."</span>
                   </a>
@@ -1083,7 +1086,7 @@ function wpsp_sidebar(){
                     <i class='dashicons dashicons-calendar-alt icon'></i><span>" . $sch_quiz_result . "</span>
                   </a>
                   </li>";
-                }
+                }   
             echo "<li class='".esc_attr($transport_page)."'>
             <a href='".esc_url(site_url('wp-admin/admin.php?page=sch-transport'))."'>
               <i class='icon wpsp-school-bus'></i><span>".$sch_transport."</span>

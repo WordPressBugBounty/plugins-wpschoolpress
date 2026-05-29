@@ -3040,47 +3040,6 @@ function wpsp_DeleteTransport(){
 	wp_die();
 }
 
-
-function wpsp_sendSubMessage(){
-	wpsp_AllAuthenticate();
-	global $wpdb, $current_user;
-	$messages_table = $wpdb->prefix . 'wpsp_messages';
-	$sender = $current_user->ID;
-	$send = '';
-	$send_error = '';
-	if (isset($_POST['main_m_id']) && !empty($_POST['main_m_id'])){
-		$main_m_id = intval($_POST['main_m_id']);
-		$replay_m_id = sanitize_text_field($_POST['replay_m_id']);
-		$reciver_id = sanitize_text_field($_POST['reciver_id']);
-		$re_message = sanitize_textarea_field($_POST['message']);
-		//$message_block = $get_mb = $wpdb->get_row("SELECT * from $messages_table where mid='".esc_sql($main_m_id)."'");
-		$message_block = $wpdb->get_row($wpdb->prepare("SELECT * FROM $messages_table WHERE mid = %d ",$main_m_id));
-		$receiverid = isset($message_block->r_id) ? intval($message_block->r_id) : '';
-		$r_id = isset($message_block->s_id) ? intval($message_block->s_id) : '';
-		$subject = isset($message_block->subject) ? sanitize_text_field($message_block->subject) : '';
-		$message_data = array(
-			's_id' => $sender,
-			'r_id' => $reciver_id,
-			'subject' => $subject,
-			'msg' => $re_message,
-			'del_stat' => 0,
-			'replay_id'  => $replay_m_id,
-			'main_m_id'  => $main_m_id,
-		);
-		$send = $wpdb->insert($messages_table, $message_data);
-		if (!empty($subject) && !empty($r_id)){
-			$receiverInfo = get_user_by('id', $receiverid);
-			$receiverEmail = isset($receiverInfo->data->user_email) ? $receiverInfo->data->user_email : '';
-			if (!empty($receiverEmail)){
-				wpsp_send_mail($receiverEmail, $subject, sanitize_text_field($_POST['message']));
-			}
-		}
-		if ($send){
-			echo  esc_html( 'Message sent successfully!', 'wpschoolpress' );
-		}
-	}
-}
-
 /* Display teacher list in popup */
 function wpsp_getTeachersList(){
 
