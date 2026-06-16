@@ -5,7 +5,7 @@ Tags: student information management, staff information management, attendance m
 Requires at least: 6.7
 Tested up to: 6.9
 Requires PHP: 7.4
-Stable tag: 2.2.42
+Stable tag: 2.2.43
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -441,3 +441,6 @@ Please purchase the SMS addon from our website www.wpschoolpress.com/downloads/s
 
 == 2.2.42 =
 *Updated - FIxed bug and Created hooks for Live addon.
+
+== 2.2.43 =
+*Updated - Fixed styling issue.
