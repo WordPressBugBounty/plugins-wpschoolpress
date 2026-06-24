@@ -3,7 +3,7 @@
 Plugin Name: 	WPSchoolPress
 Plugin URI: 	http://wpschoolpress.com
 Description:    WPSchoolpress is a school management system plugin that makes school activities transparent to parents. For more information please visit our website.
-Version: 		2.2.43
+Version: 		2.2.45
 Author: 		WPSchoolPress Team
 Author URI: 	wpschoolpress.com
 Text Domain:	wpschoolpress
@@ -16,7 +16,7 @@ if (!defined('ABSPATH')) exit;
  * Basic plugin definitions
  *
  * @package WPSchoolPress
- * @since 2.2.43
+ * @since 2.2.45
  */
 if (!defined('WPSP_PLUGIN_URL'))
 {
@@ -28,7 +28,7 @@ if (!defined('WPSP_PLUGIN_PATH'))
 }
 if (!defined('WPSP_PLUGIN_VERSION'))
 {
-	define('WPSP_PLUGIN_VERSION', '2.2.43'); //Plugin version number
+	define('WPSP_PLUGIN_VERSION', '2.2.45'); //Plugin version number
 }
 define('WPSP_PERMISSION_MSG', 'You don\'t have enough permission to access this page');
 // Call the  required files when plugin activate
@@ -243,4 +243,21 @@ add_filter( 'login_headerurl', 'wp_wp_login_url' );
         }
     }
     add_action( 'init', 'wpsp_std_role', 11 );
+
+// Appsero deactivation block 
+if ( ! class_exists( 'Appsero\Client' ) ) {
+    require_once WPSP_PLUGIN_PATH . 'includes/appsero/src/Client.php';
+}
+
+function wpsp_lms_appsero_init() {
+    $client = new Appsero\Client(
+        '174e4f64-1448-49aa-98bd-514dff30fd7b',
+        'School Management System – WPSchoolPress',
+        __FILE__
+    );
+
+    $client->insights()->init();
+}
+
+wpsp_lms_appsero_init();
 ?>

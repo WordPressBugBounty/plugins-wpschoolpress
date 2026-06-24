@@ -2041,6 +2041,105 @@ $content = "<div class='wpsp-panel-body'>
 add_action('wp_ajax_wpsp_get_marks_by_exam', 'wpsp_get_marks_by_exam_ajax');
 add_action('wp_ajax_nopriv_wpsp_get_marks_by_exam', 'wpsp_get_marks_by_exam_ajax');
 
+/**
+ * Handle customization request form submission.
+ * Sends an email to the plugin author with the user's request details.
+ *
+ * @since 2.2.43
+ */
+function wpsp_submit_customization_ajax() {
+	check_ajax_referer( 'wpsp_customization_request', 'wpsp_customization_nonce' );
+
+	if ( ! current_user_can( 'manage_options' ) ) {
+		wp_send_json_error( array( 'message' => esc_html__( 'You do not have permission to do this.', 'wpschoolpress' ) ) );
+	}
+
+	$name        = isset( $_POST['wpsp_custom_name'] )        ? sanitize_text_field( wp_unslash( $_POST['wpsp_custom_name'] ) )        : '';
+	$email       = isset( $_POST['wpsp_custom_email'] )       ? sanitize_email( wp_unslash( $_POST['wpsp_custom_email'] ) )            : '';
+	$type        = isset( $_POST['wpsp_custom_type'] )        ? sanitize_text_field( wp_unslash( $_POST['wpsp_custom_type'] ) )        : '';
+	$description = isset( $_POST['wpsp_custom_description'] ) ? sanitize_textarea_field( wp_unslash( $_POST['wpsp_custom_description'] ) ) : '';
+	$budget      = isset( $_POST['wpsp_custom_budget'] )      ? sanitize_text_field( wp_unslash( $_POST['wpsp_custom_budget'] ) )      : '';
+	$website     = isset( $_POST['wpsp_custom_website'] )     ? esc_url_raw( wp_unslash( $_POST['wpsp_custom_website'] ) )            : '';
+	$siteurl     = isset( $_POST['wpsp_custom_siteurl'] )     ? esc_url_raw( wp_unslash( $_POST['wpsp_custom_siteurl'] ) )            : '';
+
+	// Subject is now a multi-select checkbox group
+	$subject_options = array(
+		'mobile_app'           => 'Mobile App Inquiry',
+		'plugin_customization' => 'Plugin Customization Request',
+	);
+
+	$subject_keys = array();
+	if ( isset( $_POST['wpsp_custom_subject'] ) && is_array( $_POST['wpsp_custom_subject'] ) ) {
+		$subject_keys = array_map( 'sanitize_text_field', wp_unslash( $_POST['wpsp_custom_subject'] ) );
+		$subject_keys = array_intersect( $subject_keys, array_keys( $subject_options ) ); // only allow known values
+	}
+
+	$subject_labels = array();
+	foreach ( $subject_keys as $key ) {
+		$subject_labels[] = $subject_options[ $key ];
+	}
+	$subject = implode( ', ', $subject_labels );
+
+	// Basic server-side validation
+	if ( strlen( $name ) < 2 ) {
+		wp_send_json_error( array( 'message' => esc_html__( 'Please enter a valid name.', 'wpschoolpress' ) ) );
+	}
+	if ( ! is_email( $email ) ) {
+		wp_send_json_error( array( 'message' => esc_html__( 'Please enter a valid email address.', 'wpschoolpress' ) ) );
+	}
+	if ( empty( $type ) ) {
+		wp_send_json_error( array( 'message' => esc_html__( 'Please select a customization type.', 'wpschoolpress' ) ) );
+	}
+	if ( empty( $subject_labels ) ) {
+		wp_send_json_error( array( 'message' => esc_html__( 'Please select at least one subject option.', 'wpschoolpress' ) ) );
+	}
+	if ( strlen( $description ) < 20 ) {
+		wp_send_json_error( array( 'message' => esc_html__( 'Please enter a detailed description (min 20 characters).', 'wpschoolpress' ) ) );
+	}
+
+	$type_labels = array(
+		'feature'     => 'New Feature Request',
+		'ui'          => 'UI / Design Change',
+		'integration' => 'Third-Party Integration',
+		'report'      => 'Custom Report / Export',
+		'other'       => 'Other',
+	);
+	$type_label = isset( $type_labels[ $type ] ) ? $type_labels[ $type ] : $type;
+
+	$to           = 'vishal@igexsolutions.com';
+	$subject_line = '[WPSchoolPress Customization] ' . $subject;
+
+	$body  = "Customization Request from WPSchoolPress Dashboard\n";
+	$body .= "=================================================\n\n";
+	$body .= "Name        : " . $name . "\n";
+	$body .= "Email       : " . $email . "\n";
+	$body .= "Type        : " . $type_label . "\n";
+	$body .= "Subject     : " . $subject . "\n";
+	$body .= "Budget      : " . ( $budget ? $budget : 'Not specified' ) . "\n";
+	$body .= "Website     : " . ( $website ? $website : 'Not specified' ) . "\n";
+	$body .= "Site URL    : " . $siteurl . "\n\n";
+	$body .= "Description :\n" . $description . "\n";
+
+	$headers = array(
+		'From: ' . $name . ' <' . $email . '>',
+		'Reply-To: ' . $name . ' <' . $email . '>',
+		'Content-Type: text/plain; charset=UTF-8',
+	);
+
+	$sent = wp_mail( $to, $subject_line, $body, $headers );
+
+	if ( $sent ) {
+		wp_send_json_success( array(
+			'message' => esc_html__( 'Your customization request has been submitted successfully! We will get back to you within 1-2 business days.', 'wpschoolpress' ),
+		) );
+	} else {
+		wp_send_json_error( array(
+			'message' => esc_html__( 'There was an issue sending your request. Please try again or contact us directly at vishal@igexsolutions.com.', 'wpschoolpress' ),
+		) );
+	}
+}
+add_action( 'wp_ajax_wpsp_submit_customization', 'wpsp_submit_customization_ajax' );
+
 function wpsp_get_marks_by_exam_ajax() {
     check_ajax_referer('wpsp_marks_nonce', 'nonce');
     

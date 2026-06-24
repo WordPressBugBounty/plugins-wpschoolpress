@@ -3,9 +3,9 @@ Contributors: jdsofttech,narendraigex
 Donate link: https://www.wpschoolpress.com/contactus
 Tags: student information management, staff information management, attendance management, time table management, exam schedule management
 Requires at least: 6.7
-Tested up to: 6.9
+Tested up to: 7.0
 Requires PHP: 7.4
-Stable tag: 2.2.43
+Stable tag: 2.2.45
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -443,4 +443,10 @@ Please purchase the SMS addon from our website www.wpschoolpress.com/downloads/s
 *Updated - FIxed bug and Created hooks for Live addon.
 
 == 2.2.43 =
-*Updated - Fixed styling issue.
+*FIxed - Fixed styling issue.
+
+== 2.2.44 =
+*Updated: Added a Customization Request form, a dedicated Add-ons page, and Appsero deactivation feedback collection.
+
+== 2.2.45 =
+*Updated: Tested upto wordpress version 7.0

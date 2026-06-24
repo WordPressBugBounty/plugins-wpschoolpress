@@ -180,11 +180,13 @@ function wpsp_admin_menu()
 			));
 		}
 		add_submenu_page( 'wpschoolpress', 'wpschoolpress', '<i class="dashicons dashicons-welcome-add-page"></i>&nbsp; Addons',
-    'manage_options', 'addons',
-		array(
-			$this,
-			'wpsp_addons'
-		));
+			'manage_options', 'sch-addons',
+			array( $this, 'wpsp_addons' )
+		);
+		add_submenu_page( 'wpschoolpress', 'wpschoolpress', '<i class="fa fa-pencil-square-o"></i>&nbsp; Customization',
+			'manage_options', 'sch-customization',
+			array( $this, 'wpsp_customization' )
+		);
 	}
 	/*
 	* Call html of purchase code validation and contact
@@ -197,7 +199,11 @@ function wpsp_admin_menu()
 	}
 	function wpsp_addons()
 	{
-		require_once (WPSP_PLUGIN_PATH . 'lib/wpsp-admin-addons.php');
+		require_once (WPSP_PLUGIN_PATH . 'pages/wpsp-addons.php');
+	}
+	function wpsp_customization()
+	{
+		require_once (WPSP_PLUGIN_PATH . 'pages/wpsp-customization.php');
 	}
 	function wpsp_callback_dashboard()
 	{
@@ -472,6 +478,26 @@ function wpsp_admin_menu()
 		}
 		if ( $hook === 'wpschoolpress_page_sch-leavecalendar' ) {
 			wp_enqueue_script( 'wpsp_wp_admin_jquery42', WPSP_PLUGIN_URL . 'js/wpsp-leavecalendar.js', array( 'jquery' ), '1.0.0', true );
+		}
+		if ( $hook === 'wpschoolpress_page_sch-addons' || $hook === 'wpschoolpress_page_sch-customization' ) {
+			wp_register_style( 'wpsp_addons_customization', WPSP_PLUGIN_URL . 'css/wpsp-addons-customization.css', false, WPSP_PLUGIN_VERSION );
+			wp_enqueue_style( 'wpsp_addons_customization' );
+		}
+		if ( $hook === 'wpschoolpress_page_sch-customization' ) {
+			wp_enqueue_script( 'wpsp_customization_js', WPSP_PLUGIN_URL . 'js/wpsp-customization.js', array( 'jquery' ), WPSP_PLUGIN_VERSION, true );
+			wp_localize_script( 'wpsp_customization_js', 'wpspCustomization', array(
+				'ajax_url' => admin_url( 'admin-ajax.php' ),
+				'i18n'     => array(
+					'sending'       => esc_html__( 'Sending...', 'wpschoolpress' ),
+					'submit'        => esc_html__( 'Submit Request', 'wpschoolpress' ),
+					'error'         => esc_html__( 'Something went wrong. Please try again.', 'wpschoolpress' ),
+					'name_error'    => esc_html__( 'Please enter a valid name (min 2 characters).', 'wpschoolpress' ),
+					'email_error'   => esc_html__( 'Please enter a valid email address.', 'wpschoolpress' ),
+					'type_error'    => esc_html__( 'Please select a customization type.', 'wpschoolpress' ),
+					'subject_error' => esc_html__( 'Please enter a subject (min 5 characters).', 'wpschoolpress' ),
+					'desc_error'    => esc_html__( 'Please enter a description (min 20 characters).', 'wpschoolpress' ),
+				),
+			) );
 		}
 	}
 	/*

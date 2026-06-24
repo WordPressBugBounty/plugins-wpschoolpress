@@ -37,3 +37,5 @@ $sch_lms = apply_filters('wpsp_sidebar_lms_menu', esc_html__('LMS', 'wpschoolpre
 $sch_quiz = apply_filters('wpsp_sidebar_quiz_menu', esc_html__('Quizzes', 'wpschoolpress'));
 $sch_question = apply_filters('wpsp_sidebar_question_menu', esc_html__('Questions', 'wpschoolpress'));
 $sch_quiz_result = apply_filters('wpsp_sidebar_result_menu', esc_html__('Quiz Result', 'wpschoolpress'));
+$sch_addons        = apply_filters( 'wpsp_sidebar_addons_title_menu',        esc_html__( 'Addons',        'wpschoolpress' ) );
+$sch_customization = apply_filters( 'wpsp_sidebar_customization_title_menu', esc_html__( 'Customization', 'wpschoolpress' ) );

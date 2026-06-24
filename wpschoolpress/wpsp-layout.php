@@ -236,6 +236,12 @@ function wpsp_sidebar(){
       case 'question':
         $question_page = 'active';
         break;
+      case 'addons':
+        $addons_page = 'active';
+        break;
+      case 'customization':
+        $customization_page = 'active';
+        break;
     }
 
 
@@ -491,6 +497,21 @@ function wpsp_sidebar(){
           }
             echo "</ul>
                 </li>";
+
+      if ( $current_user_role === 'administrator' ) {
+        echo "<li class='" . esc_attr( isset( $addons_page ) ? $addons_page : '' ) . "'>
+          <a href='" . esc_url( site_url( 'wp-admin/admin.php?page=sch-addons' ) ) . "'>
+            <i class='dashicons dashicons-welcome-add-page icon'></i>
+            <span>" . $sch_addons . "</span>
+          </a>
+        </li>
+        <li class='" . esc_attr( isset( $customization_page ) ? $customization_page : '' ) . "'>
+          <a href='" . esc_url( site_url( 'wp-admin/admin.php?page=sch-customization' ) ) . "'>
+            <i class='fa fa-pencil-square-o icon'></i>
+            <span>" . $sch_customization . "</span>
+          </a>
+        </li>";
+      }
 
       echo "</ul>
             </div>
@@ -1261,7 +1282,7 @@ function wpsp_body_start()
        case 'editprofile' :
     $pagetitle="Edit Profile";
     break;
-     case 'history' :
+    case 'history' :
     $pagetitle="History";
     break;
     case 'lessons':
@@ -1275,6 +1296,12 @@ function wpsp_body_start()
     case 'questions':
       $pagetitle = "Questions";
       $addurl = $base_url . 'sch-questions&tab=addquestion';
+      break;
+    case 'addons':
+      $pagetitle = esc_html__( 'Addons', 'wpschoolpress' );
+      break;
+    case 'customization':
+      $pagetitle = esc_html__( 'Customization', 'wpschoolpress' );
       break;
   }
   // echo $addurl;
