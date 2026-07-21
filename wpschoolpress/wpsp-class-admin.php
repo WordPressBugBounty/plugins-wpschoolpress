@@ -32,7 +32,7 @@ function wpsp_admin_menu()
 		$promessage2    =    wpsp_check_pro_version('wpsp_message_version');
     	$prodisablemessage2    =    !$promessage2['status'] ? 'notinstalled'    : 'installed';
 
-		add_menu_page(__('WPSchoolPress', 'wpschoolpress') , __('WPSchoolPress', 'wpschoolpress') , 'manage_options', 'wpschoolpress', array(
+		add_menu_page(__('wpschoolpress', 'wpschoolpress') , __('WPSchoolPress', 'wpschoolpress') , 'manage_options', 'wpschoolpress', array(
 			$this,
 			'wpsp_admin_details'
 		) , WPSP_PLUGIN_URL . 'img/favicon.png');
@@ -44,28 +44,28 @@ function wpsp_admin_menu()
 		/* Social Posts */
 		if( $current_user_role=='administrator' || $current_user_role=='teacher' || $current_user_role=='student' ||$current_user_role=='parent' )
 		{
-			add_submenu_page('WPSchoolPress', 'WPSchoolPress', '<i class="dashicons-before dashicons-admin-post"></i>&nbsp; Posts', 'edit_posts', 'sch-posts', array(
+			add_submenu_page('wpschoolpress', 'wpschoolpress', '<i class="dashicons-before dashicons-admin-post"></i>&nbsp; Posts', 'edit_posts', 'sch-posts', array(
 				$this,
 				'wpsp_callback_posts'
 			));
 
-			add_submenu_page('WPSchoolPress', 'WPSchoolPress', '<i class="dashicons-before dashicons-admin-post"></i>&nbsp; Social Profile', 'edit_posts', 'sch-postsprofile', array(
+			add_submenu_page('wpschoolpress', 'wpschoolpress', '<i class="dashicons-before dashicons-admin-post"></i>&nbsp; Social Profile', 'edit_posts', 'sch-postsprofile', array(
 				$this,
 				'wpsp_callback_postsprofile'
 			));
 				if( $current_user_role=='administrator'){
-					add_submenu_page('WPSchoolPress', 'WPSchoolPress', '<i class="dashicons-before dashicons-admin-post"></i>&nbsp; Reported Posts', 'edit_posts', 'sch-reported-posts', array(
+					add_submenu_page('wpschoolpress', 'wpschoolpress', '<i class="dashicons-before dashicons-admin-post"></i>&nbsp; Reported Posts', 'edit_posts', 'sch-reported-posts', array(
 							$this,
 							'wpsp_callback_reported_post'
 					));
 				}
 				//if( $current_user_role=='administrator'){
-					add_submenu_page('WPSchoolPress', 'WPSchoolPress', '<i class="dashicons-before dashicons-admin-post"></i>&nbsp; Notification', 'edit_posts', 'sch-posts-notification', array(
+					add_submenu_page('wpschoolpress', 'wpschoolpress', '<i class="dashicons-before dashicons-admin-post"></i>&nbsp; Notification', 'edit_posts', 'sch-posts-notification', array(
 							$this,
 							'wpsp_callback_posts_notification'
 					));
 				//}
-				add_submenu_page('WPSchoolPress', 'WPSchoolPress', '<i class="dashicons-before dashicons-admin-post"></i>&nbsp; Documents', 'edit_posts', 'sch-documents', array(
+				add_submenu_page('wpschoolpress', 'wpschoolpress', '<i class="dashicons-before dashicons-admin-post"></i>&nbsp; Documents', 'edit_posts', 'sch-documents', array(
 							$this,
 							'wpsp_callback_documents'
 				));
@@ -180,11 +180,11 @@ function wpsp_admin_menu()
 			));
 		}
 		add_submenu_page( 'wpschoolpress', 'wpschoolpress', '<i class="dashicons dashicons-welcome-add-page"></i>&nbsp; Addons',
-			'manage_options', 'sch-addons',
+			'edit_posts', 'sch-addons',
 			array( $this, 'wpsp_addons' )
 		);
 		add_submenu_page( 'wpschoolpress', 'wpschoolpress', '<i class="fa fa-pencil-square-o"></i>&nbsp; Customization',
-			'manage_options', 'sch-customization',
+			'edit_posts', 'sch-customization',
 			array( $this, 'wpsp_customization' )
 		);
 	}

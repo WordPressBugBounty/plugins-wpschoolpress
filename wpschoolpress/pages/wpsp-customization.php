@@ -4,7 +4,7 @@ wpsp_header();
 if ( is_user_logged_in() ) {
 	global $current_user;
 	$current_user_role = $current_user->roles[0];
-	if ( $current_user_role === 'administrator' ) {
+	if ($current_user_role == 'administrator' || $current_user_role == 'teacher' ) {
             $prefill_name    = $current_user->display_name;
             $prefill_email   = $current_user->user_email;
             $prefill_subject = 'I want quote for customization work';

@@ -498,7 +498,7 @@ function wpsp_sidebar(){
             echo "</ul>
                 </li>";
 
-      if ( $current_user_role === 'administrator' ) {
+      if ( $current_user_role === 'administrator' || $current_user_role === 'teacher') {
         echo "<li class='" . esc_attr( isset( $addons_page ) ? $addons_page : '' ) . "'>
           <a href='" . esc_url( site_url( 'wp-admin/admin.php?page=sch-addons' ) ) . "'>
             <i class='dashicons dashicons-welcome-add-page icon'></i>

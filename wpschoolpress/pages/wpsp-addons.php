@@ -4,7 +4,7 @@ wpsp_header();
 if ( is_user_logged_in() ) {
 	global $current_user;
 	$current_user_role = $current_user->roles[0];
-	if ( $current_user_role === 'administrator' ) {
+	if ($current_user_role == 'administrator' || $current_user_role == 'teacher' ) {
 		wpsp_topbar();
 		wpsp_sidebar();
 		wpsp_body_start();
