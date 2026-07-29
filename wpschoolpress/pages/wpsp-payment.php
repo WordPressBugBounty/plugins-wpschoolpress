@@ -10,6 +10,14 @@ if( is_user_logged_in() ) {
         wpsp_body_start();
         $id = sanitize_text_field(stripslashes($_GET['id']));
         $user_id = esc_sql(base64_decode($id));
+        /**
+         * Hand off this page's body to a payment add-on if one is active.
+         * Falls back to the legacy markup below when no add-on is hooked in,
+         * so existing installs without the add-on keep working unchanged.
+         */
+        if ( has_action( 'wpsp_render_payment_dashboard' ) ) {
+            do_action( 'wpsp_render_payment_dashboard', 'admin' );
+        } else {
         ?>
         <div class="wpsp-row">
             <div class="wpsp-col-md-12">
@@ -27,7 +35,7 @@ if( is_user_logged_in() ) {
                                     <th><?php esc_html_e( 'Class Teacher Name', 'wpschoolpress' ); ?></th>
                                     <th><?php esc_html_e( 'Amount', 'wpschoolpress' ); ?></th>
                                     <th><?php esc_html_e( 'Date', 'wpschoolpress' ); ?></th>
-                                    <th><?php esc_html_e( 'Class Fee Status', 'wpschoolpress' ); ?></th>
+                                    <th><?php esc_html_e( 'Class Fee Status3', 'wpschoolpress' ); ?></th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -110,12 +118,20 @@ if( is_user_logged_in() ) {
             </div>
         </div>
         <?php
+        } // end else (legacy fallback markup)
         wpsp_body_end();
         wpsp_footer();
     }else if($current_user_role=='parent' || $current_user_role='student'){
         wpsp_topbar();
         wpsp_sidebar();
         wpsp_body_start();
+        /**
+         * Same hand-off as the admin/teacher branch above — a payment add-on
+         * renders the parent/student view here when active.
+         */
+        if ( has_action( 'wpsp_render_payment_dashboard' ) ) {
+            do_action( 'wpsp_render_payment_dashboard', 'parent_student' );
+        } else {
         ?>
         <div class="wpsp-row">
             <div class="wpsp-col-md-12">
@@ -133,7 +149,7 @@ if( is_user_logged_in() ) {
                                     <th><?php esc_html_e( 'Class Teacher Name', 'wpschoolpress' ); ?></th>
                                     <th><?php esc_html_e( 'Amount', 'wpschoolpress' ); ?></th>
                                     <th><?php esc_html_e( 'Date', 'wpschoolpress' ); ?></th>
-                                    <th><?php esc_html_e( 'Class Fee Status', 'wpschoolpress' ); ?></th>
+                                    <th><?php esc_html_e( 'Class Fee Status4', 'wpschoolpress' ); ?></th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -277,6 +293,7 @@ if( is_user_logged_in() ) {
             </div>
         </div>
         <?php
+        } // end else (legacy fallback markup)
         wpsp_body_end();
         wpsp_footer();
         }

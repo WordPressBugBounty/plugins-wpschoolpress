@@ -463,8 +463,8 @@ function wpsp_UpdateClass(){
 		$wpsp_class_upd = $wpdb->update($wpsp_class_table, $class_data, array(
 			'cid' => $cid
 		));
-		if ($wpsp_class_upd){
-			do_action('wpsp_class_updated', intval($cid) , $class_data);
+		if ( false !== $wpsp_class_upd ) {
+			do_action( 'wpsp_class_updated', (int) $cid, $class_data );
 		}
 		echo esc_html( 'updated' ,'wpschoolpress');
 	}
@@ -2371,6 +2371,7 @@ function wpsp_GenSettinglicensing(){
     $option_value['onlinepay'] = sanitize_text_field($_POST['onlinepay']);
 	$option_value['socialmedia'] = sanitize_text_field($_POST['socialmedia']);
 	$option_value['wpslms'] = sanitize_text_field($_POST['wpslms']);
+	$option_value = apply_filters( 'wpsp_licensing_option_values', $option_value, $_POST );
 	foreach($option_value as $key => $val){
 		$check_sett = $wpdb->get_row($wpdb->prepare("SELECT * FROM $wpsp_settings_table WHERE option_name = %s ",$key));
 		if (empty($check_sett)){

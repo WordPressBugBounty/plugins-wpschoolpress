@@ -4,7 +4,8 @@ wpsp_header();
 if( is_user_logged_in() ) {
 	global $current_user, $wp_roles, $wpdb;
 	//get_currentuserinfo();
-	$propayment = wpsp_check_pro_version('pay_WooCommerce');
+	$propayment_gate_class = apply_filters('wpsp_payment_addon_gate_class', 'pay_WooCommerce');
+	$propayment = wpsp_check_pro_version($propayment_gate_class);
 	$propayment = !$propayment['status'] ? 'notinstalled'    : 'installed';
 	$current_user_role=$current_user->roles[0];
 	if( $current_user_role == 'administrator' || $current_user_role == 'teacher' || $current_user_role == 'parent' || $current_user_role == 'student' ) {
@@ -130,7 +131,7 @@ if( is_user_logged_in() ) {
             				<th><?php esc_html_e( 'Roll No', 'wpschoolpress' ); ?></th>
             				<th><?php esc_html_e( 'Class Name', 'wpschoolpress' ); ?></th>
             				<th><?php esc_html_e( 'Class Teacher Name', 'wpschoolpress' ); ?></th>
-            				<th><?php esc_html_e( 'Class Fee Status', 'wpschoolpress' ); ?></th>
+            				<th><?php esc_html_e( 'Class Fee Status1', 'wpschoolpress' ); ?></th>
             				<th><?php esc_html_e( 'Fees For', 'wpschoolpress' ); ?></th>
             				<th><?php esc_html_e( 'Pay Now', 'wpschoolpress' ); ?></th>
         				</tr>
@@ -258,7 +259,7 @@ if( is_user_logged_in() ) {
 			$ctlass=$wpdb->prefix."wpsp_class";
 			$user_id = esc_sql($current_user->ID);
 		//	$wpsp_stud_data = $wpdb->get_results("SELECT s.class_id,s.parent_wp_usr_id FROM  $stable s INNER JOIN $ctlass c where s.wp_usr_id = '".$user_id."' and c.c_fee_type = 'paid'");
-			$wpsp_tech_data = $wpdb->get_results($wpdb->prepare("SELECT s.class_id,s.parent_wp_usr_id FROM $stable s INNER JOIN $ctlass c WHERE s.wp_usr_id = %d AND c.c_fee_type = %s",$user_id,'paid'));
+			$wpsp_stud_data = $wpdb->get_results($wpdb->prepare("SELECT s.class_id,s.parent_wp_usr_id FROM $stable s INNER JOIN $ctlass c WHERE s.wp_usr_id = %d AND c.c_fee_type = %s",$user_id,'paid'));
 			$cid = [];
 			
 			if(!empty($wpsp_stud_data)){
@@ -270,6 +271,8 @@ if( is_user_logged_in() ) {
 						$cid[] = $id;
 					}
 				}
+			}else {
+				$class_id_array = array();  
 			}
 			if($propayment == "installed"){
 				$cteacher =$wpdb->prefix."wpsp_teacher";
@@ -353,7 +356,7 @@ if( is_user_logged_in() ) {
             				<th><?php esc_html_e( 'Roll No', 'wpschoolpress' ); ?></th>
             				<th><?php esc_html_e( 'Class Name', 'wpschoolpress' ); ?></th>
             				<th><?php esc_html_e( 'Class Teacher Name', 'wpschoolpress' ); ?></th>
-            				<th><?php esc_html_e( 'Class Fee Status', 'wpschoolpress' ); ?></th>
+            				<th><?php esc_html_e( 'Class Fee Status2', 'wpschoolpress' ); ?></th>
             				<th><?php esc_html_e( 'Fees For', 'wpschoolpress' ); ?></th>
             				<th><?php esc_html_e( 'Pay Now', 'wpschoolpress' );?></th>
         				</tr>

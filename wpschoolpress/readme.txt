@@ -1,11 +1,11 @@
-﻿==== School Management System – WPSchoolPress ====
+==== School Management System – WPSchoolPress ====
 Contributors: jdsofttech,narendraigex
 Donate link: https://www.wpschoolpress.com/contactus
 Tags: student information management, staff information management, attendance management, time table management, exam schedule management
 Requires at least: 6.7
 Tested up to: 7.0
 Requires PHP: 7.4
-Stable tag: 2.2.46
+Stable tag: 2.2.47
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -453,3 +453,6 @@ Please purchase the SMS addon from our website www.wpschoolpress.com/downloads/s
 
 == 2.2.46 =
 *Updated: Teacher role permission for the addons and Customization request and Menu registration change for the Social-post addon.
+
+== 2.2.47 =
+*Updated: Added support for the WPSchoolPress Payments Add-on to enable fee payments with multiple payment gateway.

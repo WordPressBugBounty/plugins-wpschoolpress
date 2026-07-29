@@ -88,6 +88,15 @@ if( is_user_logged_in() ) {
 								<?php if( $current_user_role=='administrator' ) { ?>
 									<td align="center">
 										<div class="wpsp-action-col">
+											<?php
+											/**
+											 * Generic hook so addons (e.g. Payments) can inject their own
+											 * per-row action icons/links without this core file needing to
+											 * know anything about them. Passes the class id and the full
+											 * class row object.
+											 */
+											do_action( 'wpsp_class_list_row_actions', $wpsp_class->cid, $wpsp_class );
+											?>
 											<a href="<?php echo esc_url(wpsp_admin_url().'sch-class&id='.esc_attr($wpsp_class->cid)."&edit=true");?>" title="Edit">
 												<i class="icon dashicons dashicons-edit wpsp-edit-icon"></i></a>
 											<a href="javascript:;" id="d_teacher" class="wpsp-popclick" data-pop="DeleteModal" title="Delete" data-id="<?php echo esc_attr($wpsp_class->cid);?>" >

@@ -26,7 +26,13 @@ if (isset($_GET['id'])) {
 }
 $formname =	isset($_GET['id']) ? 'ClassEditForm' : 'ClassAddForm';
 $buttonname	= isset($_GET['id']) ? 'Update' : 'Submit';
-$propayment = wpsp_check_pro_version('pay_WooCommerce');
+/**
+ * Which class must exist for the "Paid" fee-type option to be shown.
+ * Hooked so any payment add-on (not just the legacy WooCommerce one)
+ * can unlock it by returning its own main class name here.
+ */
+$propayment_gate_class = apply_filters('wpsp_payment_addon_gate_class', 'pay_WooCommerce');
+$propayment = wpsp_check_pro_version($propayment_gate_class);
 $propayment = !$propayment['status'] ? 'notinstalled'    : 'installed';
 ?>
 <!-- This form is used for Add/Update Class -->
@@ -198,7 +204,7 @@ $propayment = !$propayment['status'] ? 'notinstalled'    : 'installed';
 								</select>
 							</div>
 						</div>
-						<?php do_action('wpsp_after_class_detail_fields'); ?>
+						<?php do_action('wpsp_after_class_detail_fields', $c_fee_type, isset($classid) ? $classid : 0); ?>
 					</div>
 					<div class="wpsp-row">
 						<div class="wpsp-col-xs-12 wpsp-btnsubmit-section">

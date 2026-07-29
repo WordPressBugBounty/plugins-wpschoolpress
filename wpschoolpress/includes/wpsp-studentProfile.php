@@ -704,7 +704,7 @@ if( !empty( $stinfo ) ) {
             </div>
           </div>
           <?php
-                      do_action('wpsp_after_student_school_detail_fields');
+                      do_action('wpsp_after_student_school_detail_fields', isset($stinfo->wp_usr_id) ? $stinfo->wp_usr_id : 0);
                   ?>
         </div>
         <div class="">
