@@ -139,6 +139,7 @@ if (!defined( 'ABSPATH' ) )exit('No Such File');
 			$student_table	=	$wpdb->prefix."wpsp_student";
 			$users_table	=	$wpdb->prefix."users";
 			$class_id='';
+			$stl = array();
 			if( isset($_POST['ClassID'] ) && $_POST['ClassID'] != 'all' ) {
 				$class_id=intval($_POST['ClassID']);
 				$stl = [];
@@ -199,7 +200,7 @@ if (!defined( 'ABSPATH' ) )exit('No Such File');
               <td><?php echo esc_html($pinfo->user_email);?></td>
               <td align="center">
                 <div class="wpsp-action-col">
-                  <a href="javascript:void(0)" title="View" data-pop="ViewModal" data-id="<?php echo esc_attr(intval($pinfo->parent_wp_usr_id));?>" class="ViewParent wpsp-popclick">
+                  <a href="javascript:void(0)" title="View" data-pop="ViewModal" data-id="<?php echo esc_attr(intval($pinfo->parent_wp_usr_id));?>" data-nonce="<?php echo esc_attr(wp_create_nonce('wpsp_parent_profile_nonce'));?>" class="ViewParent wpsp-popclick">
                     <i class="icon dashicons dashicons-visibility wpsp-view-icon"></i></a>
                   <a href="<?php echo esc_url(wpsp_admin_url().'sch-student&id='.esc_attr(intval($pinfo->wp_usr_id)).'&edit=true#parent-field-lists');?>" title="Edit"><i class="icon dashicons dashicons-edit wpsp-edit-icon"></i></a>
                 </div>

@@ -130,6 +130,9 @@ $(document).ready(function() {
         }, {
             name: "button",
             value: 1
+        }, {
+            name: "ppp_nonce",
+            value: $(this).data("nonce")
         }), jQuery.post(ajax_url, t, function(e) {
             $("#ViewModalContent").html(e), $(this).click()
         })

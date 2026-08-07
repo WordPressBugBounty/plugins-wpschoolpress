@@ -26,7 +26,8 @@ function wpsp_admin_menu()
 		$current_user_role=$current_user->roles[0];
 		$proversion1    =    wpsp_check_pro_version('wpsp_addon_version');
   		$prodisable1    =    !$proversion1['status'] ? 'notinstalled'    : 'installed';
-  		 $propayment    =    wpsp_check_pro_version('pay_WooCommerce');
+  		 $propayment_gate_class = apply_filters('wpsp_payment_addon_gate_class', 'pay_WooCommerce');
+  		 $propayment    =    wpsp_check_pro_version($propayment_gate_class);
    		$propayment    =    !$propayment['status'] ? 'notinstalled'    : 'installed';
 
 		$promessage2    =    wpsp_check_pro_version('wpsp_message_version');
@@ -548,12 +549,12 @@ function wpsp_admin_menu()
 	{
 		function wpsp_custom_loginlogo()
 		{
-            global $current_user, $wpdb, $wpsp_settings_data,$post,$current_user_name;
-            $url = plugin_dir_url( __FILE__ ).'img/wpschoolpresslogo.jpg';
-            $imglogo  = isset( $wpsp_settings_data['sch_logo'] ) ? sanitize_text_field($wpsp_settings_data['sch_logo']) : $url;
-            echo '<style type="text/css">
-                        .login h1 a {background-image: url(' . $imglogo . ') !important; }
-				  </style>';
+			global $current_user, $wpdb, $wpsp_settings_data, $post, $current_user_name;
+			$url = plugin_dir_url( __FILE__ ) . 'img/wpschoolpresslogo.jpg';
+			$imglogo = isset( $wpsp_settings_data['sch_logo'] ) ? sanitize_text_field( $wpsp_settings_data['sch_logo'] ) : $url;
+			echo '<style type="text/css">
+						.login h1 a {background-image: url(' . esc_url( $imglogo ) . ') !important; }
+				</style>';
 		}
 		// Add menu page for purchase code validation
 		add_action('admin_menu', array(

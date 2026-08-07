@@ -457,12 +457,16 @@ $(document).ready(function() {
   $('.ViewParent').click(function() {
     var data = [];
     var pid = $(this).data('id');
+    var ppp_nonce = $(this).data('nonce');
     data.push({
       name: 'action',
       value: 'ParentPublicProfile'
     }, {
       name: 'id',
       value: pid
+    }, {
+      name: 'ppp_nonce',
+      value: ppp_nonce
     });
     $.ajax({
       type: "POST",

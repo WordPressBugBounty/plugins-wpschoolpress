@@ -1,3 +1,6 @@
+<?php
+if (!defined( 'ABSPATH' ) )exit('No Such File'); 
+?>
 <!-- Start Import Data Remove Popup -->
 
 <div class="wpsp-popupMain wpsp-popVisible" id="ImportRemove" style="display:none;">

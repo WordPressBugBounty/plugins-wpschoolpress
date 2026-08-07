@@ -77,7 +77,8 @@ if (is_user_logged_in()) {
 					</form>
 					<?php
 					//echo $response['msg'];
-					if($sel_classid == 'all'){} else {echo isset( $response['msg'] ) ? $response['msg'] :'';}
+					// if($sel_classid == 'all'){} else {echo isset( $response['msg'] ) ? $response['msg'] :'';}
+					if($sel_classid == 'all'){} else {echo wpsp_kses_filter_allowed_html( isset( $response['msg'] ) ? $response['msg'] : '' );} // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- already sanitized via wp_kses() inside wpsp_kses_filter_allowed_html()
 				} else {
 					echo '<div class="wpsp-text-red col-lg-2">'.esc_html($msg).'</div>';
 			}
@@ -92,7 +93,7 @@ if (is_user_logged_in()) {
 		$wpsp_student_table = $wpdb->prefix . "wpsp_student";
 		$class_id = base64_decode(sanitize_text_field($_GET['cid']));
 		$result = wpsp_ViewTimetable($class_id);
-		echo wpsp_kses_filter_allowed_html($result['msg']);?>
+		echo wpsp_kses_filter_allowed_html($result['msg']); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- already sanitized via wp_kses() inside wpsp_kses_filter_allowed_html()?> 
 		<div class="wpsp-wrapper">
             <div class="wpsp-container">
           		<?php wpsp_body_end();
@@ -140,7 +141,7 @@ if (is_user_logged_in()) {
 												//$class_id = $child_inf->class_id;
 												$class_id = base64_decode(sanitize_text_field($_GET['cid']));
 												$result = wpsp_ViewTimetable($class_id);
-												echo wpsp_kses_filter_allowed_html($result['msg']);
+												echo wpsp_kses_filter_allowed_html($result['msg']); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- already sanitized via wp_kses() inside wpsp_kses_filter_allowed_html()
 											} else {
 												echo "<div class='wpsp-col-md-12'><div class='wpsp-text-red'>Class missing..</div></div>";
 											}  ?>

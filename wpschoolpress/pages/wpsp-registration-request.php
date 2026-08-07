@@ -83,7 +83,7 @@ wpsp_header();
                                     </td>
                                     <td><?php echo esc_html($stinfo->t_name);?></td>
                                     <td><?php echo esc_html($stinfo->t_email);?></td>
-                                    <td><?php echo (!empty($cname) ? $cname : ''); ?></td>
+                                    <td><?php echo ( ! empty( $cname ) ? esc_html( $cname ) : '' ); ?></td>
                                     <td><?php echo esc_html(ucfirst($stinfo->t_type));?></td>
                                     <td><?php echo esc_html($stinfo->t_date);?></td>
                                     <td align="center">

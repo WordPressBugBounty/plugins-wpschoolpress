@@ -93,7 +93,7 @@ function wpsp_topbar(){
     </a>
     <div class="wpsp-head">
         <div class="wpsp-menuIcon"><span></span></div>
-        <h3 class="wpsp-customeMsg"><?php echo esc_html(" “Live as if you were to die tomorrow. Learn as if you were to live forever.” ","wpschoolpress");?></h3>
+        <h3 class="wpsp-customeMsg"><?php echo esc_html(" \u{201c}Live as if you were to die tomorrow. Learn as if you were to live forever.\u{201d} ","wpschoolpress");?></h3>
         <div class="wpsp-righthead">
             <div class="wpsp-head-action"></div>
             <div class="wpsp-userMain wpsp-dropdownmain ">
@@ -127,7 +127,8 @@ function wpsp_sidebar(){
   $prodisablehistory =    !$prohistory['status'] ? 'notinstalled'    : 'installed';
   $promessage        =    wpsp_check_pro_version('wpsp_message_version');
   $prodisablemessage =    !$promessage['status'] ? 'notinstalled'    : 'installed';
-  $propayment        =    wpsp_check_pro_version('pay_WooCommerce');
+  $propayment_gate_class = apply_filters('wpsp_payment_addon_gate_class', 'pay_WooCommerce');
+  $propayment        =    wpsp_check_pro_version($propayment_gate_class);
   $propayment        =    !$propayment['status'] ? 'notinstalled'    : 'installed';
 
   $prosocial        =    wpsp_check_pro_version('wpsp_sm_version');
@@ -288,38 +289,38 @@ function wpsp_sidebar(){
           <li class='".esc_attr($dashboard_page)."'>
           <a href='".esc_url(site_url('wp-admin/admin.php?page=sch-dashboard'))."'>
           <i class='dashicons dashicons-dashboard icon'></i>
-          <span>".$sch_dashboard."</span>
+          <span>".esc_html($sch_dashboard)."</span>
           </a>
           </li>";
           if($prosocial == 'installed'){
             if($current_user_role=='administrator' || $current_user_role=='teacher'){
              echo "<li class='has-submenu ".((isset($posts_page_main)  ? esc_html($posts_page_main,'wpschoolpress') : ''))."'>
   
-              <a href='".site_url('wp-admin/admin.php?page=sch-posts')."'>
+              <a href='".esc_url(site_url('wp-admin/admin.php?page=sch-posts'))."'>
   
                 <i class='dashicons dashicons-admin-post'></i>
   
-                <span>".esc_html($sch_posts,'wpschoolpress')."</span>
+                <span>".esc_html($sch_posts)."</span>
   
               </a>
   
               <ul class='sub-menu'>
   
-                <li class='".$posts_page."'><a href='".site_url('wp-admin/admin.php?page=sch-posts')."'>
+                <li class='".esc_attr($posts_page)."'><a href='".esc_url(site_url('wp-admin/admin.php?page=sch-posts'))."'>
   
-                  <span>".$sch_posts."</span>
+                  <span>".esc_html($sch_posts)."</span>
   
                 </a></li>
   
-                <li class='".$posts_profile_page."'><a href='".site_url('wp-admin/admin.php?page=sch-postsprofile')."'>
+                <li class='".esc_attr($posts_profile_page)."'><a href='".esc_url(site_url('wp-admin/admin.php?page=sch-postsprofile'))."'>
   
-                  <span>".$sch_posts_profile."</span>
+                  <span>".esc_html($sch_posts_profile)."</span>
   
                 </a></li>";
               if($current_user_role=='administrator'){
-                echo "<li class='".$posts_reported_page."'><a href='".site_url('wp-admin/admin.php?page=sch-reported-posts')."'>
+                echo "<li class='".esc_attr($posts_reported_page)."'><a href='".esc_url(site_url('wp-admin/admin.php?page=sch-reported-posts'))."'>
   
-                  <span>".$sch_reported_posts."</span>
+                  <span>".esc_html($sch_reported_posts)."</span>
   
                 </a></li>";
               }
@@ -339,7 +340,7 @@ function wpsp_sidebar(){
             echo "<li class=".esc_attr($message_page).">
             <a href='".esc_url(site_url('wp-admin/admin.php?page=sch-messages'))."'>
             <i class='dashicons dashicons-email icon'></i>
-            <span>".$sch_message."</span><span class='pull-right label label-primary pull-right'></span>
+            <span>".esc_html($sch_message)."</span><span class='pull-right label label-primary pull-right'></span>
             </a>
             </li>";
           }
@@ -347,13 +348,13 @@ function wpsp_sidebar(){
           echo "<li class='".esc_attr($teacher_page)."'>
                 <a href='".esc_url(site_url('wp-admin/admin.php?page=sch-teacher'))."'>
                 <i class='dashicons dashicons-businessman icon'></i>
-                <span>".$sch_teacher."</span>
+                <span>".esc_html($sch_teacher)."</span>
                 </a>
                 </li>
                 <li class='".esc_attr($student_page)."'>
                   <a href='".esc_url(site_url('wp-admin/admin.php?page=sch-student'))."'>
                     <i class='dashicons dashicons-id icon'></i>
-                    <span>".$sch_student."</span>
+                    <span>".esc_html($sch_student)."</span>
                   </a>
                 </li>";
           if($current_user_role == 'administrator'){
@@ -361,53 +362,53 @@ function wpsp_sidebar(){
               echo "<li class='".esc_attr((isset($request_page) ? $request_page : '')) ."'>
               <a href='".esc_url(site_url('wp-admin/admin.php?page=sch-request'))."'>
               <i class='dashicons dashicons-welcome-write-blog icon'></i>
-              <span>".$sch_registration."</span>
+              <span>".esc_html($sch_registration)."</span>
               </a></li>";
             }
           }
           echo "<li class='".esc_attr($parent_page)."'>
           <a href='".esc_url(site_url('wp-admin/admin.php?page=sch-parent'))."'>
           <i class='dashicons dashicons-groups icon'></i>
-          <span>".$sch_parent."</span>
+          <span>".esc_html($sch_parent)."</span>
           </a>
           </li>
           <li class='has-submenu ".((isset($class_page_our)? esc_attr($class_page_our) : ''))."'>
           <a href='".esc_url(site_url('wp-admin/admin.php?page=sch-class'))."'>
           <i class='dashicons dashicons-welcome-widgets-menus icon'></i>
-          <span>".$sch_classes."</span>
+          <span>".esc_html($sch_classes)."</span>
           </a>
           <ul class='sub-menu'>
           <li class='".esc_attr($class_page)."'>
             <a href='".esc_url(site_url('wp-admin/admin.php?page=sch-class'))."'>
-              <span>".$sch_classes."</span>
+              <span>".esc_html($sch_classes)."</span>
             </a>
           </li>
           <li class='".esc_attr($subject_page)."'>
             <a href='".esc_url(site_url('wp-admin/admin.php?page=sch-subject'))."'>
-              <span>".$sch_subject."</span>
+              <span>".esc_html($sch_subject)."</span>
             </a>
           </li>";
           do_action('wpsp_register_addon_menus');
 
           if($current_user_role=='administrator'){
             echo "<li class='".esc_attr($settings_subfield_page)."'>
-            <a href='".esc_url(site_url('wp-admin/admin.php?page=sch-settings&sc=subField'))."'>".$sch_subject_mark_field."</a>
+            <a href='".esc_url(site_url('wp-admin/admin.php?page=sch-settings&sc=subField'))."'>".esc_html($sch_subject_mark_field)."</a>
             </li>";
           }
 
           echo "<li class='".esc_attr($mark_page)."'>
           <a href='".esc_url(site_url('wp-admin/admin.php?page=sch-marks'))."'>
-          <span>".$sch_marks."</span>
+          <span>".esc_html($sch_marks)."</span>
           </a>
                 </li>
                 <li class='".esc_attr($exam_page)."'>
                   <a href='".esc_url(site_url('wp-admin/admin.php?page=sch-exams'))."'>
-                    <span>".$sch_exams."</span>
+                    <span>".esc_html($sch_exams)."</span>
                   </a>
                 </li>
                 <li class='".esc_attr($timetable_page)."'>
                   <a href='".esc_url(site_url('wp-admin/admin.php?page=sch-timetable'))."'>
-                    <span>".$sch_timetable."</span>
+                    <span>".esc_html($sch_timetable)."</span>
                   </a>
                 </li>
               </ul>
@@ -416,17 +417,17 @@ function wpsp_sidebar(){
           echo "<li class='has-submenu'>
             <a href='" . esc_url(site_url('wp-admin/admin.php?page=sch-attendance')) . "'>
               <i class='dashicons dashicons-clipboard icon'></i>
-              <span>" . $sch_lms . "</span>
+              <span>" . esc_html($sch_lms) . "</span>
             </a>
             <ul class='sub-menu'>
               <li class='" . esc_attr($lesson_page) . "'><a href='" . esc_url(site_url('wp-admin/admin.php?page=sch-lessons')) . "'>
-                <span>" . $sch_lesson . "</span>
+                <span>" . esc_html($sch_lesson) . "</span>
               </a></li>
               <li class='" . esc_attr($quiz_page) . "'><a href='" . esc_url(site_url('wp-admin/admin.php?page=sch-quizzes')) . "'>
-                <span>" . $sch_quiz . "</span>
+                <span>" . esc_html($sch_quiz) . "</span>
               </a></li>
               <li class='" . esc_attr($question_page) . "'><a href='" . esc_url(site_url('wp-admin/admin.php?page=sch-questions')) . "'>
-                <span>" . $sch_question . "</span>
+                <span>" . esc_html($sch_question) . "</span>
               </a></li>
               </ul>
           </li>";
@@ -434,16 +435,16 @@ function wpsp_sidebar(){
           echo "<li class='has-submenu ".((isset($attendance_page_main)? esc_attr($attendance_page_main) : ''))."'>
             <a href='".esc_url(site_url('wp-admin/admin.php?page=sch-attendance'))."'>
               <i class='dashicons dashicons-clipboard icon'></i>
-              <span>".$sch_attendance."</span>
+              <span>".esc_html($sch_attendance)."</span>
             </a>
             <ul class='sub-menu'>
               <li class='".esc_attr($attendance_page)."'><a href='".esc_url(site_url('wp-admin/admin.php?page=sch-attendance'))."'>
-                <span>".$sch_student_attendance."</span>
+                <span>".esc_html($sch_student_attendance)."</span>
               </a></li>";
             if($current_user_role=='administrator' || $current_user_role=='teacher'){
               echo "<li class='".esc_attr($teacher_attendance_page)."'>
                 <a href='".esc_url(site_url('wp-admin/admin.php?page=sch-teacherattendance'))."'>
-                 <span>".$sch_teacher_attendance."</span>
+                 <span>".esc_html($sch_teacher_attendance)."</span>
                 </a>
                </li>";
             }
@@ -451,7 +452,7 @@ function wpsp_sidebar(){
           </li>
           <li class='".esc_attr($event_page)."'>
             <a href='".esc_url(site_url('wp-admin/admin.php?page=sch-events'))."'>
-              <i class='dashicons dashicons-calendar-alt icon'></i><span>".$sch_events."</span>
+              <i class='dashicons dashicons-calendar-alt icon'></i><span>".esc_html($sch_events)."</span>
             </a>
                 </li>
            ";
@@ -459,38 +460,38 @@ function wpsp_sidebar(){
             echo "
             <li class='".esc_attr($notify_page)."'>
             <a href='".esc_url(site_url('wp-admin/admin.php?page=sch-notify'))."'>
-              <i class='icon wpsp-notify'></i><span>".$sch_notfiy."</span>
+              <i class='icon wpsp-notify'></i><span>".esc_html($sch_notfiy)."</span>
             </a>
           </li>";
         }
          echo "<li class='".esc_attr($transport_page)."'>
             <a href='".esc_url(site_url('wp-admin/admin.php?page=sch-transport'))."'>
-              <i class='icon wpsp-school-bus'></i><span>".$sch_transport."</span>
+              <i class='icon wpsp-school-bus'></i><span>".esc_html($sch_transport)."</span>
             </a>
            </li>";
       echo "<li class='has-submenu ".((isset($settings_page_main)? esc_attr($settings_page_main) : '' ))."'>
           <a href='#'>
           <i class='dashicons dashicons-admin-generic'></i>
-          <span>".$sch_gen_setting."</span>
+          <span>".esc_html($sch_gen_setting)."</span>
           </a>
           <ul class='sub-menu'>";
            if($current_user_role=='administrator'){
           echo "<li class='".esc_attr($settings_general_page)."'>
               <a href='".esc_url(site_url('wp-admin/admin.php?page=sch-settings'))."'>
-              <span>".$sch_setting."</span></a>
+              <span>".esc_html($sch_setting)."</span></a>
               </li>";
           echo "<li class='".esc_attr($settings_wrkhours_page)."'>
               <a href='".esc_url(site_url('wp-admin/admin.php?page=sch-settings&sc=WrkHours'))."'>
-              <span>".$sch_workinghours."</span></a>
+              <span>".esc_html($sch_workinghours)."</span></a>
               </li>";
          }
-      echo "<li class='".$leave_page."'>
+      echo "<li class='".esc_attr($leave_page)."'>
           <a href='".esc_url(site_url('wp-admin/admin.php?page=sch-leavecalendar'))."'>
-          <span>".$sch_leavecalendar."</span></a></li>";
+          <span>".esc_html($sch_leavecalendar)."</span></a></li>";
          if($current_user_role=='administrator' || $current_user_role=='teacher') {
           echo "<li class='" . esc_attr($import_page) . "'>
               <a href='" . esc_url(site_url('wp-admin/admin.php?page=sch-importhistory')) . "'>
-                <span>". $sch_import_history . "</span>
+                <span>". esc_html($sch_import_history) . "</span>
               </a>
                </li>
              ";
@@ -502,13 +503,13 @@ function wpsp_sidebar(){
         echo "<li class='" . esc_attr( isset( $addons_page ) ? $addons_page : '' ) . "'>
           <a href='" . esc_url( site_url( 'wp-admin/admin.php?page=sch-addons' ) ) . "'>
             <i class='dashicons dashicons-welcome-add-page icon'></i>
-            <span>" . $sch_addons . "</span>
+            <span>" . esc_html($sch_addons) . "</span>
           </a>
         </li>
         <li class='" . esc_attr( isset( $customization_page ) ? $customization_page : '' ) . "'>
           <a href='" . esc_url( site_url( 'wp-admin/admin.php?page=sch-customization' ) ) . "'>
             <i class='fa fa-pencil-square-o icon'></i>
-            <span>" . $sch_customization . "</span>
+            <span>" . esc_html($sch_customization) . "</span>
           </a>
         </li>";
       }
@@ -638,22 +639,22 @@ function wpsp_sidebar(){
               <li class='".esc_attr($dashboard_page)."'>
                 <a href='".esc_url(site_url('wp-admin/admin.php?page=sch-dashboard'))."'>
                   <i class='dashicons dashicons-dashboard icon'></i>
-                    <span>".$sch_dashboard."</span>
+                    <span>".esc_html($sch_dashboard)."</span>
                   </a>
               </li>";
               if($prosocial == 'installed'){
-                echo "<li class='has-submenu ".((isset($posts_page_main)? $posts_page_main : ''))."'>
-                  <a href='".site_url('wp-admin/admin.php?page=sch-posts')."'>
+                echo "<li class='has-submenu ".((isset($posts_page_main)? esc_attr($posts_page_main) : ''))."'>
+                  <a href='".esc_url(site_url('wp-admin/admin.php?page=sch-posts'))."'>
                     <i class='dashicons dashicons-admin-post'></i>
-                    <span>".$sch_posts."</span>
+                    <span>".esc_html($sch_posts)."</span>
                   </a>
                   <ul class='sub-menu'>
-                    <li class='".$posts_page."'><a href='".site_url('wp-admin/admin.php?page=sch-posts')."'>
-                      <span>".$sch_posts."</span>
+                    <li class='".esc_attr($posts_page)."'><a href='".esc_url(site_url('wp-admin/admin.php?page=sch-posts'))."'>
+                      <span>".esc_html($sch_posts)."</span>
                       </a>
                     </li>
-                    <li class='".$posts_profile_page."'><a href='".site_url('wp-admin/admin.php?page=sch-postsprofile')."'>
-                      <span>".$sch_posts_profile."</span>
+                    <li class='".esc_attr($posts_profile_page)."'><a href='".esc_url(site_url('wp-admin/admin.php?page=sch-postsprofile'))."'>
+                      <span>".esc_html($sch_posts_profile)."</span>
                       </a>
                     </li>
                   </ul>
@@ -663,7 +664,7 @@ function wpsp_sidebar(){
                 echo "<li class=".esc_attr($message_page).">
                   <a href='".esc_url(site_url('wp-admin/admin.php?page=sch-messages'))."'>
                     <i class='dashicons dashicons-email icon'></i>
-                    <span>".$sch_message."</span><span class='pull-right label label-primary pull-right'></span>
+                    <span>".esc_html($sch_message)."</span><span class='pull-right label label-primary pull-right'></span>
                   </a>
                 </li>";
               }
@@ -671,12 +672,12 @@ function wpsp_sidebar(){
                 <li class='".esc_attr($parent_page)."'>
                   <a href='".esc_url(site_url('wp-admin/admin.php?page=sch-parent'))."'>
                     <i class='dashicons dashicons-groups icon'></i>
-                    <span>". $sch_parent."</span>
+                    <span>". esc_html($sch_parent)."</span>
                   </a>
                 </li>
                 <li class='has-submenu".esc_attr($class_innercls1)."'>
                   <a href='".esc_url(site_url('wp-admin/admin.php?page=sch-class'))."'>
-                    <i class='dashicons dashicons-welcome-widgets-menus icon'></i><span>".$sch_enrolled_class."</span>
+                    <i class='dashicons dashicons-welcome-widgets-menus icon'></i><span>".esc_html($sch_enrolled_class)."</span>
                   </a>";
                   if (is_numeric($wpsp_classes[0]->class_id)){
                     $classIDArray[] = $wpsp_classes[0]->class_id;
@@ -712,7 +713,7 @@ function wpsp_sidebar(){
                         $timetable_page = 'active';
                       }
                       if($clsgetid != 0){
-                        echo "<ul class='sub-menu has-submenu hehehe".((isset($nonemenu) ? $nonemenu : ''))." '>";
+                        echo "<ul class='sub-menu has-submenu hehehe".((isset($nonemenu) ? esc_attr($nonemenu) : ''))." '>";
                           if(trim($clsgetid) == trim($getid)){
                             echo "<li class='has-submenu active'>";
                           } else {
@@ -724,43 +725,43 @@ function wpsp_sidebar(){
                               <ul class='sub-menu'>
                                 <li class='".esc_attr($timetable_page)."'>
                                   <a href='".esc_url(site_url('wp-admin/admin.php?page=sch-timetable&cid=').esc_attr($id))."'>
-                                  <span>".$sch_timetable."</span>
+                                  <span>".esc_html($sch_timetable)."</span>
                                   </a>
                                 </li>
                                 <li class='".esc_attr($teacher_page)."'>
                                   <a href='".esc_url(site_url('wp-admin/admin.php?page=sch-teacher&cid=').esc_attr($id))."'>
-                                  <span>".$sch_teacher."</span>
+                                  <span>".esc_html($sch_teacher)."</span>
                                 </a>
                               </li>
                               <li class='".esc_attr($student_page)."'>
                                 <a href='".esc_url(site_url('wp-admin/admin.php?page=sch-student&cid=').esc_attr($id))."'>
-                                  <span>".$sch_student."</span>
+                                  <span>".esc_html($sch_student)."</span>
                                 </a>
                               </li>
                               <li class='".esc_attr($subject_page)."'>
                                 <a href='".esc_url(site_url('wp-admin/admin.php?page=sch-subject&cid=').esc_attr($id))."'>
-                                    <span>".$sch_subject."</span>
+                                    <span>".esc_html($sch_subject)."</span>
                                 </a>
                             </li>";
                             do_action('wpsp_register_addon_menus', $id);
                             echo "<li class='".esc_attr($exam_page)."'>
                                 <a href='".esc_url(site_url('wp-admin/admin.php?page=sch-exams&cid=').esc_attr($id))."'>
-                                <span>".$sch_exams."</span>
+                                <span>".esc_html($sch_exams)."</span>
                                 </a>
                               </li>
                               <li class='".esc_attr($mark_page)."'>
                                 <a href='".esc_url(site_url('wp-admin/admin.php?page=sch-marks&cid=').esc_attr($id))."'>
-                                  <span>".$sch_marks."</span>
+                                  <span>".esc_html($sch_marks)."</span>
                                 </a>
                               </li>
                               <li class='".esc_attr($attendance_page)."'>
                                 <a href='".esc_url(site_url('wp-admin/admin.php?page=sch-attendance&cid=').esc_attr($id))."'>
-                                  <span>".$sch_attendance."</span>
+                                  <span>".esc_html($sch_attendance)."</span>
                                 </a>
                               </li>
                               <li class='".esc_attr($leave_page)."'>
                                 <a href='".esc_url(site_url('wp-admin/admin.php?page=sch-leavecalendar&cid=').esc_attr($id))."'>
-                                <span>".$sch_leavecalendar."</span></a>
+                                <span>".esc_html($sch_leavecalendar)."</span></a>
                               </li>
                             </ul>
                           </li>
@@ -771,23 +772,23 @@ function wpsp_sidebar(){
           }
          echo "<li class='".esc_attr($event_page)."'>
                   <a href='".esc_url(site_url('wp-admin/admin.php?page=sch-events'))."'>
-                    <i class='dashicons dashicons-calendar-alt icon'></i><span>".$sch_events."</span>
+                    <i class='dashicons dashicons-calendar-alt icon'></i><span>".esc_html($sch_events)."</span>
                   </a>
                 </li>";
                 if($prolms1 == 'installed'){
                   echo "<li class='has-submenu'>
                     <a href='" . esc_url(site_url('wp-admin/admin.php?page=sch-lessons')) . "'>
-                      <i class='dashicons dashicons-welcome-widgets-menus icon'></i><span>" . $sch_lms . "</span>
+                      <i class='dashicons dashicons-welcome-widgets-menus icon'></i><span>" . esc_html($sch_lms) . "</span>
                     </a>
                     <ul class='sub-menu'>
                       <li class='" . esc_attr($lesson_page) . "'>
                         <a href='" . esc_url(site_url('wp-admin/admin.php?page=sch-lessons')) . "'>
-                          <span>" . $sch_lesson . "</span>
+                          <span>" . esc_html($sch_lesson) . "</span>
                         </a>
                       </li>
                       <li class='" . esc_attr($quiz_page) . "'>
                         <a href='" . esc_url(site_url('wp-admin/admin.php?page=sch-quizzes')) . "'>
-                          <span>" . $sch_quiz . "</span>
+                          <span>" . esc_html($sch_quiz) . "</span>
                         </a>
                       </li>
                     </ul>
@@ -795,13 +796,13 @@ function wpsp_sidebar(){
                 }
             echo "<li class='".esc_attr($transport_page)."'>
             <a href='".esc_url(site_url('wp-admin/admin.php?page=sch-transport'))."'>
-              <i class='icon wpsp-school-bus'></i><span>".$sch_transport."</span>
+              <i class='icon wpsp-school-bus'></i><span>".esc_html($sch_transport)."</span>
             </a>
            </li>";
         if($prohistory['status']){
            echo "<li class='".esc_attr($history_page)."'>
             <a href='".esc_url(site_url('wp-admin/admin.php?page=sch-history'))."'>
-              <i class='icon  fa fa-history'></i><span>".$sch_class_history."</span>
+              <i class='icon  fa fa-history'></i><span>".esc_html($sch_class_history)."</span>
             </a>
            </li>";
          }
@@ -810,7 +811,7 @@ function wpsp_sidebar(){
 
       echo "<li class='".esc_attr($payment_page_main)."'>
         <a href='".esc_url(site_url('wp-admin/admin.php?page=sch-payment'))."'>
-          <i class='icon fa fa-money'></i><span>".$sch_payment."</span>
+          <i class='icon fa fa-money'></i><span>".esc_html($sch_payment)."</span>
         </a>
        </li>";
        }}
@@ -897,7 +898,7 @@ function wpsp_sidebar(){
         $stable=$wpdb->prefix."wpsp_student";
         $ctable=$wpdb->prefix."wpsp_class";  
       //  $user_id = $wpdb->get_var("SELECT wp_usr_id FROM $stable where parent_wp_usr_id = '$current_user->ID'");
-        $wpsp_classes = $wpdb->get_var($wpdb->prepare("SELECT wp_usr_id FROM $stable WHERE parent_wp_usr_id = %d",$$current_user->ID));
+        $wpsp_classes = $wpdb->get_var($wpdb->prepare("SELECT wp_usr_id FROM $stable WHERE parent_wp_usr_id = %d",$current_user->ID));
 
       //  $wpsp_stud =$wpdb->get_results("SELECT s.class_id FROM $ctable s INNER JOIN $ctable c  where s.wp_usr_id = '".$user_id."' and c.c_fee_type = 'paid'");
         $wpsp_stud = $wpdb->get_results($wpdb->prepare("SELECT s.class_id FROM $ctable s INNER JOIN $ctable c ON s.class_id = c.cid
@@ -942,32 +943,32 @@ function wpsp_sidebar(){
             <li class='".esc_attr($dashboard_page)."'>
               <a href='".esc_url(site_url('wp-admin/admin.php?page=sch-dashboard'))."'>
                 <i class='dashicons dashicons-dashboard icon'></i>
-                  <span>".$sch_dashboard."</span>
+                  <span>".esc_html($sch_dashboard)."</span>
               </a>
             </li>";
             if($prosocial == 'installed'){
             
-              echo "<li class='has-submenu ".((isset($posts_page_main)? $posts_page_main : ''))."'>
+              echo "<li class='has-submenu ".((isset($posts_page_main)? esc_attr($posts_page_main) : ''))."'>
    
-               <a href='".site_url('wp-admin/admin.php?page=sch-posts')."'>
+               <a href='".esc_url(site_url('wp-admin/admin.php?page=sch-posts'))."'>
    
                  <i class='dashicons dashicons-admin-post'></i>
    
-                 <span>".$sch_posts."</span>
+                 <span>".esc_html($sch_posts)."</span>
    
                </a>
    
                <ul class='sub-menu'>
    
-                 <li class='".$posts_page."'><a href='".site_url('wp-admin/admin.php?page=sch-posts')."'>
+                 <li class='".esc_attr($posts_page)."'><a href='".esc_url(site_url('wp-admin/admin.php?page=sch-posts'))."'>
    
-                   <span>".$sch_posts."</span>
+                   <span>".esc_html($sch_posts)."</span>
    
                  </a></li>
    
-                 <li class='".$posts_profile_page."'><a href='".site_url('wp-admin/admin.php?page=sch-postsprofile')."'>
+                 <li class='".esc_attr($posts_profile_page)."'><a href='".esc_url(site_url('wp-admin/admin.php?page=sch-postsprofile'))."'>
    
-                   <span>".$sch_posts_profile."</span>
+                   <span>".esc_html($sch_posts_profile)."</span>
    
                  </a></li></ul>
                  </li>";
@@ -977,14 +978,14 @@ function wpsp_sidebar(){
               echo "<li class=".esc_attr($message_page).">
                 <a href='".esc_url(site_url('wp-admin/admin.php?page=sch-messages'))."'>
                 <i class='dashicons dashicons-email icon'></i>
-                <span>".$sch_message."</span>
+                <span>".esc_html($sch_message)."</span>
                 </a>
                 </li>";
               }
               echo "<li class='".esc_attr($student_page)." has-submenu ".esc_attr($class_innercls1)."'>
                   <a href='".esc_url(site_url('wp-admin/admin.php?page=sch-student'))."'>
                     <i class='dashicons dashicons-id icon'></i>
-                    <span>".$sch_student."</span>
+                    <span>".esc_html($sch_student)."</span>
                   </a>";
 
               foreach ($wpsp_classes as $sclas) {
@@ -996,7 +997,7 @@ function wpsp_sidebar(){
                   </a>
                   <ul class='sub-menu ".esc_attr($class_innercls1)."'><li class='has-submenu ".esc_attr($class_innercls1)."'>
                   <a href='".esc_url(site_url('wp-admin/admin.php?page=sch-class'))."'>
-                    <i class='dashicons dashicons-welcome-widgets-menus icon'></i><span>".$sch_enrolled_class."</span>
+                    <i class='dashicons dashicons-welcome-widgets-menus icon'></i><span>".esc_html($sch_enrolled_class)."</span>
                   </a>";
 
               $sid = base64_encode(intval($sclas->sid));
@@ -1056,38 +1057,38 @@ function wpsp_sidebar(){
                 <ul class='sub-menu ".((isset($nonemenu)? esc_attr($nonemenu) : ''))."'>
                 <li class='".esc_attr($timetable_page)."'>
                   <a href='".esc_url(site_url('wp-admin/admin.php?page=sch-timetable&cid='.esc_attr($id).'&sid=').esc_attr($sid))."'>
-                    <span>".$sch_timetable."</span>
+                    <span>".esc_html($sch_timetable)."</span>
                   </a>
                 </li>
                 <li class='".esc_attr($teacher_page)."'>
                   <a href='".esc_url(site_url('wp-admin/admin.php?page=sch-teacher&cid='.esc_attr($id).'&sid=').esc_attr($sid))."'>
-                    <span>".$sch_teacher."</span>
+                    <span>".esc_html($sch_teacher)."</span>
                   </a>
                 </li>
                <li class='".esc_attr($subject_page)."'>
                   <a href='".esc_url(site_url('wp-admin/admin.php?page=sch-subject&cid=').esc_attr($id))."'>
-                      <span>".$sch_subject."</span>
+                      <span>".esc_html($sch_subject)."</span>
                   </a>
               </li>";
               do_action('wpsp_register_addon_menus', $id);
               echo "<li class='".esc_attr($exam_page)."'>
                   <a href='".esc_url(site_url('wp-admin/admin.php?page=sch-exams&cid='.esc_attr($id).'&sid=').esc_attr($sid))."'>
-                    <span>".$sch_exams."</span>
+                    <span>".esc_html($sch_exams)."</span>
                   </a>
                 </li>
                 <li class='".esc_attr($mark_page)."'>
                   <a href='".esc_url(site_url('wp-admin/admin.php?page=sch-marks&cid='.esc_attr($id).'&sid=').esc_attr($sid))."'>
-                    <span>".$sch_marks."</span>
+                    <span>".esc_html($sch_marks)."</span>
                   </a>
                 </li>
                 <li class='".esc_attr($attendance_page)."'>
                   <a href='".esc_url(site_url('wp-admin/admin.php?page=sch-attendance&cid='.esc_attr($id).'&sid=').esc_attr($sid))."'>
-                    <span>".$sch_attendance."</span>
+                    <span>".esc_html($sch_attendance)."</span>
                   </a>
                 </li>
                 <li class='".esc_attr($leave_page)."'>
                   <a href='".esc_url(site_url('wp-admin/admin.php?page=sch-leavecalendar&cid='.esc_attr($id).'&sid=').esc_attr($sid))."'>
-                 <span>".$sch_leavecalendar."</span></a>
+                 <span>".esc_html($sch_leavecalendar)."</span></a>
                 </li>
               </ul>
           </li></ul>";
@@ -1098,25 +1099,25 @@ function wpsp_sidebar(){
 
          echo "</li><li class='".esc_attr($event_page)."'>
                   <a href='".esc_url(site_url('wp-admin/admin.php?page=sch-events'))."'>
-                    <i class='dashicons dashicons-calendar-alt icon'></i><span>".$sch_events."</span>
+                    <i class='dashicons dashicons-calendar-alt icon'></i><span>".esc_html($sch_events)."</span>
                   </a>
                 </li>";
                 if($prolms1 == 'installed'){
                  echo "<li class='" . esc_attr($quiz_page) . "'>
                   <a href='" . esc_url(site_url('wp-admin/admin.php?page=sch-quizzes')) . "'>
-                    <i class='dashicons dashicons-calendar-alt icon'></i><span>" . $sch_quiz_result . "</span>
+                    <i class='dashicons dashicons-calendar-alt icon'></i><span>" . esc_html($sch_quiz_result) . "</span>
                   </a>
                   </li>";
                 }   
             echo "<li class='".esc_attr($transport_page)."'>
             <a href='".esc_url(site_url('wp-admin/admin.php?page=sch-transport'))."'>
-              <i class='icon wpsp-school-bus'></i><span>".$sch_transport."</span>
+              <i class='icon wpsp-school-bus'></i><span>".esc_html($sch_transport)."</span>
             </a>
            </li>";
          if($prohistory['status']){
            echo"<li class='".esc_attr($history_page)."'>
             <a href='".esc_url(site_url('wp-admin/admin.php?page=sch-history'))."'>
-              <i class='icon fa fa-history'></i><span>".$sch_class_history."</span>
+              <i class='icon fa fa-history'></i><span>".esc_html($sch_class_history)."</span>
             </a>
            </li>";
          }
@@ -1125,7 +1126,7 @@ function wpsp_sidebar(){
 
       echo "<li class='".esc_attr($payment_page_main)."'>
         <a href='".esc_url(site_url('wp-admin/admin.php?page=sch-payment'))."'>
-          <i class='icon fa fa-money'></i><span>".$sch_payment."</span>
+          <i class='icon fa fa-money'></i><span>".esc_html($sch_payment)."</span>
         </a>
        </li>";
 
@@ -1397,7 +1398,7 @@ if(isset($_GET['cid'])){
 function wpsp_body_end()
 {
   echo "<footer class='wpsp-footer'>
-        <p>Copyright &copy;".date('Y')." <a href='http://wpschoolpress.com' target='_blank'>WPSchoolPress</a>. All rights reserved. <span class='wpsp-right'>WPSchoolPress Version ".esc_html(WPSP_PLUGIN_VERSION,'wpschoolpress')."</span></p></footer>
+        <p>Copyright &copy;".esc_html(date('Y'))." <a href='".esc_url('http://wpschoolpress.com')."' target='_blank'>WPSchoolPress</a>. All rights reserved. <span class='wpsp-right'>WPSchoolPress Version ".esc_html(WPSP_PLUGIN_VERSION,'wpschoolpress')."</span></p></footer>
     <!-- Control Sidebar -->
     </section><!-- /.wpsp-container -->
   </div><!-- /.wpsp-wrapper -->

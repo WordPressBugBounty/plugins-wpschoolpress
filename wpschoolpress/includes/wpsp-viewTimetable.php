@@ -93,7 +93,7 @@ function wpsp_ViewTimetable($class_id){
                                                 $brk	=	$hour_det->type == "0" ? "Break" : "";
                                                 ?>
                                                 <td class = "<?php echo esc_attr($ses); ?> " tid="<?php echo esc_attr($subida[$pa]); ?>" data-sessionid="<?php echo esc_attr($key); ?>"> 
-                                                <?php echo $brk;?></td>
+                                                <?php echo esc_html($brk);?></td>
                                                 
                                             <?php
                                                 continue;

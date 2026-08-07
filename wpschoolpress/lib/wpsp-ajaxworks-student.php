@@ -923,7 +923,6 @@ function wpsp_UpdateStudent()
 	
 	if (!empty($_FILES['p_displaypicture']['name'])) {
 		$p_avatar = uploadImage('p_displaypicture');
-		echo $p_avatar;exit;
 		$parentid_img = intval($_POST['parentid']);
 		if (isset($p_avatar['url'])) {
 			update_user_meta($parentid_img, 'displaypicture', array(

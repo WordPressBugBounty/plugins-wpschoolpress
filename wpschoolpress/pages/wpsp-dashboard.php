@@ -59,7 +59,7 @@ if( is_user_logged_in() ) {
 
 						$courses1 = get_user_meta($current_user->ID, '_pay_woocommerce_enrolled_class_access_counter');
 						$courses2 = get_user_meta($sclas->wp_usr_id, '_pay_woocommerce_enrolled_class_access_counter' );
-			   			$courses = array_merge($courses1,$courses2);
+			   			$courses = array_merge( (array) $courses1, (array) $courses2 );
 						if ( ! empty( $courses ) ) {
 							$courses = maybe_unserialize( $courses );
 						} else {
@@ -161,7 +161,7 @@ if( is_user_logged_in() ) {
 							$wpsp_tech_data = $wpdb->get_results($wpdb->prepare("SELECT * FROM $cteacher t INNER JOIN $ctlass c ON t.wp_usr_id=c.teacher_id WHERE c.cid = %d AND c.c_fee_type = %s",$idsvalue,'paid'));
 							$courses1 = get_user_meta($current_user->ID, '_pay_woocommerce_enrolled_class_access_counter');
 							$courses2 = get_user_meta($sclas->wp_usr_id, '_pay_woocommerce_enrolled_class_access_counter' );
-							$courses = array_merge($courses1,$courses2);
+							$courses = array_merge( (array) $courses1, (array) $courses2 );
 							if ( ! empty( $courses ) ) {
 								$courses = maybe_unserialize( $courses );
 							} else {
@@ -266,14 +266,19 @@ if( is_user_logged_in() ) {
 				if(is_numeric($wpsp_stud_data[0]->class_id) ){
 					$cid[] = $wpsp_stud_data[0]->class_id;
 				}else{
-					$class_id_array = unserialize( $wpsp_stud_data[0]->class_id );
-					foreach($class_id_array as $id){
-						$cid[] = $id;
+					$class_id_array = @unserialize( $wpsp_stud_data[0]->class_id );
+					if ( is_array( $class_id_array ) ) {
+						foreach($class_id_array as $id){
+							$cid[] = $id;
+						}
 					}
 				}
-			}else {
-				$class_id_array = array();  
 			}
+			// $class_id_array (used below whenever a paid/installment payment addon
+			// is active) must always mirror $cid as a plain array -- it used to be
+			// left undefined for the common case (a single numeric class_id),
+			// which crashed array_map() below with a null argument.
+			$class_id_array = $cid;
 			if($propayment == "installed"){
 				$cteacher =$wpdb->prefix."wpsp_teacher";
 				$paymenconfirmationid = 0;
@@ -289,7 +294,7 @@ if( is_user_logged_in() ) {
 						$wpsp_tech_data = $wpdb->get_results($wpdb->prepare("SELECT * FROM $cteacher t INNER JOIN $ctlass c ON t.wp_usr_id=c.teacher_id WHERE c.cid = %d AND c.c_fee_type = %s",$id,'paid'));
 						$courses1 = get_user_meta($wpsp_stud_data[0]->parent_wp_usr_id, '_pay_woocommerce_enrolled_class_access_counter' );
 						$courses2 = get_user_meta( $user_id, '_pay_woocommerce_enrolled_class_access_counter' );
-						$courses = array_merge($courses1,$courses2);
+						$courses = array_merge( (array) $courses1, (array) $courses2 );
 						if ( ! empty( $courses ) ) {
 							$courses = maybe_unserialize( $courses );
 						} else {

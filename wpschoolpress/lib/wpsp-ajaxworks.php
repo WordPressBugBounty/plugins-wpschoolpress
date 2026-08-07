@@ -331,11 +331,37 @@ function wpsp_UndoImport(){
 }
 function wpsp_ParentPublicProfile($pid = '', $button = 0){
 	wpsp_AllAuthenticate();
-	global $wpdb;
+	if (!isset($_POST['ppp_nonce']) || !wp_verify_nonce(sanitize_text_field($_POST['ppp_nonce']), 'wpsp_parent_profile_nonce')){
+		echo esc_html('Unauthorized Access!', 'wpschoolpress');
+		wp_die();
+	}
+	global $wpdb, $current_user;
 	$student_table = $wpdb->prefix . "wpsp_student";
 	$users_table = $wpdb->prefix . "users";
 	if ($pid == '') $pid = intval($_POST['id']);
-	if (!empty($pid)) $where = "where p.parent_wp_usr_id='".esc_sql($pid)."'";
+
+	// Ownership check: a user may only view the parent profile linked to
+	// their own account. Admin/teacher may view any parent profile.
+	$current_role = $current_user->roles[0];
+	if ($current_role != 'administrator' && $current_role != 'teacher'){
+		if ($current_role == 'student'){
+			$owned = $wpdb->get_var($wpdb->prepare(
+				"SELECT COUNT(*) FROM $student_table WHERE wp_usr_id = %d AND parent_wp_usr_id = %d",
+				intval($current_user->ID),
+				$pid
+			));
+		} else if ($current_role == 'parent'){
+			$owned = ($pid == intval($current_user->ID)) ? 1 : 0;
+		} else {
+			$owned = 0;
+		}
+		if (empty($owned)){
+			echo esc_html('Unauthorized Access!', 'wpschoolpress');
+			wp_die();
+		}
+	}
+
+	if (!empty($pid)) $where = $wpdb->prepare("where p.parent_wp_usr_id = %d", $pid);
 	$button = isset($_POST['button']) ? sanitize_text_field($_POST['button']) : $button;
 	$pinfo = $wpdb->get_row("select p.*, CONCAT_WS(' ', p_fname, p_mname, p_lname ) AS full_name ,u.user_email from $student_table p LEFT JOIN $users_table u ON u.ID=p.parent_wp_usr_id $where");
 	$loc_avatar = get_user_meta($pid, 'simple_local_avatar', true);
@@ -2039,7 +2065,6 @@ $content = "<div class='wpsp-panel-body'>
 	echo wp_kses(stripslashes_deep($content), $allowed_tags);
 }
 add_action('wp_ajax_wpsp_get_marks_by_exam', 'wpsp_get_marks_by_exam_ajax');
-add_action('wp_ajax_nopriv_wpsp_get_marks_by_exam', 'wpsp_get_marks_by_exam_ajax');
 
 /**
  * Handle customization request form submission.
@@ -2142,7 +2167,12 @@ add_action( 'wp_ajax_wpsp_submit_customization', 'wpsp_submit_customization_ajax
 
 function wpsp_get_marks_by_exam_ajax() {
     check_ajax_referer('wpsp_marks_nonce', 'nonce');
-    
+
+    if (!is_user_logged_in()) {
+        wp_send_json_error('Unauthorized Access!');
+        return;
+    }
+
     $student_id = intval($_POST['student_id']);
     $class_id   = intval($_POST['class_id']);
     $exam_id    = intval($_POST['exam_id']);
@@ -2151,8 +2181,32 @@ function wpsp_get_marks_by_exam_ajax() {
         wp_send_json_error('Invalid parameters');
         return;
     }
-    
-    global $wpdb;
+
+    global $wpdb, $current_user;
+    $student_table = $wpdb->prefix . "wpsp_student";
+
+    // Ownership check: parent may only view marks for their own linked
+    // children, and student may only view their own marks. Admin/teacher
+    // may view any student's marks.
+    $current_role = $current_user->roles[0];
+    if ($current_role != 'administrator' && $current_role != 'teacher') {
+        if ($current_role == 'parent') {
+            $owned = $wpdb->get_var($wpdb->prepare(
+                "SELECT COUNT(*) FROM $student_table WHERE wp_usr_id = %d AND parent_wp_usr_id = %d",
+                $student_id,
+                intval($current_user->ID)
+            ));
+        } else if ($current_role == 'student') {
+            $owned = ($student_id == intval($current_user->ID)) ? 1 : 0;
+        } else {
+            $owned = 0;
+        }
+        if (empty($owned)) {
+            wp_send_json_error('Unauthorized Access!');
+            return;
+        }
+    }
+
     $mark_table        = $wpdb->prefix . "wpsp_mark";
     $exam_table        = $wpdb->prefix . "wpsp_exam";
     $subject_table     = $wpdb->prefix . "wpsp_subject";
@@ -2536,7 +2590,7 @@ function wpsp_UpdateSubField(){
 		if ( $upd !== false ) {
     		echo esc_html( 'success', 'wpschoolpress' );
 		} else {
-    		echo "Error updating data: " . $wpdb->last_error;
+    		echo esc_html( "Error updating data: " . $wpdb->last_error );
 		}
 	}
 	wp_die();
@@ -2901,7 +2955,7 @@ function wpsp_AddTransport(){
 
 
 		$form = '<form name="TransEntryForm" action="#" id="TransEntryForm" method="post">
-		'.wp_nonce_field( 'TransportRegister', 'wps_transport_nonce', '', true ).'
+		'.wp_nonce_field( 'TransportRegister', 'wps_transport_nonce', '', false ).' // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- wp_nonce_field() output is inherently safe/escaped
 		<div class="wpsp-row">
 			<div class="wpsp-col-xs-12">
 				<div class="wpsp-panel-heading">
@@ -2955,7 +3009,7 @@ function wpsp_AddTransport(){
 		</div>
 	</div>
 </form>';
-		echo wpsp_kses_filter_allowed_html($form);
+		echo wpsp_kses_filter_allowed_html($form); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- already sanitized via wp_kses() inside this function
 		// echo wp_kses_post($form);
 		
 	}
@@ -3024,7 +3078,7 @@ function wpsp_UpdateTransport(){
 				$VhRoute = esc_html("Vehicle Route","wpschoolpress");
 			}
 			$form = '<form name="TransEditForm" action="#" id="TransEditForm" method="post">
-			'.wp_nonce_field( 'TransportRegister', 'wps_transport_nonce', '', true ).'
+			'.wp_nonce_field( 'TransportRegister', 'wps_transport_nonce', '', false ).' // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- wp_nonce_field() output is inherently safe/escaped
 					<div class="wpsp-row">
 						<div class="wpsp-col-xs-12">
 							<div class="wpsp-card">
@@ -3079,7 +3133,7 @@ function wpsp_UpdateTransport(){
 						</div>
 					</div>
 				</form>';
-				echo wpsp_kses_filter_allowed_html($form);
+				echo wpsp_kses_filter_allowed_html($form); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- already sanitized via wp_kses() inside this function
 		}else{
 			echo esc_html( 'Cant retrive data from DB!', 'wpschoolpress' );
 		}
@@ -3183,7 +3237,7 @@ function wpsp_getTeachersList(){
 									<span class="wpsp-text-green MRTen" style="vertical-align: middle;">All Present</span>
 								</div>
 							</div>';
-									echo wp_nonce_field('StudentAttendance', 'sattendance_nonce', '', true) . '
+									echo wp_nonce_field('StudentAttendance', 'sattendance_nonce', '', false) . ' // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- wp_nonce_field() output is inherently safe/escaped
 							<div class="wpsp-form-group">
 								<table class="wpsp-table wpsp-table-bordered attendance-entry">
 									<thead>
@@ -3223,7 +3277,7 @@ function wpsp_getTeachersList(){
 				</div>
 			</div>';
 		$content = ob_get_clean();
-		echo wpsp_kses_filter_allowed_html($content);
+		echo wpsp_kses_filter_allowed_html($content); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- already sanitized via wp_kses() inside this function
 		// echo wp_kses_post($content);
 	}
 	wp_die();
